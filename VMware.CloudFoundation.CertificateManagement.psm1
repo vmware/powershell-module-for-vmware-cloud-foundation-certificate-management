@@ -474,6 +474,50 @@ Function Set-ESXiMaintenanceMode {
 
 }
 
+
+Function Get-ESXiLockdownMode {
+
+    <#
+    Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01
+    Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+
+    #>
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
+    )
+    Try {
+        $vcfVcenterDetails = Get-vCenterServerDetailHelper -server $server -user $user -pass $pass -domain $domain
+        if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
+            if ($PsBoundParameters.ContainsKey("esxiFqdn")) {
+                $esxiHosts = Get-Cluster $cluster | Get-VMHost -Name $esxiFqdn
+            }
+            else {
+                $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+            }
+            if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
+        }
+        else {
+            Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
+        }
+        ForEach ($esxiHost in $esxiHosts) {
+            $currentMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
+            Write-Output "$esxiHost is in $currentMode mode"
+        }
+        if ($PsBoundParameters.ContainsKey("esxiFqdn")) {
+            return $currentMode
+        }
+    }
+    Catch {
+        Debug-ExceptionWriter -object $_
+    }
+}
+
+Export-ModuleMember -Function Get-ESXiLockdownMode
 Function Set-ESXiLockdownMode {
 
     <#
@@ -527,13 +571,185 @@ Function Set-ESXiLockdownMode {
                 }
             }
         } 
+    }
+    Catch {
+        Debug-ExceptionWriter -object $_
+    }
+}
+
+Export-ModuleMember -Function Set-ESXiLockdownMode
+
+
+
+#TODO: Inprogress -- Incomplete
+Function Install-EsxiCertificate {
+    <#
+        .SYNOPSIS
+        Install ESXi certificate to a single ESXi host or a whole cluster
+
+        .DESCRIPTION
+        The Install-EsxiCertificate cmdlet will replace ESXi certificate for a single host or all hosts in a cluster
+        (the behavior is controlled with parameter -cluster/-host). cmdlet expects to find pem encoded certificates 
+        in the specified directory, certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
+        The workflow will put ESXi host in maintenance mode with full data migration, 
+        will detach ESXi from the vCenter Server, replace the certificate, reboot the host,
+        once ESXi is up and running it will attach it vCenter Server and exit maintenance mode.
+        The Request-EsxiAccountLockout cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
+        configured account lockout policy (Advanced Settings Security.AccountLockFailures and
+        Security.AccountUnlockTime). The cmdlet connects to SDDC Manager using the -server, -user, and -password
+        values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that the workload domain exists in the SDDC Manager inventory
+        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Gathers the ESXi host or all hosts in a specified cluster
+        - TODO Validates that certificate filename matches the CN and FQDN of the ESXi host
+        - TODO Validates that certificate has been signed with the same CA as the vCenter Server or CA thumbprint is in vCenter Trusted Store
+        - TODO Validates that needed advanced settings are set in vCenter Server
+        - Replaces the ESXi certificate
+
+        .EXAMPLE
+        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain wld-1 -host esxi01.sfo.rainpole.io
+        This example will install certificate on an ESXi host esxi01.sfo.rainpole.io in Workload domain wld-1
+
+        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain wld-1 -cluster production
+        This example will install certificate on all ESXi hosts in cluster "production" in Workload Domain "wld-1"
+
+    #>
+
+    # Define possible country codes as per: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
+    #Set-Variable -Name "CertificateCountryCodes" -Option Constant -Value 
+
+    Param (
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String]$cluster,
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$hostname,
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$certificateFolder
+
+    )
+
+    Try {
+        $vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain 
+        if ($PsBoundParameters.ContainsKey("cluster")) {
+            if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
+                $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+                if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
+            }
+            else {
+                Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
+                Throw "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
+            }
+        }
+        else {
+            $esxiHosts = Get-VMHost -Name $hostname
+            if (!$esxiHosts) { Write-Error "No ESXi host '$hostname' found within workload domain '$domain'." }
+        }
+
+        # Set Advanced param for VC:
+        # TODO Add check if advanced setting is already set, if not it should be set with the following command:
+        ## $certModeSetting = Get-AdvancedSetting "vpxd.certmgmt.mode" -Server $($vcfVcenterDetails.fqdn)
+        ## Set-AdvancedSetting $certModeSetting -Value "custom"
+        # And then the VC should be restarted
+        # Setting this could be separate commandlet or manual operation.
+    
+        # Replace certificate for individual host or all hosts in $esxiHosts
+
+        Foreach ($esxiHost in $esxiHosts) {
+            $crtPath = "$certificateFolder\$($esxiHost.Name).crt"
+            # Check if certificate exists
+            if (Test-Path $crtPath -PathType Leaf ) {
+                Write-Output "Certificate file for $($esxiHost.Name) has been found: $crtPath"
+            }
+            else {
+                Write-Error "Could not find certificate in current directory for $($esxiHost.Name)."
+            }
+
+            # Certificate replacement starts here
+            $esxiCredential = (Get-VCFCredential -resourcename $($esxiHost.Name) | Where-Object { $_.username -eq "root" })
+            if ($esxiCredential) {
+                # TODO Add option to enter MM with "ensure accessability", so users could decide what to use.
+                Write-Output "Starting task 'Enter Maintenance mode' for $($esxiHost.Name)"
+                Set-VMHost -VMHost $($esxiHost.Name) -State Maintenance -VsanDataMigrationMode Full -Evacuate
+                Write-Output "Disconnecting $($esxiHost.Name) from vCenter $($vcfVcenterDetails.fqdn)"
+                Set-VMHost -VMHost $($esxiHost.Name) -State Disconnected
+                # Connect directly to ESXi host
+                # TODO Check if Lockdown Mode is enabled - if so - we could not continue.
+                # TODO Check if certificate is already replaced, if so - skip the replacement
+                # TODO Check that CN of the $crtPath is same as FQDN of the ESXi host (we could use openssl binary)
+                Write-Output "Starting certificate replacement for $($esxiHost.Name)"
+                Write-Output "ESXi credentials: $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password)"
+                Connect-VIServer $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password) -Force
+                $esxCertificatePem = Get-Content $crtPath -Raw
+                Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $($esxiHost.Name) #| Out-Null
+                Write-Output "Restarting $($esxiHost.Name)"
+                # Get ESXi uptime before restart
+                $vmHost = Get-VMHost -Server $($esxiHost.Name)
+                $ESXiUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
+                Restart-VMHost $($esxiHost.Name)
+                Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue | Out-Null
+                Write-Output "Waiting for $($esxiHost.Name) to reboot..."
+                $counter = 0
+                $sleepTime = 60 # in seconds
+                $timeout = 1800 # in seconds
+                Start-Sleep $sleepTime
+                while ($counter -lt $timeout) {
+                    if ((Test-NetConnection -ComputerName $($esxiHost.Name) -Port 443).TcpTestSucceeded) {
+                        # Test ESXi uptime - if it is less than 10 min, then the host has been restarted and we should continue
+                        # if it is more - ESXi has not been restarted yet
+                        if (Connect-VIServer $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password) -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) {
+                            $vmHost = Get-VMHost -Server $($esxiHost.Name)
+                            $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
+                            if ($($ESXiUpTime.TotalSeconds) -gt $($currentUpTime.TotalSeconds)) {
+                                Write-Output "ESXi $($esxiHost.Name), has been restarted."
+                                break
+                            }
+                            else {
+                                # The ESXi has not been restarted yet, so we should not start counting.
+                                Write-Output "ESXi $($ESXiUpTime.TotalSeconds) | $($currentUpTime.TotalSeconds) "
+                                #$counter = 0
+                            }
+                            # Workaround for Connection error if ESXi is connected and then rebooted.
+                            Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+                        }
+                    }
+                    else {
+                        Write-Output "ESXi host $($esxiHost.Name) is not responding! Sleeping for $sleepTime seconds..."
+                        Start-Sleep $sleepTime
+                        $counter += $sleepTime
+                    }
+                }
+                # Disconnect from ESXi once we finish with it.
+                Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+                if ($counter -gt $timeout) {
+                    Write-Error "ESXi host $($esxiHost.Name) did not responded after $timeout seconds. Please check if ESXi is up and running."
+                }
+                # TODO Check if certificate is changed - reuse above certificate check "if cert is already changed"
+                # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
+                if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) { 
+                    Set-VMHost -VMHost $($esxiHost.Name) -State Connected
+                    # TODO add check that ESXi is in state "Connected"
+                    Start-Sleep 30
+                    Set-VMHost -VMHost $($esxiHost.Name) -State Connected
+                }
+            }
+            else {
+                Write-Error "Could not find credentials for $($esxiHost.Name)."
+            }
+        }
 
     }
     Catch {
         Debug-ExceptionWriter -object $_
     }
-
- 
+    Finally {
+        # Disconnect from vCenter Server
+        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+    }
 }
-
-Export-ModuleMember -Function Set-ESXiLockdownMode
+Export-ModuleMember -Function Install-EsxiCertificate
