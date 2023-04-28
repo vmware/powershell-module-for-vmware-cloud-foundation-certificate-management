@@ -776,8 +776,8 @@ Function Install-EsxiCertificate {
                 #Write-Output "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
                                 
                 #TODO: uncomment later when testing actual cert replacement
-                #$esxCertificatePem = Get-Content $crtPath -Raw
-                #Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $($esxiHost.Name) 
+                $esxCertificatePem = Get-Content $crtPath -Raw
+                Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
                 
                 Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
              
@@ -788,8 +788,8 @@ Function Install-EsxiCertificate {
                 $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
                 if ($vcfVcenterDetails) { 
                     Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected" -timeout $timeout
-                    #Start-Sleep 30
-                    #Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected"
+                    Start-Sleep 30
+                    Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected"
                 }
                 else {
                     Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter"
