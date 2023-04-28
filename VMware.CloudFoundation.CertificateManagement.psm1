@@ -64,14 +64,11 @@ Function Get-vCenterServerConnection {
     #>
 
     Param (
-        [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")]
-        [Parameter (Mandatory = $true, ParameterSetName = "domain")] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")]
-        [Parameter (Mandatory = $true, ParameterSetName = "domain")] [String]$user,
-        [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")]
-        [Parameter (Mandatory = $true, ParameterSetName = "domain")] [String]$pass,
-        [Parameter (Mandatory = $true, ParameterSetName = "domain")] [String]$domain,  
-        [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")] [String]$esxiFqdn
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true, ParameterSetName = "domain")] [String] $domain,  
+        [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")] [String] $esxiFqdn
 
     )
     
@@ -123,10 +120,10 @@ Function Get-EsxiTrustedCertificateThumbprint {
     #>
 
     Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$esxiFqdn
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
     )
     
     Try {
@@ -161,11 +158,11 @@ Function Get-vCenterTrustedCertificateThumbprint {
     #>
 
     Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$issuer
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $issuer
     )
     
     Try {
@@ -197,12 +194,12 @@ Function Verify-SignedCertificateWithCA {
     #>
     
     Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$issuer,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$signedCertificate
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $issuer,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate
     )
 
     $vcThumbprint = Get-vCenterTrustedCertificateThumbprint -server $server -user $user -pass $pass -domain $domain -issuer $issuer
@@ -244,20 +241,14 @@ Function Get-EsxiCSR {
     #>
 
     Param (
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$domain,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String]$cluster,
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$esxiFqdn,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$outputFolder,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$outputFolder,
+        [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
                 "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
                 "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
                 "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
@@ -267,14 +258,10 @@ Function Get-EsxiCSR {
                 "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
                 "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
                 "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String]$Country,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$Locality,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$Organization,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$OrganizationUnit,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String]$StateOrProvince
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $Locality,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $Organization,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $OrganizationUnit,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $StateOrProvince
     
     )
     
@@ -340,10 +327,10 @@ Function Get-ESXiCertManagementMode {
     #>
 
     Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$esxiFqdn
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
     )
     
     Try {
@@ -377,11 +364,11 @@ Function Set-ESXiCertManagementMode {
     #>
 
     Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$esxiFqdn,
-        [Parameter (Mandatory = $true)] [ValidateSet ("custom", "vmca")] [String]$mode
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateSet ("custom", "vmca")] [String] $mode
 
     )
     Try {
@@ -495,8 +482,8 @@ Function Set-ESXiState {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true)] [ValidateSet ("Connected", "Disconnected", "Maintenance", "NotResponding")] [String]$state, 
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility", "NoDataMigration")] [String]$vsanDataMigrationMode,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout=18000
-        )
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
+    )
     
     if ($state -ieq (Get-ESXiState -esxiFqdn $esxiFqdn)) {
         Write-Warning "$esxiFqdn is already in $state state"
@@ -522,7 +509,8 @@ Function Set-ESXiState {
         if ($state -ieq $currentState) {
             Write-Output "Successfully changed state for $esxiFqdn to $state"
             break
-        } else {
+        }
+        else {
             Write-Output "Polling every 60 seconds for state to change to $state..."
         }
         Start-Sleep -Seconds 60
@@ -586,8 +574,8 @@ Function Set-ESXiLockdownMode {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster, 
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch] $enable,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch] $disable
+        [Parameter (Mandatory = $true, ParameterSetName = "enable")] [ValidateNotNullOrEmpty()] [Switch] $enable,
+        [Parameter (Mandatory = $true, ParameterSetName = "disable")] [ValidateNotNullOrEmpty()] [Switch] $disable
 
     )
     Try {
@@ -640,15 +628,15 @@ Export-ModuleMember -Function Set-ESXiLockdownMode
 Function Restart-ESXiHost {
 
     <#
-    Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re123!
+    Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re123! -poll $true -timeout 1800 -pollPeriod 30
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $poll=$true,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout=1800,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pollPeriod=60
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [bool] $poll = $true,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 1800,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pollPeriod = 30
     )
 
     # Connect to ESXi host
@@ -656,7 +644,7 @@ Function Restart-ESXiHost {
 
     Write-Output "Restarting $esxiFqdn"
     $vmHost = Get-VMHost -Server $esxiFqdn
-    if (!$vmHost){
+    if (!$vmHost) {
         Write-Error "Unable to find ESXi host with FQDN $esxiFqdn"
         return
     }
@@ -667,37 +655,35 @@ Function Restart-ESXiHost {
     Restart-VMHost $esxiFqdn
     Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
 
-    if ($poll){
-        Write-Output "Waiting for $esxiFqdn to reboot...Polling every 60 seconds"
+    if ($poll) {
+        Write-Output "Waiting for $esxiFqdn to reboot...Polling every $pollPeriod seconds"
         Start-Sleep 30
         $timeout = New-TimeSpan -Seconds $timeout
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         do {
-            if ((Test-NetConnection -ComputerName $esxiFqdn -Port 443).TcpTestSucceeded) {
+            if ((Test-NetConnection -ComputerName $esxiFqdn -Port 443 -WarningAction SilentlyContinue -ErrorAction SilentlyContinue).TcpTestSucceeded) {
                 if (Connect-VIServer $esxiFqdn -User $user -Password $pass -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) {
                     $vmHost = Get-VMHost -Server $esxiFqdn
                     $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
                     if ($($ESXiUpTime.TotalSeconds) -gt $($currentUpTime.TotalSeconds)) {
                         Write-Output "ESXi $esxiFqdn, has been restarted."
-                        break
                     }
                     else {
                         Write-Output "ESXi uptime - $($ESXiUpTime.TotalSeconds) | Current Uptime - $($currentUpTime.TotalSeconds) "
                     }
+                    Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+                    return
                 }
             }
             Write-Output "Waiting for $esxiFqdn to boot up..."
             Start-Sleep -Seconds $pollPeriod
         } while ($stopwatch.elapsed -lt $timeout)
 
-        Write-Error "ESXi host $esxiFqdn) did not responded after $timeout seconds. Please check if ESXi is up and running."
+        Write-Error "ESXi host $esxiFqdn) did not responded after $($timeout.TotalMinutes) seconds. Please check if ESXi is up and running."
     }
     else {
         Write-Output "Restart of $esxiFqdn triggered without polling for it to come back online. Monitor its progress in the vCenter"
-    }
-    # Disconnect from ESXi host
-    Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
-        
+    }        
 }
 
 Export-ModuleMember -Function Restart-EsxiHost
@@ -733,28 +719,21 @@ Function Install-EsxiCertificate {
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io
         This example will install certificate on an ESXi host esxi01.sfo.rainpole.io in Workload domain wld-1
 
-        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain wld-1 -cluster production
+        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-vc01
         This example will install certificate on all ESXi hosts in cluster "production" in Workload Domain "wld-1"
 
     #>
 
     Param (
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $server,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String]  $cluster,
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $certificateFolder,
-        [Parameter (Mandatory = $false, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $false, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $certificateFileExt=".cer",
-        [Parameter (Mandatory = $false, ParameterSetName = "cluster")]
-        [Parameter (Mandatory = $false, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $timeout=18000
+        [Parameter (Mandatory = $true) ] [ValidateNotNullOrEmpty()] [String] $certificateFolder,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $certificateFileExt = ".cer",
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
     Try {
@@ -774,47 +753,51 @@ Function Install-EsxiCertificate {
             if (!$esxiHosts) { Write-Error "No ESXi host '$esxiFqdn' found within workload domain '$domain'." }
         }
     
+        # Certificate replacement starts here
+
         Foreach ($esxiHost in $esxiHosts) {
-            $crtPath = "$certificateFolder\$($esxiHost.Name)$certificateFileExt"
+            $esxiFqdn = $esxiHost.Name
+            $crtPath = "$certificateFolder\$esxiFqdn$certificateFileExt"
 
             if (Test-Path $crtPath -PathType Leaf ) {
-                Write-Output "Certificate file for $($esxiHost.Name) has been found: $crtPath"
+                Write-Output "Certificate file for $esxiFqdn has been found: $crtPath"
             }
             else {
-                Write-Error "Could not find certificate in $crtPath. Skipping certificate replacement for $($esxiHost.Name). "
+                Write-Error "Could not find certificate in $crtPath. Skipping certificate replacement for $esxiFqdn. "
                 continue
             }
 
-            # Certificate replacement starts here
-            $esxiCredential = (Get-VCFCredential -resourcename $($esxiHost.Name) | Where-Object { $_.username -eq "root" })
+            $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
             if ($esxiCredential) {
-                Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
+                Set-ESXiState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
                 #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
              
-                Write-Output "Starting certificate replacement for $($esxiHost.Name)"
-                Write-Output "ESXi credentials: $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password)"
+                Write-Output "Starting certificate replacement for $esxiFqdn"
+                #Write-Output "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
                                 
                 #TODO: uncomment later when testing actual cert replacement
                 #$esxCertificatePem = Get-Content $crtPath -Raw
                 #Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $($esxiHost.Name) 
                 
-                Restart-ESXiHost -esxiFqdn $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password)
+                Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
              
                 # TODO Check if certificate is changed - reuse above certificate check "if cert is already changed"
 
                 # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
                 Write-Output "Exitting maintenance mode and connect to vCenter"
-                if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) { 
-                    Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Connected" -timeout $timeout
-                    Start-Sleep 30
-                    Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Connected"
-                } else {
-                    Write-Error "Could not connect to vCenter Server $vcfVcenterDetails."
+                $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
+                if ($vcfVcenterDetails) { 
+                    Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected" -timeout $timeout
+                    #Start-Sleep 30
+                    #Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected"
+                }
+                else {
+                    Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter"
                     break
                 }
             }
             else {
-                Write-Error "Could not find credentials for $($esxiHost.Name)."
+                Write-Error "Could not find credentials for $esxiFqdn."
             }
         }
 
