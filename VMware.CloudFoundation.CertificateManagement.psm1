@@ -57,7 +57,7 @@ Function Get-vCenterServerConnection {
         - Validates that the workload domain exists in the SDDC Manager inventory
 
         .EXAMPLE
-        Get-vCenterServerConnection -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+        Get-vCenterServerConnection -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io
 
         .EXAMPLE 
         Get-vCenterServerConnection -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01
@@ -430,8 +430,7 @@ Function Get-VsanHealthSummary {
 
     )
     Try {
-        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
-       
+        Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
         $vSANClusterHealthSystem = Get-VSANView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
         $cluster_view = (Get-Cluster -Name $cluster).ExtensionData.MoRef
         $results = $vSANClusterHealthSystem.VsanQueryVcClusterHealthSummary($cluster_view, $null, $null, $true, $null, $null, 'defaultView')
@@ -465,7 +464,6 @@ Export-ModuleMember -Function Get-VsanHealthSummary
 
 
 Function Get-ESXiState {
-
     <#
     Get-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io
     #>
@@ -639,6 +637,72 @@ Function Set-ESXiLockdownMode {
 Export-ModuleMember -Function Set-ESXiLockdownMode
 
 
+Function Restart-ESXiHost {
+
+    <#
+    Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re123!
+    #>
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $poll=$true,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout=1800,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pollPeriod=60
+    )
+
+    # Connect to ESXi host
+    Connect-VIServer $esxiFqdn -User $user -password $pass -Force
+
+    Write-Output "Restarting $esxiFqdn"
+    $vmHost = Get-VMHost -Server $esxiFqdn
+    if (!$vmHost){
+        Write-Error "Unable to find ESXi host with FQDN $esxiFqdn"
+        return
+    }
+    
+    # Get ESXi uptime before restart
+    $ESXiUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
+    
+    Restart-VMHost $esxiFqdn
+    Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+
+    if ($poll){
+        Write-Output "Waiting for $esxiFqdn to reboot...Polling every 60 seconds"
+        Start-Sleep 30
+        $timeout = New-TimeSpan -Seconds $timeout
+        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+        do {
+            if ((Test-NetConnection -ComputerName $esxiFqdn -Port 443).TcpTestSucceeded) {
+                if (Connect-VIServer $esxiFqdn -User $user -Password $pass -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) {
+                    $vmHost = Get-VMHost -Server $esxiFqdn
+                    $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
+                    if ($($ESXiUpTime.TotalSeconds) -gt $($currentUpTime.TotalSeconds)) {
+                        Write-Output "ESXi $esxiFqdn, has been restarted."
+                        break
+                    }
+                    else {
+                        Write-Output "ESXi uptime - $($ESXiUpTime.TotalSeconds) | Current Uptime - $($currentUpTime.TotalSeconds) "
+                    }
+                }
+            }
+            Write-Output "Waiting for $esxiFqdn to boot up..."
+            Start-Sleep -Seconds $pollPeriod
+        } while ($stopwatch.elapsed -lt $timeout)
+
+        Write-Error "ESXi host $esxiFqdn) did not responded after $timeout seconds. Please check if ESXi is up and running."
+    }
+    else {
+        Write-Output "Restart of $esxiFqdn triggered without polling for it to come back online. Monitor its progress in the vCenter"
+    }
+    # Disconnect from ESXi host
+    Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+        
+}
+
+Export-ModuleMember -Function Restart-EsxiHost
+
+
 #TODO: Inprogress -- Incomplete
 Function Install-EsxiCertificate {
     <#
@@ -666,7 +730,7 @@ Function Install-EsxiCertificate {
         - Replaces the ESXi certificate
 
         .EXAMPLE
-        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain wld-1 -host esxi01.sfo.rainpole.io
+        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io
         This example will install certificate on an ESXi host esxi01.sfo.rainpole.io in Workload domain wld-1
 
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain wld-1 -cluster production
@@ -687,6 +751,8 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true, ParameterSetName = "cluster")]
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $certificateFolder,
+        [Parameter (Mandatory = $false, ParameterSetName = "cluster")]
+        [Parameter (Mandatory = $false, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $certificateFileExt=".cer",
         [Parameter (Mandatory = $false, ParameterSetName = "cluster")]
         [Parameter (Mandatory = $false, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $timeout=18000
     )
@@ -709,7 +775,7 @@ Function Install-EsxiCertificate {
         }
     
         Foreach ($esxiHost in $esxiHosts) {
-            $crtPath = "$certificateFolder\$($esxiHost.Name).crt"
+            $crtPath = "$certificateFolder\$($esxiHost.Name)$certificateFileExt"
 
             if (Test-Path $crtPath -PathType Leaf ) {
                 Write-Output "Certificate file for $($esxiHost.Name) has been found: $crtPath"
@@ -722,95 +788,29 @@ Function Install-EsxiCertificate {
             # Certificate replacement starts here
             $esxiCredential = (Get-VCFCredential -resourcename $($esxiHost.Name) | Where-Object { $_.username -eq "root" })
             if ($esxiCredential) {
-                #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
-                Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
+                Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
+                #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
              
                 Write-Output "Starting certificate replacement for $($esxiHost.Name)"
                 Write-Output "ESXi credentials: $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password)"
-                
-                Connect-VIServer $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password) -Force
-                
+                                
                 #TODO: uncomment later when testing actual cert replacement
                 #$esxCertificatePem = Get-Content $crtPath -Raw
                 #Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $($esxiHost.Name) 
                 
-                Write-Output "Restarting $($esxiHost.Name)"
-                # Get ESXi uptime before restart
-                $vmHost = Get-VMHost -Server $($esxiHost.Name)
-                $ESXiUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
-                Restart-VMHost $($esxiHost.Name)
-                
-                Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue | Out-Null
-                Write-Output "Waiting for $($esxiHost.Name) to reboot...Polling every 60 seconds"
-
-                $timeout = New-TimeSpan -Seconds 1800
-                $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-                do {
-                    if ((Test-NetConnection -ComputerName $($esxiHost.Name) -Port 443).TcpTestSucceeded) {
-                        # Test ESXi uptime - if it is less than 10 min, then the host has been restarted and we should continue
-                        # if it is more - ESXi has not been restarted yet
-                        if (Connect-VIServer $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password) -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) {
-                            $vmHost = Get-VMHost -Server $($esxiHost.Name)
-                            $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
-                            if ($($ESXiUpTime.TotalSeconds) -gt $($currentUpTime.TotalSeconds)) {
-                                Write-Output "ESXi $($esxiHost.Name), has been restarted."
-                                break
-                            }
-                            else {
-                                Write-Output "ESXi uptime - $($ESXiUpTime.TotalSeconds) | Current Uptime - $($currentUpTime.TotalSeconds) "
-                            }
-                            # Workaround for Connection error if ESXi is connected and then rebooted.
-                            Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
-                        }
-                    }
-                    Write-Output "Waiting for $($esxiHost.Name) to reboot..."
-                    Start-Sleep -Seconds 60
-                } while ($stopwatch.elapsed -lt $timeout)
-                
-                <#
-                $counter = 0
-                $sleepTime = 60 # in seconds
-                $timeout = 1800 # in seconds
-                Start-Sleep $sleepTime
-                while ($counter -lt $timeout) {
-                    if ((Test-NetConnection -ComputerName $($esxiHost.Name) -Port 443).TcpTestSucceeded) {
-                        # Test ESXi uptime - if it is less than 10 min, then the host has been restarted and we should continue
-                        # if it is more - ESXi has not been restarted yet
-                        if (Connect-VIServer $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password) -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) {
-                            $vmHost = Get-VMHost -Server $($esxiHost.Name)
-                            $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
-                            if ($($ESXiUpTime.TotalSeconds) -gt $($currentUpTime.TotalSeconds)) {
-                                Write-Output "ESXi $($esxiHost.Name), has been restarted."
-                                break
-                            }
-                            else {
-                                # The ESXi has not been restarted yet, so we should not start counting.
-                                Write-Output "ESXi $($ESXiUpTime.TotalSeconds) | $($currentUpTime.TotalSeconds) "
-                                #$counter = 0
-                            }
-                            # Workaround for Connection error if ESXi is connected and then rebooted.
-                            Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
-                        }
-                    }
-                    else {
-                        Write-Output "ESXi host $($esxiHost.Name) is not responding! Sleeping for $sleepTime seconds..."
-                        Start-Sleep $sleepTime
-                        $counter += $sleepTime
-                    }
-                }
-                #>
-                # Disconnect from ESXi once we finish with it.
-                Disconnect-VIServer -Server $($esxiHost.Name) -Force -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
-                if ($counter -gt $timeout) {
-                    Write-Error "ESXi host $($esxiHost.Name) did not responded after $timeout seconds. Please check if ESXi is up and running."
-                }
+                Restart-ESXiHost -esxiFqdn $($esxiHost.Name) -User $($esxiCredential.username) -Password $($esxiCredential.password)
+             
                 # TODO Check if certificate is changed - reuse above certificate check "if cert is already changed"
+
                 # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
                 Write-Output "Exitting maintenance mode and connect to vCenter"
                 if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) { 
                     Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Connected" -timeout $timeout
                     Start-Sleep 30
                     Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Connected"
+                } else {
+                    Write-Error "Could not connect to vCenter Server $vcfVcenterDetails."
+                    break
                 }
             }
             else {
