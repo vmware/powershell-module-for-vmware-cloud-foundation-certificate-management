@@ -206,7 +206,7 @@ Function Verify-ESXiCertificateAlreadyInstalled {
         $signedCertThumbprint = $crt.GetCertHashString()
 
         if ($esxiHostThumbprint -eq $signedCertThumbprint) {
-            Write-Host "Signed Certificate thumbprint matches with the ESXi server Thumbprint"
+            Write-Host "Signed Certificate Thumbprint matches with the ESXi Host Thumbprint"
             Write-Warning "Provided Certificate is already installed on ESXi Host $esxiFqdn"
             return $true
         }
@@ -808,12 +808,12 @@ Function Install-EsxiCertificate {
 
             if (!(Test-Path $crtPath -PathType Leaf )) {
                 Write-Error "Could not find certificate in $crtPath. Skipping certificate replacement for $esxiFqdn. "
-                $skippedHosts = $skippedHosts.Add($esxiFqdn)
+               $skippedHosts.Add($esxiFqdn)
                 continue
             }
 
-            if (Verify-ESXiCertificateAlreadyInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiHost -signedCertificate $crtPath) {
-                $skippedHosts = $skippedHosts.Add($esxiFqdn)
+            if (Verify-ESXiCertificateAlreadyInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn -signedCertificate $crtPath) {
+                $skippedHosts.Add($esxiFqdn)
                 continue
             }
             else {
@@ -829,7 +829,7 @@ Function Install-EsxiCertificate {
                     #TODO: uncomment later when testing actual cert replacement
                     $esxCertificatePem = Get-Content $crtPath -Raw
                     Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
-                    $replacedHosts = $replacedHosts.Add($esxiFqdn)
+                    $replacedHosts.Add($esxiFqdn)
                     
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
                 
@@ -847,7 +847,7 @@ Function Install-EsxiCertificate {
                     }
                 } else {
                     Write-Error "Unable to get credentials for $esxiFqdn"
-                    $skippedHosts = $skippedHosts.Add($esxiFqdn)
+                    $skippedHosts.Add($esxiFqdn)
                 }
             }
         }
