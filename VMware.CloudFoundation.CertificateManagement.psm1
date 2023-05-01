@@ -101,20 +101,16 @@ Function Get-vCenterServerConnection {
 
 Export-ModuleMember -Function Get-vCenterServerConnection
 
-Function Get-EsxiTrustedCertificateThumbprint {
+Function Get-EsxiCertificateThumbprint {
     <#
         .SYNOPSIS
-        Retrieves ESXi host's trusted certificates thumbprint
+        Retrieves ESXi host's certificates thumbprint
 
         .DESCRIPTION
-        The Get-EsxiTrustedCertificateThumbprint cmdlet retrieves the ESXi host's trusted thumbprints
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values.
-        - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Validates that the workload domain exists in the SDDC Manager inventory
+        The Get-EsxiCertificateThumbprint cmdlet retrieves the ESXi host's trusted thumbprints
 
         .EXAMPLE
-        Get-EsxiTrustedCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+        Get-EsxiCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
         This example retrieves the ESXi trusted thumbprints for esxi with FQDN sfo01-m01-esx01.sfo.rainpole.io
 
     #>
@@ -128,31 +124,26 @@ Function Get-EsxiTrustedCertificateThumbprint {
     
     Try {
         $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
-        $esxiTrustedThumbprint = $(Get-VITrustedCertificate -Server $($vcfVcenterDetails.fqdn) -VMHost $esxiFqdn).Certificate.Thumbprint
-        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        $esxiTrustedThumbprint = $(Get-VIMachineCertificate -Server $($vcfVcenterDetails.fqdn) -VMHost $esxiFqdn).Certificate.Thumbprint
         return $esxiTrustedThumbprint                       
     }
     Catch {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Get-EsxiTrustedCertificateThumbprint
+Export-ModuleMember -Function Get-EsxiCertificateThumbprint
 
 
-Function Get-vCenterTrustedCertificateThumbprint {
+Function Get-vCenterCertificateThumbprint {
     <#
         .SYNOPSIS
-        Retrieves vCenter Servers trusted certificates thumbprint
+        Retrieves vCenter Servers certificates thumbprints which match the provided issuer
 
         .DESCRIPTION
-        The Get-vCenterTrustedCertificateThumbprint cmdlet retrieves the ESXi host's trusted thumbprints
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values.
-        - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Validates that the workload domain exists in the SDDC Manager inventory
+        The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server's certificate thumbprints which match the provided issuer
 
         .EXAMPLE
-        Get-vCenterTrustedCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole
+        Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole
         This example retrieves the ESXi trusted thumbprints for esxi with FQDN sfo01-m01-esx01.sfo.rainpole.io
 
     #>
@@ -180,6 +171,59 @@ Function Get-vCenterTrustedCertificateThumbprint {
 Export-ModuleMember -Function Get-vCenterTrustedCertificateThumbprint
 
 
+Function Verify-ESXiCertificateAlreadyReplaced {
+     <#
+    Verify if the provided certificate is already on the ESXi host. 
+
+     .DESCRIPTION
+    This cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host. 
+    You need to pass in the complete path for the certificate file. 
+    Returns true if certificate is already replaced, returns false if otherwise. 
+
+    .EXAMPLE
+    Verify-ESXiCertificateAlreadyReplaced -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
+
+    #>
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate
+    )
+    
+    Try {
+        if (Test-Path $signedCertificate -PathType Leaf ) {
+            Write-Output "Certificate file found - $signedCertificate"
+        }
+        else {
+            Write-Error "Could not find certificate in $signedCertificate."
+            return
+        }
+        $esxiHostThumbprint = Get-EsxiCertificateThumbprint -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
+        $crt = New-Object System.Security.Cryptography.X509Certificates.X509Certificate
+        $crt.Import($signedCertificate)
+        $signedCertThumbprint = $crt.GetCertHashString()
+
+        if ($esxiHostThumbprint -eq $signedCertThumbprint) {
+            Write-Output "Signed Certificate thumbprint matches with the ESXi server Thumbprint"
+            Write-Warning "Provided Certificate is already installed on ESXi Host $esxiFqdn"
+            return $true
+        }
+        else {
+            Write-Output "Thumbprint of ESXi host = $esxiHostThumbprint"
+            Write-Output "Thumbprint of Provided Certificate = $signedCertThumbprint"
+            Write-Output "Provided Certificate is NOT installed on ESXi Host $esxiFqdn"
+            return $false
+        }
+    }
+    Catch {
+        Debug-ExceptionWriter -object $_
+    }
+}
+Export-ModuleMember -Function Verify-ESXiCertificateAlreadyReplaced
+
+#TODO: Verify usage of below function, currently unused. 
 Function Verify-SignedCertificateWithCA {
     <#
     Verify the signed certificate thumbprint with the CA thumbprint from vcenter
@@ -202,7 +246,7 @@ Function Verify-SignedCertificateWithCA {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate
     )
 
-    $vcThumbprint = Get-vCenterTrustedCertificateThumbprint -server $server -user $user -pass $pass -domain $domain -issuer $issuer
+    $vcThumbprint = Get-vCenterCertificateThumbprint -server $server -user $user -pass $pass -domain $domain -issuer $issuer
     $crt = New-Object System.Security.Cryptography.X509Certificates.X509Certificate
     $crt.Import($signedCertificate)
     $signedCertThumbprint = $crt.GetCertHashString()
@@ -733,7 +777,9 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true) ] [ValidateNotNullOrEmpty()] [String] $certificateFolder,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $certificateFileExt = ".cer",
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch] $force
+
     )
 
     Try {
@@ -767,33 +813,38 @@ Function Install-EsxiCertificate {
                 continue
             }
 
-            $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
-            if ($esxiCredential) {
-                Set-ESXiState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
-                #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
-             
-                Write-Output "Starting certificate replacement for $esxiFqdn"
-                #Write-Output "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
-                                
-                #TODO: uncomment later when testing actual cert replacement
-                $esxCertificatePem = Get-Content $crtPath -Raw
-                Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
+            if (Verify-ESXiCertificateAlreadyReplaced -server $server -user $user -pass $pass -esxiFqdn $esxiHost -signedCertificate $crtPath) {
+                continue
+            } else {
+                $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
+                if ($esxiCredential) {
+                    
+                    Set-ESXiState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
+                    #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
                 
-                Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
-             
-                # TODO Check if certificate is changed - reuse above certificate check "if cert is already changed"
+                    Write-Output "Starting certificate replacement for $esxiFqdn"
+                    #Write-Output "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
+                                    
+                    #TODO: uncomment later when testing actual cert replacement
+                    $esxCertificatePem = Get-Content $crtPath -Raw
+                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
+                    
+                    Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
+                
+                    # TODO Check if certificate is changed - reuse above certificate check "if cert is already changed"
 
-                # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
-                Write-Output "Exitting maintenance mode and connect to vCenter"
-                $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
-                if ($vcfVcenterDetails) { 
-                    Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected" -timeout $timeout
-                    Start-Sleep 30
-                    Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected"
-                }
-                else {
-                    Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter"
-                    break
+                    # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
+                    Write-Output "Exitting maintenance mode and connect to vCenter"
+                    $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
+                    if ($vcfVcenterDetails) { 
+                        Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected" -timeout $timeout
+                        Start-Sleep 30
+                        Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected"
+                    }
+                    else {
+                        Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter"
+                        break
+                    }
                 }
             }
             else {
