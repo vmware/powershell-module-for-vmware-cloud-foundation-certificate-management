@@ -171,17 +171,17 @@ Function Get-vCenterCertificateThumbprint {
 Export-ModuleMember -Function Get-vCenterTrustedCertificateThumbprint
 
 
-Function Verify-ESXiCertificateAlreadyReplaced {
-     <#
+Function Verify-ESXiCertificateAlreadyInstalled {
+    <#
     Verify if the provided certificate is already on the ESXi host. 
 
      .DESCRIPTION
     This cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host. 
     You need to pass in the complete path for the certificate file. 
-    Returns true if certificate is already replaced, returns false if otherwise. 
+    Returns true if certificate is already installed, returns false if otherwise. 
 
     .EXAMPLE
-    Verify-ESXiCertificateAlreadyReplaced -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
+    Verify-ESXiCertificateAlreadyInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
 
     #>
     Param (
@@ -194,7 +194,7 @@ Function Verify-ESXiCertificateAlreadyReplaced {
     
     Try {
         if (Test-Path $signedCertificate -PathType Leaf ) {
-            Write-Output "Certificate file found - $signedCertificate"
+            Write-Host "Certificate file found - $signedCertificate"
         }
         else {
             Write-Error "Could not find certificate in $signedCertificate."
@@ -206,14 +206,14 @@ Function Verify-ESXiCertificateAlreadyReplaced {
         $signedCertThumbprint = $crt.GetCertHashString()
 
         if ($esxiHostThumbprint -eq $signedCertThumbprint) {
-            Write-Output "Signed Certificate thumbprint matches with the ESXi server Thumbprint"
+            Write-Host "Signed Certificate thumbprint matches with the ESXi server Thumbprint"
             Write-Warning "Provided Certificate is already installed on ESXi Host $esxiFqdn"
             return $true
         }
         else {
-            Write-Output "Thumbprint of ESXi host = $esxiHostThumbprint"
-            Write-Output "Thumbprint of Provided Certificate = $signedCertThumbprint"
-            Write-Output "Provided Certificate is NOT installed on ESXi Host $esxiFqdn"
+            Write-Host "Thumbprint of ESXi host = $esxiHostThumbprint"
+            Write-Host "Thumbprint of Provided Certificate = $signedCertThumbprint"
+            Write-Host "Provided Certificate is NOT installed on ESXi Host $esxiFqdn"
             return $false
         }
     }
@@ -221,7 +221,7 @@ Function Verify-ESXiCertificateAlreadyReplaced {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Verify-ESXiCertificateAlreadyReplaced
+Export-ModuleMember -Function Verify-ESXiCertificateAlreadyInstalled
 
 #TODO: Verify usage of below function, currently unused. 
 Function Verify-SignedCertificateWithCA {
@@ -252,7 +252,7 @@ Function Verify-SignedCertificateWithCA {
     $signedCertThumbprint = $crt.GetCertHashString()
 
     if ($vcThumbprint -eq $signedCertThumbprint) {
-        Write-Output "Signed Certificate thumbprint matches with the vCenter server CA Thumbprint"
+        Write-Host "Signed Certificate thumbprint matches with the vCenter server CA Thumbprint"
     }
     else {
         Write-Error "Thumbprint of vCenter server CA = $vcThumbprint"
@@ -336,7 +336,7 @@ Function Get-EsxiCSR {
                 $esxRequest = New-VIMachineCertificateSigningRequest -Server $($vcfVcenterDetails.fqdn) -VMHost $($esxiHost.Name) -Country "$Country" -Locality "$Locality" -Organization "$Organization" -OrganizationUnit "$OrganizationUnit" -StateOrProvince "$StateOrProvince" -CommonName $($esxiHost.Name)
                 $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
                 if (Test-Path $csrPath -PathType Leaf ) {
-                    Write-Output "CSR for $($esxiHost.Name) has been generated and saved to $csrPath"
+                    Write-Host "CSR for $($esxiHost.Name) has been generated and saved to $csrPath"
                 }
                 else {
                     Write-Error "Unable to generate CSR for $($esxiHost.Name)."
@@ -421,10 +421,10 @@ Function Set-ESXiCertManagementMode {
         $certModeSetting = Get-AdvancedSetting "vpxd.certmgmt.mode" -Entity $entity
         if ($certModeSetting.value -ne $mode) {
             Set-AdvancedSetting $certModeSetting -Value $mode
-            Write-Output "ESXi Certificate Management Mode is set to custom"
+            Write-Host "ESXi Certificate Management Mode is set to custom"
         }
         else {
-            Write-Output "ESXi Certificate Management Mode already set to custom"
+            Write-Host "ESXi Certificate Management Mode already set to custom"
         }
     }
     Catch {
@@ -438,7 +438,7 @@ Export-ModuleMember -Function Set-ESXiCertManagementMode
 
 
 
-Function Get-VsanHealthSummary {
+Function Get-vSANHealthSummary {
 
     <#
     .SYNOPSIS
@@ -448,7 +448,7 @@ Function Get-VsanHealthSummary {
     Get the vSAN health summary from vCenter for given cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised
 
     .EXAMPLE
-    Get-VsanHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 
+    Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 
     This example Gets the ESXi management mode to custom
     #>
 
@@ -491,7 +491,7 @@ Function Get-VsanHealthSummary {
     }
 }
 
-Export-ModuleMember -Function Get-VsanHealthSummary
+Export-ModuleMember -Function Get-vSANHealthSummary
 
 
 Function Get-ESXiState {
@@ -535,7 +535,7 @@ Function Set-ESXiState {
     }
     if ($state -ieq "maintenance") {
         if ($PSBoundParameters.ContainsKey("vsanDataMigrationMode")) {
-            Write-Output "Entering Maintenance state for $esxiFqdn"
+            Write-Host "Entering Maintenance state for $esxiFqdn"
             Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -Evacuate
         }
         else {
@@ -543,7 +543,7 @@ Function Set-ESXiState {
         }
     }
     else {
-        Write-Output "Changing state for $esxiFqdn to $state"
+        Write-Host "Changing state for $esxiFqdn to $state"
         Set-VMHost -VMHost $esxiFqdn -State $state
     }
     $timeout = New-TimeSpan -Seconds $timeout
@@ -551,11 +551,11 @@ Function Set-ESXiState {
     do {
         $currentState = Get-ESXiState -esxiFqdn $esxiFqdn
         if ($state -ieq $currentState) {
-            Write-Output "Successfully changed state for $esxiFqdn to $state"
+            Write-Host "Successfully changed state for $esxiFqdn to $state"
             break
         }
         else {
-            Write-Output "Polling every 60 seconds for state to change to $state..."
+            Write-Host "Polling every 60 seconds for state to change to $state..."
         }
         Start-Sleep -Seconds 60
     } while ($stopwatch.elapsed -lt $timeout)
@@ -595,7 +595,7 @@ Function Get-ESXiLockdownMode {
         }
         ForEach ($esxiHost in $esxiHosts) {
             $currentMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
-            Write-Output "$esxiHost is in $currentMode mode"
+            Write-Host "$esxiHost is in $currentMode mode"
         }
         if ($PsBoundParameters.ContainsKey("esxiFqdn")) {
             return $currentMode
@@ -639,10 +639,10 @@ Function Set-ESXiLockdownMode {
                 $currentMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
                 if ($currentMode -eq "lockdownDisabled") {
                     ($esxiHost | Get-View).EnterLockdownMode()
-                    Write-Output "Changing $esxiHost mode from $currentMode to lockdownNormal"
+                    Write-Host "Changing $esxiHost mode from $currentMode to lockdownNormal"
                 }
                 else {
-                    Write-Output "$esxiHost is in already in lockdownNormal mode"
+                    Write-Host "$esxiHost is in already in lockdownNormal mode"
                 }
             }
         } 
@@ -653,10 +653,10 @@ Function Set-ESXiLockdownMode {
                 $currentMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
                 if ($currentMode -ne "lockdownDisabled") {
                     ($esxiHost | Get-View).ExitLockdownMode()
-                    Write-Output "Changing $esxiHost mode from $currentMode to lockdownDisabled"
+                    Write-Host "Changing $esxiHost mode from $currentMode to lockdownDisabled"
                 }
                 else {
-                    Write-Output "$esxiHost is already in lockdownDisabled mode"
+                    Write-Host "$esxiHost is already in lockdownDisabled mode"
                 }
             }
         } 
@@ -686,7 +686,7 @@ Function Restart-ESXiHost {
     # Connect to ESXi host
     Connect-VIServer $esxiFqdn -User $user -password $pass -Force
 
-    Write-Output "Restarting $esxiFqdn"
+    Write-Host "Restarting $esxiFqdn"
     $vmHost = Get-VMHost -Server $esxiFqdn
     if (!$vmHost) {
         Write-Error "Unable to find ESXi host with FQDN $esxiFqdn"
@@ -700,7 +700,7 @@ Function Restart-ESXiHost {
     Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
 
     if ($poll) {
-        Write-Output "Waiting for $esxiFqdn to reboot...Polling every $pollPeriod seconds"
+        Write-Host "Waiting for $esxiFqdn to reboot...Polling every $pollPeriod seconds"
         Start-Sleep 30
         $timeout = New-TimeSpan -Seconds $timeout
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
@@ -710,23 +710,23 @@ Function Restart-ESXiHost {
                     $vmHost = Get-VMHost -Server $esxiFqdn
                     $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
                     if ($($ESXiUpTime.TotalSeconds) -gt $($currentUpTime.TotalSeconds)) {
-                        Write-Output "ESXi $esxiFqdn, has been restarted."
+                        Write-Host "ESXi $esxiFqdn, has been restarted."
                     }
                     else {
-                        Write-Output "ESXi uptime - $($ESXiUpTime.TotalSeconds) | Current Uptime - $($currentUpTime.TotalSeconds) "
+                        Write-Host "ESXi uptime - $($ESXiUpTime.TotalSeconds) | Current Uptime - $($currentUpTime.TotalSeconds) "
                     }
                     Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
                     return
                 }
             }
-            Write-Output "Waiting for $esxiFqdn to boot up..."
+            Write-Host "Waiting for $esxiFqdn to boot up..."
             Start-Sleep -Seconds $pollPeriod
         } while ($stopwatch.elapsed -lt $timeout)
 
         Write-Error "ESXi host $esxiFqdn) did not responded after $($timeout.TotalMinutes) seconds. Please check if ESXi is up and running."
     }
     else {
-        Write-Output "Restart of $esxiFqdn triggered without polling for it to come back online. Monitor its progress in the vCenter"
+        Write-Host "Restart of $esxiFqdn triggered without polling for it to come back online. Monitor its progress in the vCenter"
     }        
 }
 
@@ -800,41 +800,41 @@ Function Install-EsxiCertificate {
         }
     
         # Certificate replacement starts here
-
+        $replacedHosts = New-Object Collections.Generic.List[String]
+        $skippedHosts = New-Object Collections.Generic.List[String]
         Foreach ($esxiHost in $esxiHosts) {
             $esxiFqdn = $esxiHost.Name
             $crtPath = "$certificateFolder\$esxiFqdn$certificateFileExt"
 
-            if (Test-Path $crtPath -PathType Leaf ) {
-                Write-Output "Certificate file for $esxiFqdn has been found: $crtPath"
-            }
-            else {
+            if (!(Test-Path $crtPath -PathType Leaf )) {
                 Write-Error "Could not find certificate in $crtPath. Skipping certificate replacement for $esxiFqdn. "
+                $skippedHosts = $skippedHosts.Add($esxiFqdn)
                 continue
             }
 
-            if (Verify-ESXiCertificateAlreadyReplaced -server $server -user $user -pass $pass -esxiFqdn $esxiHost -signedCertificate $crtPath) {
+            if (Verify-ESXiCertificateAlreadyInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiHost -signedCertificate $crtPath) {
+                $skippedHosts = $skippedHosts.Add($esxiFqdn)
                 continue
-            } else {
+            }
+            else {
                 $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
                 if ($esxiCredential) {
                     
                     Set-ESXiState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
                     #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
                 
-                    Write-Output "Starting certificate replacement for $esxiFqdn"
-                    #Write-Output "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
+                    Write-Host "Starting certificate replacement for $esxiFqdn"
+                    #Write-Host "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
                                     
                     #TODO: uncomment later when testing actual cert replacement
                     $esxCertificatePem = Get-Content $crtPath -Raw
                     Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
+                    $replacedHosts = $replacedHosts.Add($esxiFqdn)
                     
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
                 
-                    # TODO Check if certificate is changed - reuse above certificate check "if cert is already changed"
-
                     # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
-                    Write-Output "Exitting maintenance mode and connect to vCenter"
+                    Write-Host "Exiting maintenance mode and connect to vCenter"
                     $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
                     if ($vcfVcenterDetails) { 
                         Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected" -timeout $timeout
@@ -845,12 +845,16 @@ Function Install-EsxiCertificate {
                         Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter"
                         break
                     }
+                } else {
+                    Write-Error "Unable to get credentials for $esxiFqdn"
+                    $skippedHosts = $skippedHosts.Add($esxiFqdn)
                 }
             }
-            else {
-                Write-Error "Could not find credentials for $esxiFqdn."
-            }
         }
+        Write-Host "Certificates for following ESXi hosts has been replaced "
+        Write-Host "$replacedHosts"
+        Write-Warning "Following ESXi hosts have been skipped "
+        Write-Warning "$skippedHosts"
 
     }
     Catch {
