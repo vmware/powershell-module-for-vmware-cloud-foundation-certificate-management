@@ -823,10 +823,8 @@ Function Install-EsxiCertificate {
                     Set-ESXiState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
                     #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
                 
-                    Write-Host "Starting certificate replacement for $esxiFqdn"
-                    #Write-Host "ESXi credentials: $esxiFqdn -User $($esxiCredential.username) -Password $($esxiCredential.password)"
-                                    
-                    #TODO: uncomment later when testing actual cert replacement
+                    Write-Host "Starting certificate replacement for $esxiFqdn"                                    
+
                     $esxCertificatePem = Get-Content $crtPath -Raw
                     Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
                     $replacedHosts.Add($esxiFqdn)
@@ -834,7 +832,7 @@ Function Install-EsxiCertificate {
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
                 
                     # Connect to vCenter server, then connect ESXi host to it and exit maintenance mode
-                    Write-Host "Exiting maintenance mode and connect to vCenter"
+                    Write-Host "Exiting maintenance mode and connecting to vCenter"
                     $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
                     if ($vcfVcenterDetails) { 
                         Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected" -timeout $timeout
@@ -852,10 +850,13 @@ Function Install-EsxiCertificate {
             }
         }
         Write-Host "Certificates for following ESXi hosts has been replaced "
-        Write-Host "$replacedHosts"
-        Write-Warning "Following ESXi hosts have been skipped "
-        Write-Warning "$skippedHosts"
-
+        Foreach ($replacedHost in $replacedHosts) {
+            Write-Host "$replacedHost"
+        }
+        Write-Warning "Following ESXi hosts have been skipped"
+        Foreach ($skippedHost in $skippedHosts) {
+            Write-Host "$skippedHost"
+        }
     }
     Catch {
         Debug-ExceptionWriter -object $_
