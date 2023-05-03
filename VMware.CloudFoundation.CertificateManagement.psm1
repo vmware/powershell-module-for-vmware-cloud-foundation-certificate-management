@@ -9,7 +9,7 @@
 # scenarios. It is recommended you don't use it for any production environment without testing extensively!
 
 # Allow communication with self-signed certificates when using Powershell Core. If you require all communications to be
-# secure and do not wish to allow communication with self-signed certificates, remove lines 13-36 before importing the
+# secure and do not wish to allow communication with self-signed certificates, remove lines 15-41 before importing the
 # module.
 
 if ($PSEdition -eq 'Core') {
@@ -168,10 +168,10 @@ Function Get-vCenterCertificateThumbprint {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Get-vCenterTrustedCertificateThumbprint
+Export-ModuleMember -Function Get-vCenterCertificateThumbprint
 
 
-Function Verify-ESXiCertificateAlreadyInstalled {
+Function Confirm-ESXiCertificateAlreadyInstalled {
     <#
     Verify if the provided certificate is already on the ESXi host. 
 
@@ -181,7 +181,7 @@ Function Verify-ESXiCertificateAlreadyInstalled {
     Returns true if certificate is already installed, returns false if otherwise. 
 
     .EXAMPLE
-    Verify-ESXiCertificateAlreadyInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
+    Confirm-ESXiCertificateAlreadyInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
 
     #>
     Param (
@@ -197,7 +197,7 @@ Function Verify-ESXiCertificateAlreadyInstalled {
             Write-Host "Certificate file found - $signedCertificate"
         }
         else {
-            Write-Error "Could not find certificate in $signedCertificate."
+            Write-Error "Could not find certificate in $signedCertificate." -ErrorAction Stop
             return
         }
         $esxiHostThumbprint = Get-EsxiCertificateThumbprint -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
@@ -221,10 +221,10 @@ Function Verify-ESXiCertificateAlreadyInstalled {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Verify-ESXiCertificateAlreadyInstalled
+Export-ModuleMember -Function Confirm-ESXiCertificateAlreadyInstalled
 
 #TODO: Verify usage of below function, currently unused. 
-Function Verify-SignedCertificateWithCA {
+Function Confirm-SignedCertificateWithCA {
     <#
     Verify the signed certificate thumbprint with the CA thumbprint from vcenter
 
@@ -233,7 +233,7 @@ Function Verify-SignedCertificateWithCA {
     You need to pass in the complete path for the certificate file. 
 
     .EXAMPLE
-    Verify-SignedCertificateWithCA -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole -signedCertificate F:\bncode\powershell-module-for-vmware-cloud-foundation-certificate-management\Root64.cer
+    Confirm-SignedCertificateWithCA -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole -signedCertificate F:\bncode\powershell-module-for-vmware-cloud-foundation-certificate-management\Root64.cer
 
     #>
     
@@ -255,13 +255,13 @@ Function Verify-SignedCertificateWithCA {
         Write-Host "Signed Certificate thumbprint matches with the vCenter server CA Thumbprint"
     }
     else {
-        Write-Error "Thumbprint of vCenter server CA = $vcThumbprint"
-        Write-Error "Thumbprint of signed certificate = $signedCertThumbprint"
+        Write-Error "Thumbprint of vCenter server CA = $vcThumbprint" 
+        Write-Error "Thumbprint of signed certificate = $signedCertThumbprint" 
         Throw "Signed Certificate thumbprint DOESNT match with the vCenter server CA Thumbprint"
     }
 }
 
-Export-ModuleMember -Function Verify-SignedCertificateWithCA
+Export-ModuleMember -Function Confirm-SignedCertificateWithCA
 
 Function Get-EsxiCSR {
     <#
@@ -311,7 +311,7 @@ Function Get-EsxiCSR {
     
     Try {
         if (!(Test-Path $outputFolder)) {
-            Write-Error "Please specify a valid directory to save the CSR files."
+            Write-Error "Please specify a valid directory to save the CSR files." -ErrorAction Stop
             return
         }
         $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain 
@@ -441,15 +441,15 @@ Export-ModuleMember -Function Set-ESXiCertManagementMode
 Function Get-vSANHealthSummary {
 
     <#
-    .SYNOPSIS
-    Get the vSAN health summary from vCenter for given cluster 
+        .SYNOPSIS
+        Get the vSAN health summary from vCenter Server for given cluster 
 
-    .DESCRIPTION
-    Get the vSAN health summary from vCenter for given cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised
+        .DESCRIPTION
+        This function gets the vSAN health summary from vCenter Server for a given cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised
 
-    .EXAMPLE
-    Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 
-    This example Gets the ESXi management mode to custom
+        .EXAMPLE
+        Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 
+        This example gets the vSAN health summary for cluster sfo-m01-cl01 
     #>
 
     Param (
@@ -476,11 +476,12 @@ Function Get-vSANHealthSummary {
             if ($healthCheckTestName) {
                 if ($healthCheckTestHealth -eq "yellow") {
                     $overallStatus = ($overallStatus, 1 | Measure-Object -Max).Maximum
-                    Write-Warning "$vCenter - vSAN cluster $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription"   
+                    Write-Warning "$vCenter - vSAN cluster $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" -WarningAction Inquire
                 }
                 if ($healthCheckTestHealth -eq "red") {
                     $overallStatus = ($overallStatus, 2 | Measure-Object -Max).Maximum
-                    Write-Error " $vCenter - vSAN Clustername $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription"
+                    Write-Error "vSAN status is RED. Please check vSAN health before continuing..."
+                    Write-Error " $vCenter - vSAN Clustername $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" -ErrorAction Inquire
                 }
             }
         }
@@ -496,7 +497,15 @@ Export-ModuleMember -Function Get-vSANHealthSummary
 
 Function Get-ESXiState {
     <#
-    Get-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io
+        .SYNOPSIS
+        Get the ESXi state from vCenter Server
+
+        .DESCRIPTION
+        This cmdlet gets the current configuration state of the ESXi host. Possible outputs are "Connected", "Disconnected", "Maintenance" and "NotResponding"
+        Can only be used after you have run Get-vCenterServerConnection cmdlet
+
+        .EXAMPLE
+        Get-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
@@ -510,16 +519,22 @@ Export-ModuleMember -Function Get-ESXiState
 Function Set-ESXiState {
 
     <#
-    Can only be used after you have run Get-vCenterServerConnection 
+        .SYNOPSIS
+        Get the ESXi state from vCenter Server
 
-    Set-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io -state Connected
-    Set-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io -state Maintenance -VsanDataMigrationMode Full
+        .DESCRIPTION
+        This cmdlet sets the configuration state of ESXi host to provided value. Possible states are "Connected", "Disconnected", "Maintenance" and "NotResponding"
+        If putting in Maintenance mode, you need to provide the VsanDataMigrationMode which can be one of these values - "Full", "EnsureAccessibility", "NoDataMigration"
+        Can only be used after you have run Get-vCenterServerConnection cmdlet
+        Default timeout 5 hrs (18000 seconds)
 
-
-    Set-VMHost -VMHost $($esxiHost.Name) -State Maintenance -VsanDataMigrationMode Full -Evacuate
-
-    Default timeout 5 hrs (18000 seconds)
-
+        .EXAMPLE
+        Set-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io -state Connected
+        The above example sets the ESXi hosts state to connected
+        
+        .EXAMPLE
+        Set-ESXiState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io -state Maintenance -VsanDataMigrationMode Full
+        The above example sets the ESXi hosts state to Maintenance with Full data migration. 
     
     #>
     Param (
@@ -567,8 +582,20 @@ Export-ModuleMember -Function Set-ESXiState
 Function Get-ESXiLockdownMode {
 
     <#
-    Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01
-    Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+        .SYNOPSIS
+        Get the ESXi state from vCenter Server
+
+        .DESCRIPTION
+        This cmdlet gets the lockdown mode value for all hosts in a cluster or a particular ESXi host within that cluster.
+        If esxiFqdn is provided, only the value for that host is retrieved. 
+
+        .EXAMPLE
+        Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01
+        The above example retreives the lockdown mode value for all ESXi hosts in the provided cluster
+
+        .EXAMPLE
+        Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+        The above example retreives the lockdown mode value only the provided ESXi host in the provided cluster
 
     #>
     Param (
@@ -591,7 +618,7 @@ Function Get-ESXiLockdownMode {
             if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
         }
         else {
-            Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
+            Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
         }
         ForEach ($esxiHost in $esxiHosts) {
             $currentMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
@@ -607,10 +634,23 @@ Function Get-ESXiLockdownMode {
 }
 
 Export-ModuleMember -Function Get-ESXiLockdownMode
+
 Function Set-ESXiLockdownMode {
 
     <#
-    Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
+        .SYNOPSIS
+        Set the lockdown mode for all ESXi hosts in given cluster
+
+        .DESCRIPTION
+        This cmdlet sets the lockdown mode value for all hosts in a cluster 
+
+        .EXAMPLE
+        Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
+        This example will enable the lockdown mode on all hosts in the provided cluster
+
+         .EXAMPLE
+        Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
+        This example will disable the lockdown mode on all hosts in the provided cluster
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
@@ -629,7 +669,7 @@ Function Set-ESXiLockdownMode {
             if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
         }
         else {
-            Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
+            Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
         }
 
         if ($PSBoundParameters.ContainsKey("enable")) {
@@ -640,6 +680,10 @@ Function Set-ESXiLockdownMode {
                 if ($currentMode -eq "lockdownDisabled") {
                     ($esxiHost | Get-View).EnterLockdownMode()
                     Write-Host "Changing $esxiHost mode from $currentMode to lockdownNormal"
+                    $newMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
+                    if ($currentMode -eq $newMode){
+                        Write-Error "Unable to change $esxiHost mode from $currentMode to lockdownNormal. Currently it is in $newMode" -ErrorAction Stop
+                    }
                 }
                 else {
                     Write-Host "$esxiHost is in already in lockdownNormal mode"
@@ -654,6 +698,10 @@ Function Set-ESXiLockdownMode {
                 if ($currentMode -ne "lockdownDisabled") {
                     ($esxiHost | Get-View).ExitLockdownMode()
                     Write-Host "Changing $esxiHost mode from $currentMode to lockdownDisabled"
+                    $newMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
+                    if ($currentMode -eq $newMode){
+                        Write-Error "Unable to change $esxiHost mode from $currentMode to lockdownDisabled. Currently it is in $newMode" -ErrorAction Stop
+                    }
                 }
                 else {
                     Write-Host "$esxiHost is already in lockdownDisabled mode"
@@ -672,7 +720,17 @@ Export-ModuleMember -Function Set-ESXiLockdownMode
 Function Restart-ESXiHost {
 
     <#
-    Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re123! -poll $true -timeout 1800 -pollPeriod 30
+        .SYNOPSIS
+        Restart the provided ESXi host and poll for it to come back online
+
+        .DESCRIPTION
+        This cmdlet triggers a restart the provided ESXi host and polls for it to come back online. 
+        Timeout value is in seconds.
+
+
+        .EXAMPLE
+        Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re123! -poll $true -timeout 1800 -pollPeriod 30
+        This example restarts the provided esxi hosts and polls every 30 seconds till it comes back online. It will timeout after 1800 seconds. 
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
@@ -689,7 +747,7 @@ Function Restart-ESXiHost {
     Write-Host "Restarting $esxiFqdn"
     $vmHost = Get-VMHost -Server $esxiFqdn
     if (!$vmHost) {
-        Write-Error "Unable to find ESXi host with FQDN $esxiFqdn"
+        Write-Error "Unable to find ESXi host with FQDN $esxiFqdn" -ErrorAction Stop
         return
     }
     
@@ -723,7 +781,7 @@ Function Restart-ESXiHost {
             Start-Sleep -Seconds $pollPeriod
         } while ($stopwatch.elapsed -lt $timeout)
 
-        Write-Error "ESXi host $esxiFqdn) did not responded after $($timeout.TotalMinutes) seconds. Please check if ESXi is up and running."
+        Write-Error "ESXi host $esxiFqdn) did not responded after $($timeout.TotalMinutes) seconds. Please check if ESXi is up and running." -ErrorAction Stop
     }
     else {
         Write-Host "Restart of $esxiFqdn triggered without polling for it to come back online. Monitor its progress in the vCenter"
@@ -741,23 +799,11 @@ Function Install-EsxiCertificate {
 
         .DESCRIPTION
         The Install-EsxiCertificate cmdlet will replace ESXi certificate for a single host or all hosts in a cluster
-        (the behavior is controlled with parameter -cluster/-host). cmdlet expects to find pem encoded certificates 
+        (the behavior is controlled with parameter -cluster/-esxiFqdn). cmdlet expects to find pem encoded certificates 
         in the specified directory, certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
         The workflow will put ESXi host in maintenance mode with full data migration, 
         will detach ESXi from the vCenter Server, replace the certificate, reboot the host,
         once ESXi is up and running it will attach it vCenter Server and exit maintenance mode.
-        The Request-EsxiAccountLockout cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
-        configured account lockout policy (Advanced Settings Security.AccountLockFailures and
-        Security.AccountUnlockTime). The cmdlet connects to SDDC Manager using the -server, -user, and -password
-        values:
-        - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi host or all hosts in a specified cluster
-        - TODO Validates that certificate filename matches the CN and FQDN of the ESXi host
-        - TODO Validates that certificate has been signed with the same CA as the vCenter Server or CA thumbprint is in vCenter Trusted Store
-        - TODO Validates that needed advanced settings are set in vCenter Server
-        - Replaces the ESXi certificate
 
         .EXAMPLE
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io
@@ -790,13 +836,12 @@ Function Install-EsxiCertificate {
                 if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
             }
             else {
-                Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
-                Throw "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED"
+                Write-Error "Unable to locate Cluster $cluster in $($vcfVcenterDetails.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
             }
         }
         else {
             $esxiHosts = Get-VMHost -Name $esxiFqdn
-            if (!$esxiHosts) { Write-Error "No ESXi host '$esxiFqdn' found within workload domain '$domain'." }
+            if (!$esxiHosts) { Write-Error "No ESXi host '$esxiFqdn' found within workload domain '$domain'." -ErrorAction Stop }
         }
     
         # Certificate replacement starts here
@@ -812,7 +857,7 @@ Function Install-EsxiCertificate {
                 continue
             }
 
-            if (Verify-ESXiCertificateAlreadyInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn -signedCertificate $crtPath) {
+            if (Confirm-ESXiCertificateAlreadyInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn -signedCertificate $crtPath) {
                 $skippedHosts.Add($esxiFqdn)
                 continue
             }
@@ -840,7 +885,7 @@ Function Install-EsxiCertificate {
                         Set-ESXiState -esxiFqdn $esxiFqdn -state "Connected"
                     }
                     else {
-                        Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter"
+                        Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter" -ErrorAction Stop
                         break
                     }
                 } else {
