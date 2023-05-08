@@ -48,13 +48,14 @@ if ($PSEdition -eq 'Desktop') {
 Function Get-vCenterServerConnection {
     <#
         .SYNOPSIS
-        Helper function to get vCenter Server details using either domain or ESXi FQDN
+        Get connection to vCenter Server via SDDC Manager using either domain or ESXi FQDN
 
         .DESCRIPTION
         The cmdlet connects to SDDC Manager using the -server, -user, and -password values
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Validates that the workload domain exists in the SDDC Manager inventory
+        - Connect to vCenter server and returns its details
 
         .EXAMPLE
         Get-vCenterServerConnection -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io
@@ -134,18 +135,22 @@ Function Get-EsxiCertificateThumbprint {
 Export-ModuleMember -Function Get-EsxiCertificateThumbprint
 
 
-Function Get-vCenterCertificateThumbprint {
+Function Get-vCenterCertificateThumbprints {
     <#
         .SYNOPSIS
-        Retrieves vCenter Servers certificates thumbprints which match the provided issuer
+        Retrieves either all of vCenter Servers certificates thumbprints ot the ones which match the provided issuer name
 
         .DESCRIPTION
-        The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server's certificate thumbprints which match the provided issuer
+        The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server's certificate thumbprints. By default it retrievs all thumbprints. 
+        If issuer is provided, then only the thumbprint of the matching certificate is returned.
 
         .EXAMPLE
+        Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 
+        This example retrieves the certificate thumbprints for the vCenter server belonging to domain sfo-m01.       
+        
+        .EXAMPLE
         Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole
-        This example retrieves the ESXi trusted thumbprints for esxi with FQDN sfo01-m01-esx01.sfo.rainpole.io
-
+        This example retrieves the certificate thumbprints for the vCenter server belonging to domain sfo-m01 and matching issuer rainpole.
     #>
 
     Param (
@@ -153,14 +158,21 @@ Function Get-vCenterCertificateThumbprint {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $issuer
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $issuer
     )
     
     Try {
         $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
-        $vcTrustedcert = Get-VITrustedCertificate -Server $($vcfVcenterDetails.fqdn) | Where-Object { $_.issuer -match $issuer }
+        $vcTrustedcert = Get-VITrustedCertificate -Server $vcfVcenterDetails.fqdn
+        
         if ($vcTrustedcert) {
+            if ($PsBoundParameters.ContainsKey("issuer")) {
+                $vcTrustedcert = $vcTrustedcert | Where-Object { $_.issuer -match $issuer }
+            }
             $vcTrustedThumbprint = $vcTrustedcert.Certificate.Thumbprint
+        }
+        else {
+            Write-Error "Unable to retrieve certificates from vCenter server $($vcfVcenterDetails.fqdn)" -ErrorAction Stop
         }
         return $vcTrustedThumbprint                       
     }
@@ -168,7 +180,7 @@ Function Get-vCenterCertificateThumbprint {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Get-vCenterCertificateThumbprint
+Export-ModuleMember -Function Get-vCenterCertificateThumbprints
 
 
 Function Confirm-ESXiCertificateAlreadyInstalled {
@@ -182,7 +194,7 @@ Function Confirm-ESXiCertificateAlreadyInstalled {
 
     .EXAMPLE
     Confirm-ESXiCertificateAlreadyInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
-
+    This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
@@ -206,14 +218,13 @@ Function Confirm-ESXiCertificateAlreadyInstalled {
         $signedCertThumbprint = $crt.GetCertHashString()
 
         if ($esxiHostThumbprint -eq $signedCertThumbprint) {
-            Write-Host "Signed Certificate Thumbprint matches with the ESXi Host Thumbprint"
-            Write-Warning "Provided Certificate is already installed on ESXi Host $esxiFqdn"
+            Write-Host "Signed certificate thumbprint matches with the ESXi host thumbprint"
+            Write-Warning "Provided certificate is already installed on ESXi host $esxiFqdn"
             return $true
         }
         else {
-            Write-Host "Thumbprint of ESXi host = $esxiHostThumbprint"
-            Write-Host "Thumbprint of Provided Certificate = $signedCertThumbprint"
-            Write-Host "Provided Certificate is NOT installed on ESXi Host $esxiFqdn"
+            Write-Host "ESXi host's certificate thumbprint - $esxiHostThumbprint does not match with the thumbprint of provided certificate = $signedCertThumbprint"
+            Write-Host "Provided certificate is NOT installed on ESXi Host $esxiFqdn"
             return $false
         }
     }
@@ -223,18 +234,19 @@ Function Confirm-ESXiCertificateAlreadyInstalled {
 }
 Export-ModuleMember -Function Confirm-ESXiCertificateAlreadyInstalled
 
-#TODO: Verify usage of below function, currently unused. 
-Function Confirm-SignedCertificateWithCA {
+Function Confirm-CAInVcenterServer {
     <#
-    Verify the signed certificate thumbprint with the CA thumbprint from vcenter
+    Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter server
 
-     .DESCRIPTION
-    This cmdlet will get the thumbprint from the signed certificate and matches it with the CA thumbprint from vcenter. 
+    .DESCRIPTION
+    This cmdlet will get the thumbprint from the root certificate and matches it with the CA thumbprint from vCenter. 
     You need to pass in the complete path for the certificate file. 
+    Returns true if thumbprint matches, else returns false.
+
 
     .EXAMPLE
-    Confirm-SignedCertificateWithCA -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole -signedCertificate F:\bncode\powershell-module-for-vmware-cloud-foundation-certificate-management\Root64.cer
-
+    Confirm-CAInVcenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -issuer rainpole -signedCertificate F:\powershell-module-for-vmware-cloud-foundation-certificate-management\Root64.cer
+    This command will match the thumbprint of provided root certificate file with the thumbprints on the vCenter server matching the issuer "rainpole"
     #>
     
     Param (
@@ -242,22 +254,44 @@ Function Confirm-SignedCertificateWithCA {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $issuer,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $issuer
     )
+    
+    try {
 
-    $vcThumbprint = Get-vCenterCertificateThumbprint -server $server -user $user -pass $pass -domain $domain -issuer $issuer
-    $crt = New-Object System.Security.Cryptography.X509Certificates.X509Certificate
-    $crt.Import($signedCertificate)
-    $signedCertThumbprint = $crt.GetCertHashString()
+        if ($PsBoundParameters.ContainsKey("issuer")) { 
+            $vcThumbprints = Get-vCenterCertificateThumbprints -server $server -user $user -pass $pass -domain $domain -issuer $issuer
+        }
+        else {
+            $vcThumbprints = Get-vCenterCertificateThumbprints -server $server -user $user -pass $pass -domain $domain
+        }
+        if (Test-Path $signedCertificate -PathType Leaf ) {
+            Write-Host "Certificate file found - $signedCertificate"
+        }
+        else {
+            Write-Error "Could not find certificate in $signedCertificate." -ErrorAction Stop
+            return
+        }
+        $crt = New-Object System.Security.Cryptography.X509Certificates.X509Certificate
+        $crt.Import($signedCertificate)
+        $signedCertThumbprint = $crt.GetCertHashString()
 
-    if ($vcThumbprint -eq $signedCertThumbprint) {
-        Write-Host "Signed Certificate thumbprint matches with the vCenter server CA Thumbprint"
+        $match = $false
+        Foreach ($vcThumbprint in $vcThumbprints) { 
+            if ($vcThumbprint -eq $signedCertThumbprint) {
+                Write-Host "Signed certificate thumbprint matches with the vCenter server CA thumbprint"
+                $match = $true
+                break
+            }
+        }
+        if (!$match) {
+            Write-Error "Signed certificate thumbprint DOESNT match with any of the vCenter server certificates thumbprints"
+        }
+        return $match    
     }
-    else {
-        Write-Error "Thumbprint of vCenter server CA = $vcThumbprint" 
-        Write-Error "Thumbprint of signed certificate = $signedCertThumbprint" 
-        Throw "Signed Certificate thumbprint DOESNT match with the vCenter server CA Thumbprint"
+    Catch {
+        Debug-ExceptionWriter -object $_
     }
 }
 
@@ -266,21 +300,21 @@ Export-ModuleMember -Function Confirm-SignedCertificateWithCA
 Function Get-EsxiCSR {
     <#
         .SYNOPSIS
-        Generate the ESXi Certificate Sign Request in a specified cluster or single ESXi host and saves it to file(s)
+        Generate the ESXi Certificate Sign Request in a specified cluster or single ESXi host and saves it to file(s) in a folder
 
         .DESCRIPTION
-        The Get-EsxiCSR cmdlet will generate the Certificate Sign Request from a cluster or infividual ESXi host and saves it to file(s)
+        The Get-EsxiCSR cmdlet will generate the Certificate Sign Request from a cluster or infividual ESXi host and saves it to file(s) in provided output folder.
         The cmdlet connects to SDDC Manager using the -server, -user, and -password values.
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Gathers the ESXi hosts from the cluster
-        - Request ESXi CSR and save it in the working directory as FQDN.csr e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
+        - Request ESXi CSR and save it in the output directory as FQDN.csr e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
         - Defines possible country codes as per: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
         .EXAMPLE
         Get-EsxiCSR -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -Country US -Locality "Test Location" -Organization "VMware LTD" -OrganizationUnit "VCF Deployment" -StateOrProvince "California" -outputFolder F:\csr
-        This example generates CSRs and stores them in the working directory for all ESXi hosts in the cluster "production" with the specified properties
+        This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields
 
     #>
 
@@ -349,24 +383,23 @@ Function Get-EsxiCSR {
         Debug-ExceptionWriter -object $_
     }
     Finally {
-        # Disconnect from vCenter Server
         Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
     }
 }
 Export-ModuleMember -Function Get-EsxiCSR
 
 
-Function Get-ESXiCertManagementMode {
+Function Get-CertManagementModeForESXi {
     <#
         .SYNOPSIS
-        Retrieves ESXi host's management mode
+        Retrieves the certificate management mode value from the vcenter server for the given domain.
 
         .DESCRIPTION
-        Get-ESXiCertManagementMode cmdlet retrieves the ESXi host's management mode 
+        Get-CertManagementModeForESXi cmdlet retrieves the cert management mode value from vcenter for the given domain.
 
         .EXAMPLE
-        Get-ESXiCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
-        This example retrieves the ESXi trusted thumbprints for esxi with FQDN sfo01-m01-esx01.sfo.rainpole.io
+        Get-CertManagementModeForESXi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01
+        This example retrieves the certificate management mode value for the vcenter server belonging to domain sfo-m01.
 
     #>
 
@@ -374,11 +407,11 @@ Function Get-ESXiCertManagementMode {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain
     )
     
     Try {
-        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
+        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -esxiFqdn $domain
         $entity = Connect-VIServer -Server $vcfVcenterDetails.fqdn -User $vcfVcenterDetails.ssoAdmin -Pass $vcfVcenterDetails.ssoAdminPass
         $certModeSetting = Get-AdvancedSetting "vpxd.certmgmt.mode" -Entity $entity
         return $certModeSetting.value
@@ -391,7 +424,7 @@ Function Get-ESXiCertManagementMode {
     }
 }    
 
-Export-ModuleMember -Function Get-ESXiCertManagementMode
+Export-ModuleMember -Function Get-CertManagementModeForESXi
 
 Function Set-ESXiCertManagementMode {
 
@@ -461,7 +494,7 @@ Function Get-vSANHealthSummary {
 
     )
     Try {
-        Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
+        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
         $vSANClusterHealthSystem = Get-VSANView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
         $cluster_view = (Get-Cluster -Name $cluster).ExtensionData.MoRef
         $results = $vSANClusterHealthSystem.VsanQueryVcClusterHealthSummary($cluster_view, $null, $null, $true, $null, $null, 'defaultView')
@@ -476,12 +509,12 @@ Function Get-vSANHealthSummary {
             if ($healthCheckTestName) {
                 if ($healthCheckTestHealth -eq "yellow") {
                     $overallStatus = ($overallStatus, 1 | Measure-Object -Max).Maximum
-                    Write-Warning "$vCenter - vSAN cluster $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" -WarningAction Inquire
+                    Write-Warning "$vCenter - vSAN cluster $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" 
                 }
                 if ($healthCheckTestHealth -eq "red") {
                     $overallStatus = ($overallStatus, 2 | Measure-Object -Max).Maximum
                     Write-Error "vSAN status is RED. Please check vSAN health before continuing..."
-                    Write-Error " $vCenter - vSAN Clustername $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" -ErrorAction Inquire
+                    Write-Error " $vCenter - vSAN Clustername $Cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" 
                 }
             }
         }
@@ -489,6 +522,9 @@ Function Get-vSANHealthSummary {
     }
     Catch {
         Debug-ExceptionWriter -object $_
+    }
+    Finally {
+        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
     }
 }
 
@@ -595,7 +631,7 @@ Function Get-ESXiLockdownMode {
 
         .EXAMPLE
         Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
-        The above example retreives the lockdown mode value only the provided ESXi host in the provided cluster
+        The above example retreives the lockdown mode value for the provided ESXi host in the provided cluster
 
     #>
     Param (
@@ -642,7 +678,7 @@ Function Set-ESXiLockdownMode {
         Set the lockdown mode for all ESXi hosts in given cluster
 
         .DESCRIPTION
-        This cmdlet sets the lockdown mode value for all hosts in a cluster 
+        This cmdlet sets the lockdown mode value for all hosts in a cluster. 
 
         .EXAMPLE
         Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
@@ -681,7 +717,7 @@ Function Set-ESXiLockdownMode {
                     ($esxiHost | Get-View).EnterLockdownMode()
                     Write-Host "Changing $esxiHost mode from $currentMode to lockdownNormal"
                     $newMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
-                    if ($currentMode -eq $newMode){
+                    if ($currentMode -eq $newMode) {
                         Write-Error "Unable to change $esxiHost mode from $currentMode to lockdownNormal. Currently it is in $newMode" -ErrorAction Stop
                     }
                 }
@@ -699,7 +735,7 @@ Function Set-ESXiLockdownMode {
                     ($esxiHost | Get-View).ExitLockdownMode()
                     Write-Host "Changing $esxiHost mode from $currentMode to lockdownDisabled"
                     $newMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
-                    if ($currentMode -eq $newMode){
+                    if ($currentMode -eq $newMode) {
                         Write-Error "Unable to change $esxiHost mode from $currentMode to lockdownDisabled. Currently it is in $newMode" -ErrorAction Stop
                     }
                 }
@@ -726,7 +762,6 @@ Function Restart-ESXiHost {
         .DESCRIPTION
         This cmdlet triggers a restart the provided ESXi host and polls for it to come back online. 
         Timeout value is in seconds.
-
 
         .EXAMPLE
         Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re123! -poll $true -timeout 1800 -pollPeriod 30
@@ -799,18 +834,20 @@ Function Install-EsxiCertificate {
 
         .DESCRIPTION
         The Install-EsxiCertificate cmdlet will replace ESXi certificate for a single host or all hosts in a cluster
-        (the behavior is controlled with parameter -cluster/-esxiFqdn). cmdlet expects to find pem encoded certificates 
-        in the specified directory, certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
+        (the behavior is controlled with parameter -cluster/-esxiFqdn). 
+        You must provide the folder containing the signed certificate files
+        Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
         The workflow will put ESXi host in maintenance mode with full data migration, 
         will detach ESXi from the vCenter Server, replace the certificate, reboot the host,
         once ESXi is up and running it will attach it vCenter Server and exit maintenance mode.
+        Timeout for putting ESXi host in maintenance is provided in seconds using -timeout Parameter. Default is 18000 seconds or 5 hrs. 
 
         .EXAMPLE
-        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io
-        This example will install certificate on an ESXi host esxi01.sfo.rainpole.io in Workload domain wld-1
+        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -certificateFolder F:\certificates
+        This example will install certificate from the given folder to the ESXi host sfo01-m01-esx03.sfo.rainpole.io in domain sfo-m01 
 
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-vc01
-        This example will install certificate on all ESXi hosts in cluster "production" in Workload Domain "wld-1"
+        This example will install certificates from the given folder to all ESXi hosts in cluster "sfo-m01-cl01" in Domain "sfo-m01"
 
     #>
 
@@ -823,9 +860,7 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true) ] [ValidateNotNullOrEmpty()] [String] $certificateFolder,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $certificateFileExt = ".cer",
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch] $force
-
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
     Try {
@@ -853,7 +888,7 @@ Function Install-EsxiCertificate {
 
             if (!(Test-Path $crtPath -PathType Leaf )) {
                 Write-Error "Could not find certificate in $crtPath. Skipping certificate replacement for $esxiFqdn. "
-               $skippedHosts.Add($esxiFqdn)
+                $skippedHosts.Add($esxiFqdn)
                 continue
             }
 
@@ -866,7 +901,6 @@ Function Install-EsxiCertificate {
                 if ($esxiCredential) {
                     
                     Set-ESXiState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
-                    #Set-ESXiState -esxiFqdn $($esxiHost.Name) -state "Disconnected" -timeout 300
                 
                     Write-Host "Starting certificate replacement for $esxiFqdn"                                    
 
@@ -888,7 +922,8 @@ Function Install-EsxiCertificate {
                         Write-Error "Could not connect to vCenter Server $vcfVcenterDetails. Check the state of ESXi host in vCenter" -ErrorAction Stop
                         break
                     }
-                } else {
+                }
+                else {
                     Write-Error "Unable to get credentials for $esxiFqdn"
                     $skippedHosts.Add($esxiFqdn)
                 }
@@ -907,7 +942,6 @@ Function Install-EsxiCertificate {
         Debug-ExceptionWriter -object $_
     }
     Finally {
-        # Disconnect from vCenter Server
         Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
     }
 }
