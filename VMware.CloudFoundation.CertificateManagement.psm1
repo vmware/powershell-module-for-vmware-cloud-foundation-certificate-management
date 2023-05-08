@@ -838,8 +838,8 @@ Function Install-EsxiCertificate {
         You must provide the folder containing the signed certificate files
         Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
         The workflow will put ESXi host in maintenance mode with full data migration, 
-        will detach ESXi from the vCenter Server, replace the certificate, reboot the host,
-        once ESXi is up and running it will attach it vCenter Server and exit maintenance mode.
+        will disconnect ESXi from the vCenter Server, replace the certificate, reboot the host,
+        and once ESXi is up and running it will connect it vCenter server and exit maintenance mode.
         Timeout for putting ESXi host in maintenance is provided in seconds using -timeout Parameter. Default is 18000 seconds or 5 hrs. 
 
         .EXAMPLE
