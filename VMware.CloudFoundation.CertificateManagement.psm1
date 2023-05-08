@@ -846,7 +846,7 @@ Function Install-EsxiCertificate {
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -certificateFolder F:\certificates
         This example will install certificate from the given folder to the ESXi host sfo01-m01-esx03.sfo.rainpole.io in domain sfo-m01 
 
-        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-vc01
+        Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
         This example will install certificates from the given folder to all ESXi hosts in cluster "sfo-m01-cl01" in Domain "sfo-m01"
 
     #>
