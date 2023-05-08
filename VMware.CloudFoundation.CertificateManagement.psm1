@@ -367,7 +367,7 @@ Function Get-EsxiCSR {
         if ($esxiHosts) {
             Foreach ($esxiHost in $esxiHosts) {
                 $csrPath = "$outputFolder\$($esxiHost.Name).csr"
-                $esxRequest = New-VIMachineCertificateSigningRequest -Server $($vcfVcenterDetails.fqdn) -VMHost $($esxiHost.Name) -Country "$Country" -Locality "$Locality" -Organization "$Organization" -OrganizationUnit "$OrganizationUnit" -StateOrProvince "$StateOrProvince" -CommonName $($esxiHost.Name)
+                $esxRequest = New-VIMachineCertificateSigningRequest -Server $vcfVcenterDetails.fqdn -VMHost $esxiHost.Name -Country "$Country" -Locality "$Locality" -Organization "$Organization" -OrganizationUnit "$OrganizationUnit" -StateOrProvince "$StateOrProvince" -CommonName $esxiHost.Name
                 $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
                 if (Test-Path $csrPath -PathType Leaf ) {
                     Write-Host "CSR for $($esxiHost.Name) has been generated and saved to $csrPath"
@@ -411,7 +411,7 @@ Function Get-CertManagementModeForESXi {
     )
     
     Try {
-        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -esxiFqdn $domain
+        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
         $entity = Connect-VIServer -Server $vcfVcenterDetails.fqdn -User $vcfVcenterDetails.ssoAdmin -Pass $vcfVcenterDetails.ssoAdminPass
         $certModeSetting = Get-AdvancedSetting "vpxd.certmgmt.mode" -Entity $entity
         return $certModeSetting.value
@@ -426,38 +426,38 @@ Function Get-CertManagementModeForESXi {
 
 Export-ModuleMember -Function Get-CertManagementModeForESXi
 
-Function Set-ESXiCertManagementMode {
+Function Set-CertManagementModeForESXi {
 
     <#
         .SYNOPSIS
-        Sets the ESXi host's management mode to either custom or vmca
+        Sets the ESXi host's management mode in the vCenter Server to either custom or vmca.
 
         .DESCRIPTION
-        Set-ESXiCertManagementMode cmdlet sets the ESXi host's management mode 
+        Set-CertManagementModeForESXi cmdlet sets the ESXi host's management mode on the vCenter server belonging to given domain.
 
         .EXAMPLE
-        Set-ESXiCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -mode custom
-        This example sets the ESXi management mode to custom
+        Set-CertManagementModeForESXi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-m01 -mode custom
+        This example sets the ESXi management mode to custom for the vCenter Server belonging to domain sfo-m01
     #>
 
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateSet ("custom", "vmca")] [String] $mode
 
     )
     Try {
-        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
+        $vcfVcenterDetails = Get-vCenterServerConnection -server $server -user $user -pass $pass -domain $domain
         $entity = Connect-VIServer -Server $vcfVcenterDetails.fqdn -User $vcfVcenterDetails.ssoAdmin -Pass $vcfVcenterDetails.ssoAdminPass
         $certModeSetting = Get-AdvancedSetting "vpxd.certmgmt.mode" -Entity $entity
         if ($certModeSetting.value -ne $mode) {
             Set-AdvancedSetting $certModeSetting -Value $mode
-            Write-Host "ESXi Certificate Management Mode is set to custom"
+            Write-Host "ESXi Certificate Management Mode is set to $mode on the vCenter server $($vcfVcenterDetails.fqdn)"
         }
         else {
-            Write-Host "ESXi Certificate Management Mode already set to custom"
+            Write-Host "ESXi Certificate Management Mode already set to $mode on the vCenter server $($vcfVcenterDetails.fqdn)"
         }
     }
     Catch {
@@ -467,7 +467,7 @@ Function Set-ESXiCertManagementMode {
         Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
     }
 }
-Export-ModuleMember -Function Set-ESXiCertManagementMode
+Export-ModuleMember -Function Set-CertManagementModeForESXi
 
 
 
@@ -501,8 +501,8 @@ Function Get-vSANHealthSummary {
         $healthCheckGroups = $results.groups
 
         foreach ($healthCheckGroup in $healthCheckGroups) {     
-            $Health = @("Yellow", "Red")
-            $output = $healthCheckGroup.grouptests | Where-Object TestHealth -in $Health | Select-Object TestHealth, @{l = "TestId"; e = { $_.testid.split(".") | Select-Object -last 1 } }, TestName, TestShortDescription, @{l = "Group"; e = { $healthCheckGroup.GroupName } }
+            $health = @("Yellow", "Red")
+            $output = $healthCheckGroup.grouptests | Where-Object TestHealth -in $health | Select-Object TestHealth, @{l = "TestId"; e = { $_.testid.split(".") | Select-Object -last 1 } }, TestName, TestShortDescription, @{l = "Group"; e = { $healthCheckGroup.GroupName } }
             $healthCheckTestHealth = $output.TestHealth
             $healthCheckTestName = $output.TestName
             $healthCheckTestShortDescription = $output.TestShortDescription
