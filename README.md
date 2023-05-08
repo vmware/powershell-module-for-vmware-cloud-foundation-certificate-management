@@ -29,10 +29,10 @@
 
 ### PowerShell Modules
 
-- [`VMware.PowerCLI`][module-vmware-powercli] 12.7.0 or later
-- [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.8 or later
-- [`PowerVCF`][module-powervcf] 2.2.0 or later
-- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.1.0 or later
+- [`VMware.PowerCLI`][module-vmware-powercli] 13.0.0 or later
+- [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.9 or later
+- [`PowerVCF`][module-powervcf] 2.3.0 or later
+- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.2.0 or later
 
 ## Installing the Module
 
@@ -102,6 +102,10 @@ Each cmdlet may provide one or more usage examples. Many of the cmdlets require 
 The cmdlets in this module, and its dependencies, return data from multple platform components. The credentials for most of the platform components are returned to the cmdlets by retrieving credentials from the SDDC Manager inventory and using these credentials, as needed, within cmdlet operations.
 
 For the best expereince, for cmdlets that connect to SDDC Manager, use the VMware Cloud Foundation API user `admin@local` or an account with the **ADMIN** role in SDDC Manager (e.g., `administrator@vsphere.local`).
+
+## Getting Started with Certificate Management
+
+TODO: 
 
 ## Contributing
 
