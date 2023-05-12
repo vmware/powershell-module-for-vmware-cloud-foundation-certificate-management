@@ -514,7 +514,7 @@ Function Get-vSANHealthSummary {
         Debug-ExceptionWriter -object $_
     }
     Finally {
-        Disconnect-VIServer $vcfvCenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
     }
 }
 
@@ -899,14 +899,19 @@ Function Install-EsxiCertificate {
                 }
             }
         }
-        Write-Host "Succesfully completed certificate replacement for the following ESXi hosts:"
+        Write-Host "--------------------------------------------------------------------------------"
+		Write-Host "ESXi Host Certificate Replacement Summary :"
+		Write-Host "--------------------------------------------------------------------------------"
+
+        Write-Host "Succesfully completed certificate replacement for $($replacedHosts.Count) ESXi hosts:"
         foreach ($replacedHost in $replacedHosts) {
             Write-Host "$replacedHost"
         }
-        Write-Warning "Skipped certificate replacement for the following ESXi hosts:"
+        Write-Warning "Skipped certificate replacement for $($skippedHosts.Count) ESXi hosts:"
         foreach ($skippedHost in $skippedHosts) {
-            Write-Warning "$skippedHost"
+            Write-Warning "$skippedHost : SKIPPED"
         }
+		Write-Host "--------------------------------------------------------------------------------"
     }
     Catch {
         Debug-ExceptionWriter -object $_
