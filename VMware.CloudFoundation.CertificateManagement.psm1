@@ -749,7 +749,7 @@ Function Restart-ESXiHost {
         Timeout value is in seconds.
 
         .EXAMPLE
-        Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re1! -poll $true -timeout 1800 -pollPeriod 30
+        Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re1! -poll $true -timeout 1800 -pollInterval 30
         This example restarts the provided esxi hosts and polls every 30 seconds till it comes back online. It will timeout after 1800 seconds. 
     #>
     Param (
