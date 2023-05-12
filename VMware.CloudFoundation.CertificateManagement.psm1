@@ -200,7 +200,7 @@ Function Confirm-ESXiCertificateInstalled {
         Returns true if certificate is already installed, else returns false.
 
         .EXAMPLE
-        Confirm-ESXiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\TB02A-sfo-w02-certs\sfo01-w02-esx01.sfo.rainpole.io.cer
+        Confirm-ESXiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w02-esx01.sfo.rainpole.io.cer
         This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
     #>
     Param (
@@ -249,7 +249,7 @@ Function Confirm-CAInvCenterServer {
         Returns true if thumbprint matches, else returns false.
 
         .EXAMPLE
-        Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\powershell-module-for-vmware-cloud-foundation-certificate-management\Root64.cer
+        Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\certificates\Root64.cer
         This command will match the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
     #>
     
@@ -302,10 +302,10 @@ Export-ModuleMember -Function Confirm-CAInvCenterServer
 Function Request-EsxiCsr {
     <#
         .SYNOPSIS
-        Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a folder.
+        Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
 
         .DESCRIPTION
-        The Request-EsxiCsr cmdlet will generate the Certificate Sign Request from a cluster or infividual ESXi host and saves it to file(s) in provided output folder.
+        The Request-EsxiCsr cmdlet will generate the Certificate Sign Request from a cluster or infividual ESXi host and saves it to file(s) in provided output directory.
         The cmdlet connects to SDDC Manager using the -server, -user, and -password values.
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
@@ -315,7 +315,7 @@ Function Request-EsxiCsr {
         - Defines possible counTry codes as per: https://www.digicert.com/kb/ssl-certificate-counTry-codes.htm
 
         .EXAMPLE
-        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -CounTry US -Locality "Test Location" -Organization "VMware LTD" -OrganizationUnit "VCF Deployment" -StateOrProvince "California" -outputFolder F:\csr
+        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -CounTry US -Locality "Test Location" -Organization "VMware LTD" -OrganizationUnit "VCF Deployment" -StateOrProvince "California" -outputDirectory F:\csr
         This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields
 
     #>
@@ -327,7 +327,7 @@ Function Request-EsxiCsr {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$outputFolder,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$outputDirectory,
         [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
                 "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
                 "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
@@ -346,7 +346,7 @@ Function Request-EsxiCsr {
     )
     
     Try {
-        if (!(Test-Path $outputFolder)) {
+        if (!(Test-Path $outputDirectory)) {
             Write-Error "Please specify a valid directory to save the CSR files." -ErrorAction Stop
             return
         }
@@ -366,7 +366,7 @@ Function Request-EsxiCsr {
 
         if ($esxiHosts) {
             foreach ($esxiHost in $esxiHosts) {
-                $csrPath = "$outputFolder\$($esxiHost.Name).csr"
+                $csrPath = "$outputDirectory\$($esxiHost.Name).csr"
                 $esxRequest = New-VIMachineCertificateSigningRequest -Server $vCenterServer.details.fqdn -VMHost $esxiHost.Name -CounTry "$counTry" -Locality "$locality" -Organization "$organization" -OrganizationUnit "$organizationUnit" -StateOrProvince "$stateOrProvince" -CommonName $esxiHost.Name
                 $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
                 if (Test-Path $csrPath -PathType Leaf ) {
