@@ -134,7 +134,7 @@ Function Get-EsxiCertificateThumbprint {
     Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
 Export-ModuleMember -Function Get-EsxiCertificateThumbprint
@@ -184,7 +184,7 @@ Function Get-vCenterCertificateThumbprint {
     Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
 Export-ModuleMember -Function Get-vCenterCertificateThumbprint
@@ -315,7 +315,7 @@ Function Request-EsxiCsr {
         - Defines possible counTry codes as per: https://www.digicert.com/kb/ssl-certificate-counTry-codes.htm
 
         .EXAMPLE
-        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -CounTry US -Locality "Test Location" -Organization "VMware LTD" -OrganizationUnit "VCF Deployment" -StateOrProvince "California" -outputDirectory F:\csr
+        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Test Location" -organization "VMware LTD" -organizationUnit "VCF Deployment" -stateOrProvince "California" -outputDirectory F:\csr
         This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields
 
     #>
@@ -337,7 +337,7 @@ Function Request-EsxiCsr {
                 "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
                 "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
                 "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
-                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String]$CounTry,
+                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String]$country,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $locality,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
@@ -380,7 +380,7 @@ Function Request-EsxiCsr {
     } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
 Export-ModuleMember -Function Request-EsxiCsr
@@ -414,7 +414,7 @@ Function Get-vCenterCertManagementMode {
     } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }    
 
@@ -454,7 +454,7 @@ Function Set-vCenterCertManagementMode {
     } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
 Export-ModuleMember -Function Set-vCenterCertManagementMode
@@ -514,7 +514,7 @@ Function Get-vSANHealthSummary {
         Debug-ExceptionWriter -object $_
     }
     Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
 
@@ -774,7 +774,7 @@ Function Restart-ESXiHost {
     $esxiUptime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
     
     Restart-VMHost $esxiFqdn
-    Disconnect-VIServer -Server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+    Disconnect-VIServer -server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
 
     if ($poll) {
         Write-Host "Waiting for ESXi host $esxiFqdn to reboot. Polling the connection every $pollInterval seconds."
@@ -917,7 +917,7 @@ Function Install-EsxiCertificate {
         Debug-ExceptionWriter -object $_
     }
     Finally {
-        Disconnect-VIServer $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
 
