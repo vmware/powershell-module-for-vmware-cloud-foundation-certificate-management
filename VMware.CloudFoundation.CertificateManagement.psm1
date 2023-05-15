@@ -42,13 +42,13 @@ if ($PSEdition -eq 'Desktop') {
 
 
 #######################################################################################################################
-########################################################  FUNCTIONS  ##################################################
+#####################################################  FUNCTIONS  #####################################################
 
 
 Function Get-vCenterServer {
     <#
         .SYNOPSIS
-        Retrieves the vCenter Server details and connection object via SDDC Manager using either a domain or ESXi FQDN
+        Retrieves the vCenter Server details and connection object from SDDC Manager using either a workload domain name or ESXi host FQDN.
 
         .DESCRIPTION
         The cmdlet connects to SDDC Manager using the -server, -user, and -password values
@@ -149,14 +149,13 @@ Function Get-vCenterCertificateThumbprint {
         The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server instance's certificate thumbprints. By default, it retrieves all thumbprints.         
         If issuer is provided, then only the thumbprint of the matching certificate is returned.
 
-
         .EXAMPLE
         Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 
         This example retrieves the certificate thumbprints for the vCenter Server instance belonging to the domain sfo-m01.      
 
         .EXAMPLE
         Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole
-        This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer of rainpole.
+        This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer "rainpole".
     #>
 
     Param (
@@ -195,12 +194,12 @@ Function Confirm-ESXiCertificateInstalled {
         Verify if the provided certificate is already on the ESXi host. 
 
         .DESCRIPTION
-        This cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host. 
+        The Confirm-ESXiCertificateInstalled cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host. 
         You need to pass in the complete path for the certificate file. 
         Returns true if certificate is already installed, else returns false.
 
         .EXAMPLE
-        Confirm-ESXiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w02-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w02-esx01.sfo.rainpole.io.cer
+        Confirm-ESXiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w01-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w01-esx01.sfo.rainpole.io.cer
         This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
     #>
     Param (
@@ -244,13 +243,13 @@ Function Confirm-CAInvCenterServer {
         Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
         .DESCRIPTION
-        This cmdlet will get the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
+        The Confirm-CAInvCenterServer cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
         You need to pass in the complete path for the certificate file. 
         Returns true if thumbprint matches, else returns false.
 
         .EXAMPLE
         Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\certificates\Root64.cer
-        This command will match the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
+        This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
     #>
     
     Param (
@@ -288,7 +287,7 @@ Function Confirm-CAInvCenterServer {
             }
         }
         if (!$match) {
-            Write-Error "Signed certificate thumbprint DOESNT match with any of the vCenter server certificates thumbprints"
+            Write-Error "Signed certificate thumbprint does not match any of the vCenter Server certificate authority thumbprints."
         }
         return $match    
     }
@@ -305,17 +304,17 @@ Function Request-EsxiCsr {
         Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
 
         .DESCRIPTION
-        The Request-EsxiCsr cmdlet will generate the Certificate Sign Request from a cluster or infividual ESXi host and saves it to file(s) in provided output directory.
+        The Request-EsxiCsr cmdlet will generate the Certificate Sign Request from a cluster or an ESXi host and saves it to file(s) in an output directory.
         The cmdlet connects to SDDC Manager using the -server, -user, and -password values.
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Gathers the ESXi hosts from the cluster
         - Request ESXi CSR and save it in the output directory as FQDN.csr e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
-        - Defines possible counTry codes as per: https://www.digicert.com/kb/ssl-certificate-counTry-codes.htm
+        - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
         .EXAMPLE
-        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Test Location" -organization "VMware LTD" -organizationUnit "VCF Deployment" -stateOrProvince "California" -outputDirectory F:\csr
+        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
         This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields
 
     #>
@@ -367,7 +366,7 @@ Function Request-EsxiCsr {
         if ($esxiHosts) {
             foreach ($esxiHost in $esxiHosts) {
                 $csrPath = "$outputDirectory\$($esxiHost.Name).csr"
-                $esxRequest = New-VIMachineCertificateSigningRequest -Server $vCenterServer.details.fqdn -VMHost $esxiHost.Name -CounTry "$counTry" -Locality "$locality" -Organization "$organization" -OrganizationUnit "$organizationUnit" -StateOrProvince "$stateOrProvince" -CommonName $esxiHost.Name
+                $esxRequest = New-VIMachineCertificateSigningRequest -Server $vCenterServer.details.fqdn -VMHost $esxiHost.Name -Country "$country" -Locality "$locality" -Organization "$organization" -OrganizationUnit "$organizationUnit" -StateOrProvince "$stateOrProvince" -CommonName $esxiHost.Name
                 $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
                 if (Test-Path $csrPath -PathType Leaf ) {
                     Write-Host "CSR for $($esxiHost.Name) has been generated and saved to $csrPath."
@@ -385,7 +384,6 @@ Function Request-EsxiCsr {
 }
 Export-ModuleMember -Function Request-EsxiCsr
 
-
 Function Get-vCenterCertManagementMode {
     <#
         .SYNOPSIS
@@ -396,7 +394,7 @@ Function Get-vCenterCertManagementMode {
 
         .EXAMPLE
         Get-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the certificate management mode value for the vCenter Server instance for the domain sfo-m01.
+        This example retrieves the certificate management mode value for the vCenter Server instance for the workload domain sfo-m01.
 
     #>
 
@@ -424,14 +422,14 @@ Function Set-vCenterCertManagementMode {
 
     <#
         .SYNOPSIS
-        Sets the ESXi host's management mode in the vCenter Server to either custom or vmca.
+        Sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
         .DESCRIPTION
-        Set-vCenterCertManagementMode cmdlet sets the ESXi host's management mode on the vCenter server belonging to given domain.
+        Set-vCenterCertManagementMode cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
         .EXAMPLE
         Set-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -mode custom
-        This example sets the ESXi management mode to custom for the vCenter Server belonging to domain sfo-m01
+        This example sets the certificate management mode to custom in vCenter Server for the ESXi hosts in workload domain sfo-m01.
     #>
 
     Param (
@@ -440,7 +438,6 @@ Function Set-vCenterCertManagementMode {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateSet ("custom", "vmca")] [String] $mode
-
     )
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -465,14 +462,14 @@ Function Get-vSANHealthSummary {
 
     <#
         .SYNOPSIS
-        Get the vSAN health summary from vCenter Server for given cluster 
+        Get the vSAN health summary from vCenter Server for a cluster.
 
         .DESCRIPTION
-        This function gets the vSAN health summary from vCenter Server for a given cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised
+        This function gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 
         .EXAMPLE
         Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 
-        This example gets the vSAN health summary for cluster sfo-m01-cl01 
+        This example gets the vSAN health summary for cluster sfo-m01-cl01.
     #>
 
     Param (
@@ -481,7 +478,6 @@ Function Get-vSANHealthSummary {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster
-
     )
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -503,7 +499,7 @@ Function Get-vSANHealthSummary {
                 }
                 if ($healthCheckTestHealth -eq "red") {
                     $overallStatus = ($overallStatus, 2 | Measure-Object -Max).Maximum
-                    Write-Error "vSAN status is RED. Please check vSAN health before continuing..."
+                    Write-Error "vSAN status is RED. Please check the vSAN health before continuing."
                     Write-Error "$($vCenterServer.details.fqdn) - vSAN Clustername $cluster | vSAN Alarm Name - $healthCheckTestName | Alarm Description - $healthCheckTestShortDescription" 
                 }
             }
@@ -520,14 +516,13 @@ Function Get-vSANHealthSummary {
 
 Export-ModuleMember -Function Get-vSANHealthSummary
 
-
 Function Get-EsxiConnectionState {
     <#
         .SYNOPSIS
         Get the ESXi host connection state from vCenter Server.
 
         .DESCRIPTION
-        This cmdlet gets the current connection state of the ESXi host. Possible outputs are "Connected", "Disconnected", "Maintenance" and "NotResponding"
+        The Get-EsxiConnectionState cmdlet gets the connection state of an ESXi host. One of "Connected", "Disconnected", "Maintenance", or "NotResponding"
         Can only be used after you have run Get-vCenterServer cmdlet
 
         .EXAMPLE
