@@ -523,10 +523,10 @@ Function Get-EsxiConnectionState {
 
         .DESCRIPTION
         The Get-EsxiConnectionState cmdlet gets the connection state of an ESXi host. One of "Connected", "Disconnected", "Maintenance", or "NotResponding"
-        Can only be used after you have run Get-vCenterServer cmdlet
+        Depends on a connection to a vCenter Server instance.
 
         .EXAMPLE
-        Get-EsxiConnectionState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io
+        Get-EsxiConnectionState -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
@@ -537,29 +537,27 @@ Function Get-EsxiConnectionState {
 #TODO: Remove export for helper function
 Export-ModuleMember -Function Get-EsxiConnectionState
 
-
 Function Set-EsxiConnectionState {
 
     <#
         .SYNOPSIS
-        Set the ESXi state from vCenter Server
+        Sets the ESXi host connection state in vCenter Server.
 
         .DESCRIPTION
-        This cmdlet sets the connection state of the ESXi host to the provided value. One of "Connected", "Disconnected", "Maintenance", or "NotResponding".
+        The Set-EsxiConnectionState cmdlet sets the connection state of an ESXi host. One of "Connected", "Disconnected", "Maintenance", or "NotResponding".
         If setting the connection state to Maintenance, you must provide the VsanDataMigrationMode. One of "Full", "EnsureAccessibility", or "NoDataMigration".
-         Can only be used after you have run Get-vCenterServer cmdlet
+        Depends on a connection to a vCenter Server instance.
         Default timeout 5 hrs (18000 seconds)
 
         .EXAMPLE
         Set-EsxiConnectionState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io -state Connected
-        This example example sets the ESXi hosts state to Connected.
+        This example sets an ESXi host's connection state to Connected.
         
         .EXAMPLE
-        Set-EsxiConnectionState -esxiFqdn sfo01-m01-esx04.sfo.rainpole.io -state Maintenance -VsanDataMigrationMode Full
-        This example sets the ESXi host state to Maintenance with a Full data migration. 
+        Set-EsxiConnectionState -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -state Maintenance -vsanDataMigrationMode Full
+        This example sets an ESXi host's connection state to Maintenance with a Full data migration. 
     
     #>
-
 
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
@@ -591,34 +589,34 @@ Function Set-EsxiConnectionState {
             Write-Host "Successfully changed the connection state for ESXi host $esxiFqdn to $state."
             break
         } else {
-            Write-Host "Polling every 60 seconds for state to change to $state..."
+            Write-Host "Polling every 60 seconds monitoring for the connection state to change to $state..."
         }
-        Start-Sleep -Seconds 60
+        Start-Sleep -Seconds $pollInterval 
     } while ($stopwatch.elapsed -lt $timeout)
 }
 
 #TODO: Remove export for helper function
 Export-ModuleMember -Function Set-EsxiConnectionState
 
-
 Function Get-ESXiLockdownMode {
 
     <#
         .SYNOPSIS
-        Get the ESXi lockdown mode state from vCenter Server.
+        Get the ESXi host lockdown mode state from vCenter Server.
 
         .DESCRIPTION
-        This cmdlet gets the lockdown mode value for all hosts in a cluster or a particular ESXi host within that cluster.
+        The Get-ESXiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
         If esxiFqdn is provided, only the value for that host is returned. 
 
         .EXAMPLE
         Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
-        This example retreives the lockdown mode state for each ESXi host in a cluster.
+        This example retrieves the lockdown mode for each ESXi host in a cluster.
 
         .EXAMPLE
         Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
-        This example retreives the lockdown mode state for a specific ESXi host in a cluster.
+        This example retrieves the lockdown mode state for an ESXi host in a given cluster.
     #>
+
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
@@ -659,18 +657,18 @@ Function Set-ESXiLockdownMode {
 
     <#
         .SYNOPSIS
-        Set the lockdown mode for all ESXi hosts in given cluster
+        Set the lockdown mode for all ESXi hosts in a given cluster.
 
         .DESCRIPTION
-        This cmdlet sets the lockdown mode value for all hosts in a cluster. 
+        The Set-ESXiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster. 
 
         .EXAMPLE
         Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
-        This example will enable the lockdown mode on all hosts in the provided cluster
+        This example will enable the lockdown mode for all ESXi hosts in a cluster.
 
          .EXAMPLE
         Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
-        This example will disable the lockdown mode on all hosts in the provided cluster
+        This example will disable the lockdown mode for all ESXi hosts in a cluster.
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
@@ -732,20 +730,19 @@ Function Set-ESXiLockdownMode {
 
 Export-ModuleMember -Function Set-ESXiLockdownMode
 
-
 Function Restart-ESXiHost {
 
     <#
         .SYNOPSIS
-        Restart the provided ESXi host and poll for it to come back online
+        Restart an ESXi host and poll for connection availability.
 
         .DESCRIPTION
-        This cmdlet triggers a restart the provided ESXi host and polls for it to come back online. 
+        The Restart-ESXiHost cmdlet restarts an ESXi host and polls for connection availability. 
         Timeout value is in seconds.
 
         .EXAMPLE
-        Restart-EsxiHost -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -user root -pass VMw@re1! -poll $true -timeout 1800 -pollInterval 30
-        This example restarts the provided esxi hosts and polls every 30 seconds till it comes back online. It will timeout after 1800 seconds. 
+        Restart-EsxiHost -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -user root -pass VMw@re1! -poll $true -timeout 1800 -pollInterval 30
+        This example restarts an ESXi host and polls the connection availability every 30 seconds. It will timeout after 1800 seconds. 
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
@@ -772,7 +769,7 @@ Function Restart-ESXiHost {
     Disconnect-VIServer -server $esxiFqdn -Confirm:$false -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
 
     if ($poll) {
-        Write-Host "Waiting for ESXi host $esxiFqdn to reboot. Polling the connection every $pollInterval seconds."
+        Write-Host "Waiting for ESXi host $esxiFqdn to restart. Polling the connection every $pollInterval seconds."
         Start-Sleep -Seconds $pollInterval
         $timeout = New-TimeSpan -Seconds $timeout
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
@@ -790,7 +787,7 @@ Function Restart-ESXiHost {
                     return
                 }
             }
-            Write-Host "Waiting for ESXi host $esxiFqdn to reboot and become accessible."
+            Write-Host "Waiting for ESXi host $esxiFqdn to restart and become accessible."
             Start-Sleep -Seconds $pollInterval
         } while ($stopwatch.elapsed -lt $timeout)
 
@@ -802,27 +799,25 @@ Function Restart-ESXiHost {
 
 Export-ModuleMember -Function Restart-EsxiHost
 
-
 Function Install-EsxiCertificate {
     <#
         .SYNOPSIS
         Install a certificate for an ESXi host or for each ESXi host in a cluster.
 
         .DESCRIPTION
-        The Install-EsxiCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster
-        (the behavior is controlled with parameter -cluster/-esxiFqdn). 
+        The Install-EsxiCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster.
         You must provide the directory containing the signed certificate files
         Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
-        The workflow will put ESXi host in maintenance mode with full data migration, 
-        disconnect ESXi host from the vCenter Server, replace the certificate, reboot the ESXi host, and exits maintenance mode once the ESXi host is online.
-        Timeout for putting ESXi host in maintenance is provided in seconds using -timeout Parameter. Default is 18000 seconds or 5 hrs. 
+        The workflow will put the ESXi host in maintenance mode with full data migration, 
+        disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+        The timeout for putting the ESXi host in maintenance is provided in seconds using -timeout Parameter. The default value is 18000 seconds (5 hours). 
 
         .EXAMPLE
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx03.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install the certificate to the ESXi host sfo01-m01-esx03.sfo.rainpole.io in domain sfo-m01 from the provided path.
         
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in domain sfo-m01 from the provided path.
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
     #>
 
     Param (
@@ -885,7 +880,7 @@ Function Install-EsxiCertificate {
                         Start-Sleep -Seconds 30
                         Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Connected"
                     } else {
-                        Write-Error "Could not connect to vCenter Server instance $($vCenterServer.details.fqdn). Check the state of ESXi host $esxiFqdn in vCenter Server." -ErrorAction Stop
+                        Write-Error "Could not connect to vCenter Server instance $($vCenterServer.details.fqdn). Check the state of ESXi host $esxiFqdn using the Get-EsxiConnectionState cmdlet." -ErrorAction Stop
                         break
                     }
                 } else {
@@ -895,7 +890,7 @@ Function Install-EsxiCertificate {
             }
         }
         Write-Host "--------------------------------------------------------------------------------"
-		Write-Host "ESXi Host Certificate Replacement Summary :"
+		Write-Host "ESXi Host Certificate Replacement Summary:"
 		Write-Host "--------------------------------------------------------------------------------"
 
         Write-Host "Succesfully completed certificate replacement for $($replacedHosts.Count) ESXi hosts:"
