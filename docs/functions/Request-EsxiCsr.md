@@ -9,17 +9,17 @@ Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi
 ### cluster
 
 ```powershell
-Request-EsxiCsr -server <String> -user <String> -pass <String> -domain <String> -cluster <String>
- -outputDirectory <String> -country <String> -locality <String> -organization <String>
- -organizationUnit <String> -stateOrProvince <String> [<CommonParameters>]
+Request-EsxiCsr [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
+ [-outputDirectory] <String> [-country] <String> [-locality] <String> [-organization] <String>
+ [-organizationUnit] <String> [-stateOrProvince] <String> [<CommonParameters>]
 ```
 
 ### host
 
 ```powershell
-Request-EsxiCsr -server <String> -user <String> -pass <String> -domain <String> -esxiFqdn <String>
- -outputDirectory <String> -country <String> -locality <String> -organization <String>
- -organizationUnit <String> -stateOrProvince <String> [<CommonParameters>]
+Request-EsxiCsr [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] [-esxiFqdn] <String>
+ [-outputDirectory] <String> [-country] <String> [-locality] <String> [-organization] <String>
+ [-organizationUnit] <String> [-stateOrProvince] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION

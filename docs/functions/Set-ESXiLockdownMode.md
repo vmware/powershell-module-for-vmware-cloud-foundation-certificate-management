@@ -9,14 +9,14 @@ Set the lockdown mode for all ESXi hosts in a given cluster.
 ### enable
 
 ```powershell
-Set-ESXiLockdownMode -server <String> -user <String> -pass <String> -domain <String> -cluster <String>
+Set-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
  [-enable] [<CommonParameters>]
 ```
 
 ### disable
 
 ```powershell
-Set-ESXiLockdownMode -server <String> -user <String> -pass <String> -domain <String> -cluster <String>
+Set-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
  [-disable] [<CommonParameters>]
 ```
 

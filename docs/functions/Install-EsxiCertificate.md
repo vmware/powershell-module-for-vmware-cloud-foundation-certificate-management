@@ -9,15 +9,15 @@ Install a certificate for an ESXi host or for each ESXi host in a cluster.
 ### cluster
 
 ```powershell
-Install-EsxiCertificate -server <String> -user <String> -pass <String> -domain <String> -cluster <String>
- -certificateDirectory <String> -certificateFileExt <String> [-timeout <String>] [<CommonParameters>]
+Install-EsxiCertificate [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
+ [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
 ```
 
 ### host
 
 ```powershell
-Install-EsxiCertificate -server <String> -user <String> -pass <String> -domain <String> -esxiFqdn <String>
- -certificateDirectory <String> -certificateFileExt <String> [-timeout <String>] [<CommonParameters>]
+Install-EsxiCertificate [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String>
+ [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
