@@ -8,13 +8,13 @@
 
 ## Overview
 
-`VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to managed certificates across your VMware Cloud Foundatiоn instance.
+`VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage ESXi host certificates across your VMware Cloud Foundatiоn instance. 
 
 ## Requirements
 
 ### Platforms
 
-- [VMware Cloud Foundation][vmware-cloud-foundation] 4.4 or later
+- [VMware Cloud Foundation][vmware-cloud-foundation] 4.5 or later
 
 ### Operating Systems
 
