@@ -50,11 +50,11 @@ Function Get-vCenterServer {
 
         .DESCRIPTION
         The Get-vCenterServer retrieves the vCenter Server details and connection object from SDDC Manager using either a workload domain name or ESXi host FQDN.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values
-        - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Validates that the workload domain exists in the SDDC Manager inventory
-        - Connects to vCenter Server and returns its details and connection in a single object
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Validates that network connectivity and authentication is possible to vCenter Server.
+        - Validates that the workload domain exists in the SDDC Manager inventory.
+        - Connects to vCenter Server and returns its details and connection in a single object.
 
         .EXAMPLE
         Get-vCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
@@ -231,6 +231,7 @@ Export-ModuleMember -Function Get-vCenterCertificateThumbprint
 
 Function Confirm-ESXiCertificateInstalled {
     <#
+        .SYNOPSIS
         Verify if the provided certificate is already on the ESXi host.
 
         .DESCRIPTION
@@ -296,6 +297,7 @@ Export-ModuleMember -Function Confirm-ESXiCertificateInstalled
 
 Function Confirm-CAInvCenterServer {
     <#
+        .SYNOPSIS
         Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
         .DESCRIPTION
@@ -377,13 +379,13 @@ Function Request-EsxiCsr {
         Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
 
         .DESCRIPTION
-        The Request-EsxiCsr cmdlet will generate the Certificate Sign Request from a cluster or an ESXi host and saves it to file(s) in an output directory.
+        The Request-EsxiCsr cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
-        - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts from the cluster
-        - Request ESXi CSR and save it in the output directory as FQDN.csr e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Validates that the workload domain exists in the SDDC Manager inventory.
+        - Validates that network connectivity and authentication is possible to vCenter Server.
+        - Gathers the ESXi hosts from the cluster.
+        - Requests the ESXi host CSR and saves it in the output directory as <esxi-host-fqdn>.csr. e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
         - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
         .EXAMPLE
@@ -497,7 +499,7 @@ Function Get-vCenterCertManagementMode {
         Retrieves the certificate management mode value from the vCenter Server instance for a workload domain.
 
         .DESCRIPTION
-        Get-vCenterCertManagementMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
+        The Get-vCenterCertManagementMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
 
         .EXAMPLE
         Get-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -541,7 +543,7 @@ Function Set-vCenterCertManagementMode {
         Sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
         .DESCRIPTION
-        Set-vCenterCertManagementMode cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+        The Set-vCenterCertManagementMode cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
         .EXAMPLE
         Set-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -mode custom
@@ -594,7 +596,7 @@ Function Get-vSANHealthSummary {
         Get the vSAN health summary from vCenter Server for a cluster.
 
         .DESCRIPTION
-        This function gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
+        The Get-vSANHealthSummary cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 
         .EXAMPLE
         Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
@@ -1022,10 +1024,11 @@ Function Install-EsxiCertificate {
 
         .DESCRIPTION
         The Install-EsxiCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster.
-        You must provide the directory containing the signed certificate files
-        Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt
+        You must provide the directory containing the signed certificate files.
+        Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt.
         The workflow will put the ESXi host in maintenance mode with full data migration,
-        disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+        disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host,
+        and the exit maintenance mode once the ESXi host is online.
 
         .EXAMPLE
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
