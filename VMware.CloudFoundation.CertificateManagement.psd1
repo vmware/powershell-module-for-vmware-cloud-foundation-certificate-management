@@ -12,13 +12,13 @@
     RootModule = '.\VMware.CloudFoundation.CertificateManagement.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0.0.1000'
+    ModuleVersion = '1.0.0.1001'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
     
     # ID used to uniquely identify this module
-    GUID              = 'ac903c83-c745-44f7-b6bd-1dff113bef14'
+    GUID = 'ac903c83-c745-44f7-b6bd-1dff113bef14'
     
     # Author of this module
     Author = 'Gary Blake, Ryan Johnson, Kevin Teng, Bhumitra Nagar - Cloud Infrastructure Business Group (CIBG)'
