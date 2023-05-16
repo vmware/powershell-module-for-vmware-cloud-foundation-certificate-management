@@ -118,8 +118,7 @@ Function Get-vCenterServer {
         Throw "Unable to connect to ($server): PRE_VALIDATION_FAILED"
     }
 }
-#TODO: Remove export for helper function.
-Export-ModuleMember -Function Get-vCenterServer
+
 
 Function Get-EsxiCertificateThumbprint {
     <#
@@ -686,8 +685,6 @@ Function Get-EsxiConnectionState {
     $response = Get-VMHost -name $esxiFqdn
     return $response.ConnectionState
 }
-#TODO: Remove export for helper function.
-Export-ModuleMember -Function Get-EsxiConnectionState
 
 Function Set-EsxiConnectionState {
     <#
@@ -759,8 +756,7 @@ Function Set-EsxiConnectionState {
         Start-Sleep -Seconds $pollInterval
     } while ($stopwatch.elapsed -lt $timeout)
 }
-#TODO: Remove export for helper function..
-Export-ModuleMember -Function Set-EsxiConnectionState
+
 
 Function Get-ESXiLockdownMode {
     <#
