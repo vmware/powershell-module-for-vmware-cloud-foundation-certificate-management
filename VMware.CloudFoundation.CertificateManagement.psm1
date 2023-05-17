@@ -118,8 +118,7 @@ Function Get-vCenterServer {
         Throw "Unable to connect to ($server): PRE_VALIDATION_FAILED"
     }
 }
-#TODO: Remove export for helper function.
-Export-ModuleMember -Function Get-vCenterServer
+
 
 Function Get-EsxiCertificateThumbprint {
     <#
@@ -686,8 +685,6 @@ Function Get-EsxiConnectionState {
     $response = Get-VMHost -name $esxiFqdn
     return $response.ConnectionState
 }
-#TODO: Remove export for helper function.
-Export-ModuleMember -Function Get-EsxiConnectionState
 
 Function Set-EsxiConnectionState {
     <#
@@ -759,8 +756,7 @@ Function Set-EsxiConnectionState {
         Start-Sleep -Seconds $pollInterval
     } while ($stopwatch.elapsed -lt $timeout)
 }
-#TODO: Remove export for helper function..
-Export-ModuleMember -Function Set-EsxiConnectionState
+
 
 Function Get-ESXiLockdownMode {
     <#
@@ -1034,6 +1030,7 @@ Function Install-EsxiCertificate {
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
 
+        .EXAMPLE
         Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
 
