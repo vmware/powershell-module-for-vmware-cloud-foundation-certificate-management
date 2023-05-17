@@ -119,7 +119,6 @@ Function Get-vCenterServer {
     }
 }
 
-
 Function Get-EsxiCertificateThumbprint {
     <#
         .SYNOPSIS
@@ -163,7 +162,6 @@ Function Get-EsxiCertificateThumbprint {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Get-EsxiCertificateThumbprint
 
 Function Get-vCenterCertificateThumbprint {
     <#
@@ -226,7 +224,6 @@ Function Get-vCenterCertificateThumbprint {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Get-vCenterCertificateThumbprint
 
 Function Confirm-ESXiCertificateInstalled {
     <#
@@ -292,7 +289,6 @@ Function Confirm-ESXiCertificateInstalled {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Confirm-ESXiCertificateInstalled
 
 Function Confirm-CAInvCenterServer {
     <#
@@ -369,8 +365,6 @@ Function Confirm-CAInvCenterServer {
         Debug-ExceptionWriter -object $_
     }
 }
-
-Export-ModuleMember -Function Confirm-CAInvCenterServer
 
 Function Request-EsxiCsr {
     <#
@@ -490,7 +484,6 @@ Function Request-EsxiCsr {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Request-EsxiCsr
 
 Function Get-vCenterCertManagementMode {
     <#
@@ -534,7 +527,6 @@ Function Get-vCenterCertManagementMode {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Get-vCenterCertManagementMode
 
 Function Set-vCenterCertManagementMode {
     <#
@@ -587,7 +579,6 @@ Function Set-vCenterCertManagementMode {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Set-vCenterCertManagementMode
 
 Function Get-vSANHealthSummary {
     <#
@@ -659,7 +650,6 @@ Function Get-vSANHealthSummary {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Get-vSANHealthSummary
 
 Function Get-EsxiConnectionState {
     <#
@@ -757,7 +747,6 @@ Function Set-EsxiConnectionState {
     } while ($stopwatch.elapsed -lt $timeout)
 }
 
-
 Function Get-ESXiLockdownMode {
     <#
         .SYNOPSIS
@@ -828,7 +817,6 @@ Function Get-ESXiLockdownMode {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Get-ESXiLockdownMode
 
 Function Set-ESXiLockdownMode {
     <#
@@ -925,7 +913,6 @@ Function Set-ESXiLockdownMode {
         Debug-ExceptionWriter -object $_
     }
 }
-Export-ModuleMember -Function Set-ESXiLockdownMode
 
 Function Restart-ESXiHost {
     <#
@@ -1011,7 +998,6 @@ Function Restart-ESXiHost {
         Write-Warning "Restart of ESXi host $esxiFqdn triggered without polling connection state. Please monitor the connection state in the vSphere Client."
     }
 }
-Export-ModuleMember -Function Restart-EsxiHost
 
 Function Install-EsxiCertificate {
     <#
@@ -1151,7 +1137,6 @@ Function Install-EsxiCertificate {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
-Export-ModuleMember -Function Install-EsxiCertificate
 
 ###################################################  END FUNCTIONS  ###################################################
 #######################################################################################################################
