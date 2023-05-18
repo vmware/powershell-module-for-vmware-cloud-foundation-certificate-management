@@ -724,7 +724,6 @@ Function Set-EsxiConnectionState {
         return
     }
     if ($state -ieq "maintenance") {
-        Write-Output "Entering $state connection state for ESXi host $esxiFqdn."
         if ($PSBoundParameters.ContainsKey("vsanDataMigrationMode")) {
             Write-Output "Entering $state connection state for ESXi host $esxiFqdn with vSAN data migration mode set to $vsanDataMigrationMode."
             Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -Evacuate
