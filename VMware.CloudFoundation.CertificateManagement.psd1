@@ -12,7 +12,7 @@
     RootModule = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.0.1005'
+    ModuleVersion = '1.0.0.1006'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = 'Get-EsxiCertificateThumbprint', 'Get-vCenterCertificateThumbprint', 'Confirm-ESXiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-EsxiCsr', 'Get-vCenterCertManagementMode', 'Set-vCenterCertManagementMode', 'Get-vSANHealthSummary', 'Get-ESXiLockdownMode', 'Set-ESXiLockdownMode', 'Restart-EsxiHost', 'Install-EsxiCertificate'
+    FunctionsToExport = 'Get-EsxiCertificateThumbprint', 'Get-vCenterCertificateThumbprint', 'Confirm-ESXiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-EsxiCsr', 'Get-EsxiCertificateMode', 'Set-EsxiCertificateMode', 'Get-vSANHealthSummary', 'Get-ESXiLockdownMode', 'Set-ESXiLockdownMode', 'Restart-EsxiHost', 'Install-EsxiCertificate'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()

@@ -485,16 +485,16 @@ Function Request-EsxiCsr {
     }
 }
 
-Function Get-vCenterCertManagementMode {
+Function Get-EsxiCertificateMode {
     <#
         .SYNOPSIS
         Retrieves the certificate management mode value from the vCenter Server instance for a workload domain.
 
         .DESCRIPTION
-        The Get-vCenterCertManagementMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
+        The Get-EsxiCertificateMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
 
         .EXAMPLE
-        Get-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Get-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
         This example retrieves the certificate management mode value for the vCenter Server instance for the workload domain sfo-m01.
 
         .PARAMETER server
@@ -528,16 +528,16 @@ Function Get-vCenterCertManagementMode {
     }
 }
 
-Function Set-vCenterCertManagementMode {
+Function Set-EsxiCertificateMode {
     <#
         .SYNOPSIS
         Sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
         .DESCRIPTION
-        The Set-vCenterCertManagementMode cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+        The Set-EsxiCertificateMode cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
         .EXAMPLE
-        Set-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -mode custom
+        Set-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -mode custom
         This example sets the certificate management mode to custom in vCenter Server for the ESXi hosts in workload domain sfo-m01.
 
         .PARAMETER server
@@ -570,6 +570,7 @@ Function Set-vCenterCertManagementMode {
         if ($certModeSetting.value -ne $mode) {
             Set-AdvancedSetting $certModeSetting -Value $mode
             Write-Output "Certificate Management Mode is set to $mode on the vCenter Server instance $($vCenterServer.details.fqdn)."
+            Write-Output "Please restart the vCenter Server services for the change to take effect. See the vCenter Server Configuration documentation for information about restarting services."
         } else {
             Write-Warning "Certificate Management Mode already set to $mode on the vCenter Server instance $($vCenterServer.details.fqdn): SKIPPED"
         }
@@ -682,8 +683,8 @@ Function Set-EsxiConnectionState {
         Sets the ESXi host connection state in vCenter Server.
 
         .DESCRIPTION
-        The Set-EsxiConnectionState cmdlet sets the connection state of an ESXi host. One of "Connected", "Disconnected", "Maintenance", or "NotResponding".
-        If setting the connection state to Maintenance, you must provide the VsanDataMigrationMode. One of "Full", "EnsureAccessibility", or "NoDataMigration".
+        The Set-EsxiConnectionState cmdlet sets the connection state of an ESXi host. One of "Connected", "Disconnected" or "Maintenance".
+        If setting the connection state to Maintenance, you may provide the VsanDataMigrationMode for a vSAN environment. One of "Full", "EnsureAccessibility", or "NoDataMigration".
         Depends on a connection to a vCenter Server instance.
 
         .EXAMPLE
@@ -698,7 +699,7 @@ Function Set-EsxiConnectionState {
         The FQDN of the ESXi host.
 
         .PARAMETER state
-        The connection state to set the ESXi host to. One of "Connected", "Disconnected", "Maintenance", or "NotResponding".
+        The connection state to set the ESXi host to. One of "Connected", "Disconnected" or "Maintenance".
 
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full", "EnsureAccessibility", or "NoDataMigration".
@@ -712,7 +713,7 @@ Function Set-EsxiConnectionState {
 
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
-        [Parameter (Mandatory = $true)] [ValidateSet ("Connected", "Disconnected", "Maintenance", "NotResponding")] [String] $state,
+        [Parameter (Mandatory = $true)] [ValidateSet ("Connected", "Disconnected", "Maintenance")] [String] $state,
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility", "NoDataMigration")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pollInterval = 60
@@ -724,10 +725,11 @@ Function Set-EsxiConnectionState {
     }
     if ($state -ieq "maintenance") {
         if ($PSBoundParameters.ContainsKey("vsanDataMigrationMode")) {
-            Write-Output "Entering $state connection state for ESXi host $esxiFqdn."
+            Write-Output "Entering $state connection state for ESXi host $esxiFqdn with vSAN data migration mode set to $vsanDataMigrationMode."
             Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -Evacuate
         } else {
-            Throw "You must provide a valid vsanDataMigrationMode value."
+            Write-Output "Entering $state connection state for ESXi host $esxiFqdn."
+            Set-VMHost -VMHost $esxiFqdn -State $state -Evacuate
         }
     } else {
         Write-Output "Changing the connection state for ESXi host $esxiFqdn to $state."
@@ -1063,14 +1065,15 @@ Function Install-EsxiCertificate {
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
         if ($PsBoundParameters.ContainsKey("cluster")) {
-            if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
-                $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+            $clusterDetails = Get-VCFCluster -Name $cluster
+            if ($clusterDetails) {
+                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
                 if (!$esxiHosts) { Write-Warning "No ESXi hosts found in cluster $cluster." }
             } else {
                 Write-Error "Unable to locate cluster $cluster in $($vCenterServer.details.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
             }
         } else {
-            $esxiHosts = Get-VMHost -Name $esxiFqdn
+            $esxiHosts = Get-VCFHost -fqdn $esxiFqdn
             if (!$esxiHosts) { Write-Error "No ESXi host $esxiFqdn found in workload domain $domain." -ErrorAction Stop }
         }
 
@@ -1078,7 +1081,7 @@ Function Install-EsxiCertificate {
         $replacedHosts = New-Object Collections.Generic.List[String]
         $skippedHosts = New-Object Collections.Generic.List[String]
         foreach ($esxiHost in $esxiHosts) {
-            $esxiFqdn = $esxiHost.Name
+            $esxiFqdn = $esxiHost.fqdn
             $crtPath = "$certificateDirectory\$esxiFqdn$certificateFileExt"
 
             if (!(Test-Path $crtPath -PathType Leaf )) {
@@ -1093,10 +1096,14 @@ Function Install-EsxiCertificate {
             } else {
                 $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
                 if ($esxiCredential) {
-                    Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
+                    if ($clusterDetails.primaryDatastoreType -ieq "vsan") {
+                        Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
+                    } else {
+                        Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -timeout $timeout
+                    }
                     Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
                     $esxCertificatePem = Get-Content $crtPath -Raw
-                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
+                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxiFqdn -ErrorAction Stop
                     $replacedHosts.Add($esxiFqdn)
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
 
