@@ -1103,7 +1103,7 @@ Function Install-EsxiCertificate {
                     }
                     Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
                     $esxCertificatePem = Get-Content $crtPath -Raw
-                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn -ErrorAction Stop
+                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxiFqdn -ErrorAction Stop
                     $replacedHosts.Add($esxiFqdn)
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
 
