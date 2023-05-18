@@ -1067,7 +1067,7 @@ Function Install-EsxiCertificate {
         if ($PsBoundParameters.ContainsKey("cluster")) {
             $clusterDetails = Get-VCFCluster -Name $cluster
             if ($clusterDetails) {
-                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id }
+                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
                 if (!$esxiHosts) { Write-Warning "No ESXi hosts found in cluster $cluster." }
             } else {
                 Write-Error "Unable to locate cluster $cluster in $($vCenterServer.details.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
@@ -1103,7 +1103,7 @@ Function Install-EsxiCertificate {
                     }
                     Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
                     $esxCertificatePem = Get-Content $crtPath -Raw
-                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn
+                    Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxifqdn -ErrorAction Stop
                     $replacedHosts.Add($esxiFqdn)
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
 
