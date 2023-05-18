@@ -1,4 +1,4 @@
-# Get-vCenterCertManagementMode
+# Get-EsxiCertificateMode
 
 ## SYNOPSIS
 
@@ -7,20 +7,20 @@ Retrieves the certificate management mode value from the vCenter Server instance
 ## SYNTAX
 
 ```powershell
-Get-vCenterCertManagementMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
+Get-EsxiCertificateMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Get-vCenterCertManagementMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
+The Get-EsxiCertificateMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```powershell
-Get-vCenterCertManagementMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Get-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
 ```
 
 This example retrieves the certificate management mode value for the vCenter Server instance for the workload domain sfo-m01.
