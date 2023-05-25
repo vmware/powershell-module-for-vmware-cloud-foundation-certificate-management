@@ -14,7 +14,7 @@
 
 ### Platforms
 
-- [VMware Cloud Foundation][vmware-cloud-foundation] 4.5 or later
+- [VMware Cloud Foundation][vmware-cloud-foundation] 4.5.0
 
 ### Operating Systems
 
