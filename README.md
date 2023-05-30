@@ -32,7 +32,7 @@
 - [`VMware.PowerCLI`][module-vmware-powercli] 13.0.0 or later
 - [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.9 or later
 - [`PowerVCF`][module-powervcf] 2.3.0 or later
-- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.2.0 or later
+- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.3.0 or later
 
 ## Installing the Module
 
@@ -45,7 +45,7 @@ Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 Install-Module -Name VMware.PowerCLI -MinimumVersion 13.0.0
 Install-Module -Name VMware.vSphere.SsoAdmin -MinimumVersion 1.3.9
 Install-Module -Name PowerVCF -MinimumVersion 2.3.0
-Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.2.0
+Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.3.0
 Install-Module -Name VMware.CloudFoundation.CertificateManagement
 ```
 
@@ -99,9 +99,9 @@ Get-InstalledModule -Name VMware.CloudFoundation.CertificateManagement
 
 Each cmdlet may provide one or more usage examples. Many of the cmdlets require that credentials are provided to output to the PowerShell console or a report.
 
-The cmdlets in this module, and its dependencies, return data from multple platform components. The credentials for most of the platform components are returned to the cmdlets by retrieving credentials from the SDDC Manager inventory and using these credentials, as needed, within cmdlet operations.
+The cmdlets in this module, and its dependencies, return data from multiple platform components. The credentials for most of the platform components are returned to the cmdlets by retrieving credentials from the SDDC Manager inventory and using these credentials, as needed, within cmdlet operations.
 
-For the best expereince, for cmdlets that connect to SDDC Manager, use the VMware Cloud Foundation API user `admin@local` or an account with the **ADMIN** role in SDDC Manager (e.g., `administrator@vsphere.local`).
+For the best experience, for cmdlets that connect to SDDC Manager, use the VMware Cloud Foundation API user `admin@local` or an account with the **ADMIN** role in SDDC Manager (e.g., `administrator@vsphere.local`).
 
 ## Getting Started with Certificate Management
 
@@ -124,7 +124,7 @@ The [`Set-EsxiCertificateMode`](/docs/functions/Set-EsxiCertificateMode.md) cmdl
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -133,6 +133,7 @@ The [`Set-EsxiCertificateMode`](/docs/functions/Set-EsxiCertificateMode.md) cmdl
     $workloadDomain = "sfo-m01"
     $mode = "custom"
     ```
+
 3. Set the ESXi certificate management mode in vCenter Server by running the command in the PowerShell console.
 
     ```powershell
@@ -143,13 +144,13 @@ The [`Set-EsxiCertificateMode`](/docs/functions/Set-EsxiCertificateMode.md) cmdl
 
 The [`Request-EsxiCsr`](/docs/functions/Request-EsxiCsr.md) cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory. 
 
-#### Request Certificate Signing Request files for All ESXi Hosts in a Cluster 
+#### Request Certificate Signing Request files for All ESXi Hosts in a Cluster
 
 1. Start PowerShell (Run as Administrator).
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -164,6 +165,7 @@ The [`Request-EsxiCsr`](/docs/functions/Request-EsxiCsr.md) cmdlet will generate
     $stateOrProvince = "CA"
     $outputDirectory = "F:\csr"
     ```
+
 3. Request Certificate Signing Request files by running the command in the PowerShell console.
 
     ```powershell
@@ -176,7 +178,7 @@ The [`Request-EsxiCsr`](/docs/functions/Request-EsxiCsr.md) cmdlet will generate
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -191,6 +193,7 @@ The [`Request-EsxiCsr`](/docs/functions/Request-EsxiCsr.md) cmdlet will generate
     $stateOrProvince = "CA"
     $outputDirectory = "F:\csr"
     ```
+
 3. Request a Certificate Signing Request file by running the command in the PowerShell console.
 
     ```powershell
@@ -205,7 +208,7 @@ The [`Confirm-CAInvCenterServer`](/docs/functions/Confirm-CAInvCenterServer.md) 
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -215,6 +218,7 @@ The [`Confirm-CAInvCenterServer`](/docs/functions/Confirm-CAInvCenterServer.md) 
     $issuer = "rainpole"
     $signedCertificate = "F:\certificates\Root64.cer"
     ```
+
 3. Verify the Certificate Authority is trusted in vCenter server by running the command in the PowerShell console.
 
     ```powershell
@@ -231,7 +235,7 @@ The [`Set-ESXiLockdownMode`](/docs/functions/Set-ESXiLockdownMode.md) cmdlet set
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -240,6 +244,7 @@ The [`Set-ESXiLockdownMode`](/docs/functions/Set-ESXiLockdownMode.md) cmdlet set
     $workloadDomain = "sfo-m01"
     $cluster = "sfo-m01-cl01"
     ```
+
 3. Set the lockdown mode to `disable` by running the command in the PowerShell console.
 
     ```powershell
@@ -252,7 +257,7 @@ The [`Set-ESXiLockdownMode`](/docs/functions/Set-ESXiLockdownMode.md) cmdlet set
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -261,6 +266,7 @@ The [`Set-ESXiLockdownMode`](/docs/functions/Set-ESXiLockdownMode.md) cmdlet set
     $workloadDomain = "sfo-m01"
     $cluster = "sfo-m01-cl01"
     ```
+
 3. Set the lockdown mode to `enable` by running the command in the PowerShell console.
 
     ```powershell
@@ -275,7 +281,7 @@ The [`Get-vSANHealthSummary`](/docs/functions/Get-vSANHealthSummary.md) cmdlet g
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -284,6 +290,7 @@ The [`Get-vSANHealthSummary`](/docs/functions/Get-vSANHealthSummary.md) cmdlet g
     $workloadDomain = "sfo-m01"
     $cluster = "sfo-m01-cl01"
     ```
+
 3. Get the vSAN health summary from vCenter server for a cluster by running the command in the PowerShell console.
 
     ```powershell
@@ -300,7 +307,7 @@ The [`Install-EsxiCertificate`](/docs/functions/Install-EsxiCertificate.md) cmdl
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -311,6 +318,7 @@ The [`Install-EsxiCertificate`](/docs/functions/Install-EsxiCertificate.md) cmdl
     $certificateDirectory = "F:\certificates"
     $certificateFileExt = ".cer"
     ```
+
 3. Install a Certificate for each ESXi host in cluster by running the command in the PowerShell console.
 
     ```powershell
@@ -323,7 +331,7 @@ The [`Install-EsxiCertificate`](/docs/functions/Install-EsxiCertificate.md) cmdl
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
-    **Example**: 
+    **Example**:
 
     ```powershell
     $sddcManagerFqdn = "sfo-vcf01.sfo.rainpole.io"
@@ -334,6 +342,7 @@ The [`Install-EsxiCertificate`](/docs/functions/Install-EsxiCertificate.md) cmdl
     $certificateDirectory = "F:\certificates"
     $certificateFileExt = ".cer"
     ```
+
 3. Install a certificate to an ESXi host by running the command in the PowerShell console.
 
     ```powershell
@@ -381,7 +390,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
 [module-vmware-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [module-vmware-vsphere-ssoadmin]: https://www.powershellgallery.com/packages/VMware.vSphere.SsoAdmin
-[module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF/2.2.0
+[module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF
 [module-reporting]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.CertificateManagement
 [module-powervalidatedsolutions]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
 [vmware-photon]: https://vmware.github.io/photon/
