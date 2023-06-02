@@ -1,31 +1,39 @@
-# Confirm-CAInvCenterServer
+# Get-vCenterCertificateThumbprint
 
 ## SYNOPSIS
 
-Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
+Retrieves either all of the vCenter Server instance's certificate thumbprints or those which match the provided issuer name.
 
 ## SYNTAX
 
 ```powershell
-Confirm-CAInvCenterServer [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-signedCertificate] <String> [[-issuer] <String>] [<CommonParameters>]
+Get-vCenterCertificateThumbprint [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
+ [[-issuer] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Confirm-CAInvCenterServer cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
-You need to pass in the complete path for the certificate file.
-Returns true if thumbprint matches, else returns false.
+The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server instance's certificate thumbprints.
+By default, it retrieves all thumbprints.
+If issuer is provided, then only the thumbprint of the matching certificate is returned.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```powershell
-Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\certificates\Root64.cer
+Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
 ```
 
-This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
+This example retrieves the certificate thumbprints for the vCenter Server instance belonging to the domain sfo-m01.
+
+### EXAMPLE 2
+
+```powershell
+Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole
+```
+
+This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer "rainpole".
 
 ## PARAMETERS
 
@@ -93,25 +101,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -signedCertificate
-
-The complete path for the root certificate file.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 5
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -issuer
 
-The name of the issuer to match with the thumbprint.
+The name of the issuer to match with the vCenter Server instance's certificate thumbprints.
 
 ```yaml
 Type: String
@@ -119,20 +111,12 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 6
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### CommonParameters
+### Common Parameters
 
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
-
-## INPUTS
-
-## OUTPUTS
-
-## NOTES
-
-## RELATED LINKS
