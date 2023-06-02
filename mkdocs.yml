@@ -1,0 +1,164 @@
+# Project Information
+site_name: VMware.CloudFoundation.CertificateManagement
+site_description: PowerShell Module for VMware Cloud Foundation Certificate Management
+site_url: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management
+site_author: VMware, Inc.
+docs_dir: docs
+site_dir: .site
+use_directory_urls: true
+
+# Repository
+repo_url: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management
+edit_uri: blob/main/docs/
+
+# Copyright
+copyright: >
+  Copyright &copy; 2023 - VMware, Inc. –
+  <a href="#__consent">Manage Settings</a>
+
+# Configuration
+theme:
+  name: material
+  favicon: favicon.ico
+  logo: assets/images/icon-white.svg
+  icon:
+    repo: fontawesome/brands/github
+  palette:  
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/toggle-switch
+      name: Dark Theme
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/toggle-switch-off-outline
+      name: Light Theme
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+  - content.action.edit
+  - content.action.view
+  - content.code.annotate
+  - content.code.copy
+  - content.tabs.link
+  - navigation.expand
+  - navigation.footer
+  - navigation.header
+  - navigation.indexes
+  - navigation.instant
+  - navigation.sections
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - navigation.tracking
+  - search.highlight
+  - search.share
+  - search.suggest
+  - toc.follow
+
+# Plugins
+plugins:
+- search:
+    separator: '[\s\u200b\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+- markdownextradata:
+    jinja_options:
+      variable_start_string: "${{"
+      variable_end_string: "}}"
+- git-authors
+- git-revision-date-localized:
+    enabled: !ENV [CI, false]
+    enable_creation_date: false
+    exclude:
+      - index.md
+    fallback_to_build_date: true
+    type: timeago
+
+# Customization
+extra:
+  config:
+    repo_url: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management
+    repo_url_raw: https://raw.githubusercontent.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management
+  consent:
+    title: Cookie Consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+    actions:
+      - accept
+      - manage
+      - reject
+  version:
+    default: latest
+    provider: mike
+extra_css:
+  - assets/stylesheets/extra.css
+
+# Extensions
+markdown_extensions:
+- admonition
+- attr_list
+- md_in_html
+- pymdownx.emoji:
+    emoji_index: !!python/name:materialx.emoji.twemoji
+    emoji_generator: !!python/name:materialx.emoji.to_svg
+    options:
+      custom_icons:
+      - material/.icons
+- pymdownx.inlinehilite
+- pymdownx.highlight:
+    use_pygments: true
+- pymdownx.snippets:
+    check_paths: true
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format
+- pymdownx.tabbed:
+    alternate_style: true
+- pymdownx.details
+- tables
+- toc:
+    permalink: true
+
+# Navigation
+nav:
+- Getting Started: 
+  - index.md
+  - Installation: install.md
+  - Updating: update.md
+  - User Access: user-access.md
+  - Release Notes: release-notes.md
+  - Release Milestones: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/milestones
+  - License: license.md
+- Documentation:
+  - User Guide:
+    - ESXi Certificate Management: documentation/user-guide/esxi-certificate-management.md
+  - Functions:
+    - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
+    - Confirm-ESXiCertificateInstalled: documentation/functions/Confirm-ESXiCertificateInstalled.md
+    - Get-ESXiLockdownMode: documentation/functions/Get-ESXiLockdownMode.md
+    - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md
+    - Get-EsxiCertificateThumbprint: documentation/functions/Get-EsxiCertificateThumbprint.md
+    - Get-vCenterCertificateThumbprint: documentation/functions/Get-vCenterCertificateThumbprint.md
+    - Get-vSANHealthSummary: documentation/functions/Get-vSANHealthSummary.md
+    - Install-EsxiCertificate: documentation/functions/Install-EsxiCertificate.md
+    - Request-EsxiCsr: documentation/functions/Request-EsxiCsr.md
+    - Restart-ESXiHos: documentation/functions/Restart-ESXiHost.md
+    - Set-ESXiLockdownMode: documentation/functions/Set-ESXiLockdownMode.md
+    - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
+- Community:
+  - Contributing: community/contributing.md
+  - Discussions: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/discussions
+  - Search Issues: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/issues
+  - Open an Issue: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/issues/new/choose
+  - Support: community/support.md
+  - Code of Conduct: community/code-of-conduct.md

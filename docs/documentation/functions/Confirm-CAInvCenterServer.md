@@ -1,38 +1,31 @@
-# Get-ESXiLockdownMode
+# Confirm-CAInvCenterServer
 
 ## SYNOPSIS
 
-Get the ESXi host lockdown mode state from vCenter Server.
+Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
 ## SYNTAX
 
 ```powershell
-Get-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [[-esxiFqdn] <String>] [<CommonParameters>]
+Confirm-CAInvCenterServer [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
+ [-signedCertificate] <String> [[-issuer] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Get-ESXiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
-If esxiFqdn is provided, only the value for that host is returned.
+The Confirm-CAInvCenterServer cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
+You need to pass in the complete path for the certificate file.
+Returns true if thumbprint matches, else returns false.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```powershell
-Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\certificates\Root64.cer
 ```
 
-This example retrieves the lockdown mode for each ESXi host in a cluster.
-
-### EXAMPLE 2
-
-```powershell
-Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
-```
-
-This example retrieves the lockdown mode state for an ESXi host in a given cluster.
+This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
 
 ## PARAMETERS
 
@@ -86,7 +79,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain in which the cluster is located.
+The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
 
 ```yaml
 Type: String
@@ -100,9 +93,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -cluster
+### -signedCertificate
 
-The name of the cluster in which the ESXi host is located.
+The complete path for the root certificate file.
 
 ```yaml
 Type: String
@@ -116,9 +109,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -esxiFqdn
+### -issuer
 
-The FQDN of the ESXi host to retrieve the lockdown mode state for.
+The name of the issuer to match with the thumbprint.
 
 ```yaml
 Type: String
@@ -132,14 +125,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### CommonParameters
+### Common Parameters
 
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
-
-## INPUTS
-
-## OUTPUTS
-
-## NOTES
-
-## RELATED LINKS

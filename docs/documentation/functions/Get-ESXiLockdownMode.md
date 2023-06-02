@@ -1,46 +1,38 @@
-# Set-ESXiLockdownMode
+# Get-ESXiLockdownMode
 
 ## SYNOPSIS
 
-Set the lockdown mode for all ESXi hosts in a given cluster.
+Get the ESXi host lockdown mode state from vCenter Server.
 
 ## SYNTAX
 
-### enable
-
 ```powershell
-Set-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
- [-enable] [<CommonParameters>]
-```
-
-### disable
-
-```powershell
-Set-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
- [-disable] [<CommonParameters>]
+Get-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
+ [-cluster] <String> [[-esxiFqdn] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Set-ESXiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The Get-ESXiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
+If esxiFqdn is provided, only the value for that host is returned.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```powershell
-Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
+Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
 ```
 
-This example will enable the lockdown mode for all ESXi hosts in a cluster.
+This example retrieves the lockdown mode for each ESXi host in a cluster.
 
 ### EXAMPLE 2
 
 ```powershell
-Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
+Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
 ```
 
-This example will disable the lockdown mode for all ESXi hosts in a cluster.
+This example retrieves the lockdown mode state for an ESXi host in a given cluster.
 
 ## PARAMETERS
 
@@ -54,7 +46,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -70,7 +62,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -86,7 +78,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -102,7 +94,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -118,52 +110,28 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -enable
+### -esxiFqdn
 
-Enable lockdown mode for the ESXi host(s).
+The FQDN of the ESXi host to retrieve the lockdown mode state for.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: enable
+Type: String
+Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: Named
-Default value: False
+Required: False
+Position: 6
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -disable
-
-Disable lockdown mode for the ESXi host(s).
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: disable
-Aliases:
-
-Required: True
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### CommonParameters
+### Common Parameters
 
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
-
-## INPUTS
-
-## OUTPUTS
-
-## NOTES
-
-## RELATED LINKS

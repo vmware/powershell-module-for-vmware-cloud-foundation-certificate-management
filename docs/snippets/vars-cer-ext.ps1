@@ -1,0 +1,1 @@
+$certificateFileExt = ".cer"
