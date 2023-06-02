@@ -1,0 +1,1 @@
+$certificateDirectory = 'F:\Certificates'
