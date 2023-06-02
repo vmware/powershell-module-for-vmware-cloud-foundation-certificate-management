@@ -20,17 +20,14 @@
 
 - Microsoft Windows Server 2019 and 2022
 - Microsoft Windows 10 and 11
-- [VMware Photon OS][vmware-photon] 3.0 and 4.0
 
 ### PowerShell Editions and Versions
 
 - [Microsoft Windows PowerShell 5.1][microsoft-powershell]
-- [PowerShell Core 7.2.0 or later][microsoft-powershell]
 
 ### PowerShell Modules
 
 - [`VMware.PowerCLI`][module-vmware-powercli] 13.0.0 or later
-- [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.9 or later
 - [`PowerVCF`][module-powervcf] 2.3.0 or later
 - [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.3.0 or later
 
@@ -43,7 +40,6 @@ Install the supporting PowerShell modules from the PowerShell Gallery by running
 ```powershell
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 Install-Module -Name VMware.PowerCLI -MinimumVersion 13.0.0
-Install-Module -Name VMware.vSphere.SsoAdmin -MinimumVersion 1.3.9
 Install-Module -Name PowerVCF -MinimumVersion 2.3.0
 Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.3.0
 Install-Module -Name VMware.CloudFoundation.CertificateManagement
@@ -55,7 +51,6 @@ For example:
 
 ```powershell
 Import-Module -Name VMware.PowerCLI
-Import-Module -Name VMware.vSphere.SsoAdmin
 Import-Module -Name PowerVCF
 Import-Module -Name PowerValidatedSolutions
 Import-Module -Name VMware.CloudFoundation.CertificateManagement
