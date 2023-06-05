@@ -14,12 +14,12 @@
 
 The following table lists the supported platforms for this module.
 
-Platform                                                     | vSAN ReadyNodes                     | DellEMC VxRail
--------------------------------------------------------------|-------------------------------------|--------------------------
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-x:{ .red }       | :fontawesome-solid-x:{ .red }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }       | :fontawesome-solid-x:{ .red }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }       | :fontawesome-solid-x:{ .red }
+Platform                                                     | Support
+-------------------------------------------------------------|------------------------------------
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-x:{ .red }
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green }
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }
 
 ### Operating Systems
 
@@ -52,7 +52,7 @@ PowerShell Module                                    | Version   | Publisher    
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
 [psgallery-module-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [psgallery-module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF
-[psgallery-module-certificate-management]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.Reporting
+[psgallery-module-certificate-management]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.CertificateManagement
 [psgallery-module-pvs]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
 [developer-module-powercli]: https://developer.vmware.com/tool/vmware-powercli
 [github-module-powervcf]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation
