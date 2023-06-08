@@ -1231,16 +1231,17 @@
 <span class="nv">$sddcManagerUser</span> <span class="p">=</span> <span class="s2">&quot;admin@local&quot;</span>
 <span class="nv">$sddcManagerPass</span> <span class="p">=</span> <span class="s2">&quot;VMw@re1!VMw@re1!&quot;</span>
 <span class="nv">$workloadDomain</span> <span class="p">=</span> <span class="s2">&quot;sfo-m01&quot;</span>
+<span class="nv">$mode</span> <span class="p">=</span> <span class="s2">&quot;custom&quot;</span>
 </code></pre></div>
 </li>
 <li>
 <p>Set the ESXi certificate management mode in vCenter Server by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-EsxiCertificateMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-mode</span> <span class="nv">$mode</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Set-EsxiCertificateMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-mode</span> <span class="nv">$mode</span>
 </code></pre></div>
 </li>
 </ol>
 <h2 id="request-a-certificate-signing-request">Request a Certificate Signing Request<a class="headerlink" href="#request-a-certificate-signing-request" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-EsxiCsr/"><code>Request-EsxiCsr</code></a> cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory. </p>
+<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-EsxiCsr/"><code>Request-EsxiCsr</code></a> cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.</p>
 <h2 id="request-certificate-signing-request-for-each-esxi-host-in-a-cluster">Request Certificate Signing Request for each ESXi Host in a Cluster<a class="headerlink" href="#request-certificate-signing-request-for-each-esxi-host-in-a-cluster" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
@@ -1264,7 +1265,7 @@
 </li>
 <li>
 <p>Request Certificate Signing Request files by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Request-EsxiCsr</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-Country</span> <span class="nv">$country</span> <span class="n">-Locality</span> <span class="nv">$location</span> <span class="n">-Organization</span> <span class="nv">$organization</span> <span class="n">-OrganizationUnit</span> <span class="nv">$organizationUnit</span> <span class="n">-StateOrProvince</span> <span class="nv">$stateOrProvince</span> <span class="n">-outputFolder</span> <span class="nv">$outputDirectory</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Request-EsxiCsr</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-Country</span> <span class="nv">$country</span> <span class="n">-Locality</span> <span class="nv">$location</span> <span class="n">-Organization</span> <span class="nv">$organization</span> <span class="n">-OrganizationUnit</span> <span class="nv">$organizationUnit</span> <span class="n">-StateOrProvince</span> <span class="nv">$stateOrProvince</span> <span class="n">-outputDirectory</span> <span class="nv">$outputDirectory</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1291,7 +1292,7 @@
 </li>
 <li>
 <p>Request a Certificate Signing Request file by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Request-EsxiCsr</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-esxiFqdn</span> <span class="nv">$esxiFqdn</span> <span class="n">-Country</span> <span class="nv">$country</span> <span class="n">-Locality</span> <span class="nv">$location</span> <span class="n">-Organization</span> <span class="nv">$organization</span> <span class="n">-OrganizationUnit</span> <span class="nv">$organizationUnit</span> <span class="n">-StateOrProvince</span> <span class="nv">$stateOrProvince</span> <span class="n">-outputFolder</span> <span class="nv">$outputDirectory</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Request-EsxiCsr</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-esxiFqdn</span> <span class="nv">$esxiFqdn</span> <span class="n">-Country</span> <span class="nv">$country</span> <span class="n">-Locality</span> <span class="nv">$locality</span> <span class="n">-Organization</span> <span class="nv">$organization</span> <span class="n">-OrganizationUnit</span> <span class="nv">$organizationUnit</span> <span class="n">-StateOrProvince</span> <span class="nv">$stateOrProvince</span> <span class="n">-outputDirectory</span> <span class="nv">$outputDirectory</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1314,7 +1315,7 @@
 </li>
 <li>
 <p>Verify the Certificate Authority is trusted in vCenter server by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Confirm-CAInvCenterServer</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-issuer</span> <span class="nv">$issuer</span> <span class="n">-signedCertificate</span> <span class="nv">$signedCertificate</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Confirm-CAInvCenterServer</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-issuer</span> <span class="nv">$issuer</span> <span class="n">-signedCertificate</span> <span class="nv">$signedCertificate</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1337,7 +1338,7 @@
 </li>
 <li>
 <p>Set the lockdown mode to <code>disable</code> by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-ESXiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-disable</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Set-ESXiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-disable</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1358,7 +1359,7 @@
 </li>
 <li>
 <p>Set the lockdown mode to <code>enable</code> by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-ESXiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-enable</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Set-ESXiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-enable</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1380,7 +1381,7 @@
 </li>
 <li>
 <p>Get the vSAN health summary from vCenter server for a cluster by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Get-vSANHealthSummary</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-password</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-vSANHealthSummary</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1438,7 +1439,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-06-02T21:45:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-06-02</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-06-08T18:54:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-06-08</span>
       
     
   </small>
