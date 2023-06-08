@@ -1,1 +1,2 @@
-$reportPath = "/home/vmware/reporting"
+$signedCertificate = "/home/vmware/certificates/Root64.cer"
+
