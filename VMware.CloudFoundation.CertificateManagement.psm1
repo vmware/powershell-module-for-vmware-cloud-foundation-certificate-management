@@ -88,7 +88,7 @@ Function Get-vCenterServer {
         [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")] [String] $esxiFqdn
     )
 
-    if (Test-Connection -server $server) {
+    if (Test-Connection -ComputerName $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
             if ($PsBoundParameters.ContainsKey("domain")) {
                 $domain = $(Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }).name
@@ -271,9 +271,8 @@ Function Confirm-ESXiCertificateInstalled {
             return
         }
         $esxiCertificateThumbprint = Get-EsxiCertificateThumbprint -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
-        $crt = New-Object System.Security.Cryptography.X509Certificates.X509Certificate
-        $crt.Import($signedCertificate)
-        $signedCertThumbprint = $crt.GetCertHashString()
+        $crt = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2($signedCertificate)
+        $signedCertThumbprint = $crt.Thumbprint
 
         if ($esxiCertificateThumbprint -eq $signedCertThumbprint) {
             Write-Debug "Signed certificate thumbprint matches with the ESXi host certificate thumbprint."
@@ -1147,3 +1146,4 @@ Function Install-EsxiCertificate {
 
 ###################################################  END FUNCTIONS  ###################################################
 #######################################################################################################################
+
