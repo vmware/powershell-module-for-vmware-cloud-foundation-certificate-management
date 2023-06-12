@@ -1105,9 +1105,9 @@ Function Install-EsxiCertificate {
                     $esxCertificatePem = Get-Content $crtPath -Raw
                     Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxiFqdn -ErrorAction Stop
                     $replacedHosts.Add($esxiFqdn)
-
+                    
                     # Disconnect ESXi host from vCenter Server prior to restarting an ESXi host.
-					Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Disconnected" -timeout $timeout
+                    Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Disconnected" -timeout $timeout
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
 
                     # Connect to vCenter Server, set the ESXi host connection state, and exit maintenance mode.

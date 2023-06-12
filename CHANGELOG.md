@@ -1,5 +1,13 @@
 # CHANGELOG
 
+# Release History
+
+## v1.0.0.1007 (Not Released)
+
+Bugfix:
+
+- Added a disconnect from vCenter Server prior toan ESXi host reboot`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/36)
+
 ## [v1.0.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.0.0)
 
 > Release Date: 2023-05-30
