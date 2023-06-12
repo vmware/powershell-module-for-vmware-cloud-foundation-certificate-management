@@ -911,7 +911,7 @@ Function Set-EsxiConnectionState {
             break
         } else {
             if ($state -ieq "Connected"){
-                Set-VMHost -VMHost $esxiFqdn -State $state -confirm:$false
+                Set-VMHost -VMHost $esxiFqdn -State $state -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $errMsg -WarningAction SilentlyContinue
             }
             Write-Output "Polling the connection every $pollInterval seconds. Waiting for the connection state to change to $state."
         }
@@ -1276,7 +1276,7 @@ Function Install-EsxiCertificate {
                     $esxCertificatePem = Get-Content $crtPath -Raw
                     Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxiFqdn -ErrorAction Stop -Confirm:$false
                     $replacedHosts.Add($esxiFqdn)
-                    Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Disconnected" -timeout $timeout
+                    #Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Disconnected" -timeout $timeout
                     Restart-EsxiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
 
                     # Connect to vCenter Server, set the ESXi host connection state, and exit maintenance mode.
