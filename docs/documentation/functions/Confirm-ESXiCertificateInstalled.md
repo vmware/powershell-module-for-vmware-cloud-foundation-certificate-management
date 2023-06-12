@@ -1,4 +1,4 @@
-# Confirm-ESXiCertificateInstalled
+# Confirm-EsxiCertificateInstalled
 
 ## SYNOPSIS
 
@@ -7,13 +7,13 @@ Verify if the provided certificate is already on the ESXi host.
 ## SYNTAX
 
 ```powershell
-Confirm-ESXiCertificateInstalled [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String>
+Confirm-EsxiCertificateInstalled [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String>
  [-signedCertificate] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Confirm-ESXiCertificateInstalled cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
+The Confirm-EsxiCertificateInstalled cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
 You need to pass in the complete path for the certificate file.
 Returns true if certificate is already installed, else returns false.
 
@@ -22,7 +22,7 @@ Returns true if certificate is already installed, else returns false.
 ### EXAMPLE 1
 
 ```powershell
-Confirm-ESXiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w01-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w01-esx01.sfo.rainpole.io.cer
+Confirm-EsxiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w01-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w01-esx01.sfo.rainpole.io.cer
 ```
 
 This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
