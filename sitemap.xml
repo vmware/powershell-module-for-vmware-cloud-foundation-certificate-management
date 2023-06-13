@@ -106,6 +106,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/</loc>
+         <lastmod>2023-06-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/user-guide/esxi-certificate-management/</loc>
          <lastmod>2023-06-13</lastmod>
          <changefreq>daily</changefreq>

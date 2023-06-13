@@ -651,6 +651,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -685,8 +687,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../documentation/functions/Confirm-ESXiCertificateInstalled/" class="md-nav__link">
-        Confirm-ESXiCertificateInstalled
+      <a href="../documentation/functions/Confirm-EsxiCertificateInstalled.md" class="md-nav__link">
+        Confirm-EsxiCertificateInstalled
       </a>
     </li>
   
@@ -699,8 +701,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../documentation/functions/Get-ESXiLockdownMode/" class="md-nav__link">
-        Get-ESXiLockdownMode
+      <a href="../documentation/functions/Get-EsxiLockdownMode.md" class="md-nav__link">
+        Get-EsxiLockdownMode
       </a>
     </li>
   
@@ -797,8 +799,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../documentation/functions/Restart-ESXiHost/" class="md-nav__link">
-        Restart-ESXiHos
+      <a href="../documentation/functions/Restart-EsxiHost.md" class="md-nav__link">
+        Restart-EsxiHos
       </a>
     </li>
   
@@ -811,8 +813,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../documentation/functions/Set-ESXiLockdownMode/" class="md-nav__link">
-        Set-ESXiLockdownMode
+      <a href="../documentation/functions/Set-EsxiLockdownMode.md" class="md-nav__link">
+        Set-EsxiLockdownMode
       </a>
     </li>
   
@@ -827,6 +829,20 @@
     <li class="md-nav__item">
       <a href="../documentation/functions/Set-EsxiCertificateMode/" class="md-nav__link">
         Set-EsxiCertificateMode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/functions/Test-EsxiCertMgmtChecks/" class="md-nav__link">
+        Test-EsxiCertMgmtChecks
       </a>
     </li>
   
@@ -1054,6 +1070,16 @@
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
 <h2 id="v110-not-released">v1.1.0 (Not Released)<a class="headerlink" href="#v110-not-released" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Release Date: Unreleased</p>
+</blockquote>
+<p>Enhancement:</p>
+<ul>
+<li>Added support for an ESXi certificate management pre-check with <code>Test-EsxiCertMgmtChecks</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37">GH-37</a></li>
+<li>Added support for PowerShell Core. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37">GH-37</a></li>
+<li>Added support for VMware PhotonOS. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37">GH-37</a></li>
+<li>Enhanced <code>Get-vSANHealthSummary</code> cmdlet improving log messages and adding a check for vSAN services. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37">GH-37</a></li>
+</ul>
 <p>Bugfix:</p>
 <ul>
 <li>Added a disconnect from vCenter Server prior to an ESXi host reboot. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/36">GH-36</a></li>

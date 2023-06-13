@@ -648,6 +648,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#run-the-checks-required-for-esxi-certificate-management-for-a-cluster" class="md-nav__link">
+    Run the checks required for ESXi Certificate Management for a Cluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-certificate" class="md-nav__link">
     Install a Certificate
   </a>
@@ -733,6 +740,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -767,8 +776,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../functions/Confirm-ESXiCertificateInstalled/" class="md-nav__link">
-        Confirm-ESXiCertificateInstalled
+      <a href="../../functions/Confirm-EsxiCertificateInstalled.md" class="md-nav__link">
+        Confirm-EsxiCertificateInstalled
       </a>
     </li>
   
@@ -781,8 +790,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../functions/Get-ESXiLockdownMode/" class="md-nav__link">
-        Get-ESXiLockdownMode
+      <a href="../../functions/Get-EsxiLockdownMode.md" class="md-nav__link">
+        Get-EsxiLockdownMode
       </a>
     </li>
   
@@ -879,8 +888,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../functions/Restart-ESXiHost/" class="md-nav__link">
-        Restart-ESXiHos
+      <a href="../../functions/Restart-EsxiHost.md" class="md-nav__link">
+        Restart-EsxiHos
       </a>
     </li>
   
@@ -893,8 +902,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../functions/Set-ESXiLockdownMode/" class="md-nav__link">
-        Set-ESXiLockdownMode
+      <a href="../../functions/Set-EsxiLockdownMode.md" class="md-nav__link">
+        Set-EsxiLockdownMode
       </a>
     </li>
   
@@ -909,6 +918,20 @@
     <li class="md-nav__item">
       <a href="../../functions/Set-EsxiCertificateMode/" class="md-nav__link">
         Set-EsxiCertificateMode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/Test-EsxiCertMgmtChecks/" class="md-nav__link">
+        Test-EsxiCertMgmtChecks
       </a>
     </li>
   
@@ -1159,6 +1182,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#run-the-checks-required-for-esxi-certificate-management-for-a-cluster" class="md-nav__link">
+    Run the checks required for ESXi Certificate Management for a Cluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-certificate" class="md-nav__link">
     Install a Certificate
   </a>
@@ -1320,7 +1350,7 @@
 </li>
 </ol>
 <h2 id="set-the-lockdown-mode-for-esxi-hosts">Set the Lockdown Mode for ESXi Hosts<a class="headerlink" href="#set-the-lockdown-mode-for-esxi-hosts" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-ESXiLockdownMode/"><code>Set-ESXiLockdownMode</code></a> cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.</p>
+<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiLockdownMode/"><code>Set-EsxiLockdownMode</code></a> cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.</p>
 <h3 id="disable-lockdown-mode-for-each-esxi-host-in-a-cluster">Disable Lockdown Mode for Each ESXi Host in a Cluster<a class="headerlink" href="#disable-lockdown-mode-for-each-esxi-host-in-a-cluster" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -1338,7 +1368,7 @@
 </li>
 <li>
 <p>Set the lockdown mode to <code>disable</code> by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-ESXiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-disable</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Set-EsxiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-disable</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1359,7 +1389,7 @@
 </li>
 <li>
 <p>Set the lockdown mode to <code>enable</code> by running the command in the PowerShell console.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-ESXiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-enable</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Set-EsxiLockdownMode</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-enable</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1382,6 +1412,35 @@
 <li>
 <p>Get the vSAN health summary from vCenter server for a cluster by running the command in the PowerShell console.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-vSANHealthSummary</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span>
+</code></pre></div>
+</li>
+</ol>
+<h2 id="run-the-checks-required-for-esxi-certificate-management-for-a-cluster">Run the checks required for ESXi Certificate Management for a Cluster<a class="headerlink" href="#run-the-checks-required-for-esxi-certificate-management-for-a-cluster" title="Permanent link">&para;</a></h2>
+<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/"><code>Test-EsxiCertMgmtChecks</code></a> cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The following checks are run:
+- Check ESXi Certificate Mode
+- Check ESXi Lockdown Mode
+- Confirm CA In vCenter Server
+- Check vSAN Health Status</p>
+<ol>
+<li>
+<p>Start PowerShell (Run as Administrator).</p>
+</li>
+<li>
+<p>Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$sddcManagerFqdn</span> <span class="p">=</span> <span class="s2">&quot;sfo-vcf01.sfo.rainpole.io&quot;</span>
+<span class="nv">$sddcManagerUser</span> <span class="p">=</span> <span class="s2">&quot;admin@local&quot;</span>
+<span class="nv">$sddcManagerPass</span> <span class="p">=</span> <span class="s2">&quot;VMw@re1!VMw@re1!&quot;</span>
+<span class="nv">$workloadDomain</span> <span class="p">=</span> <span class="s2">&quot;sfo-m01&quot;</span>
+<span class="nv">$cluster</span> <span class="p">=</span> <span class="s2">&quot;sfo-m01-cl01&quot;</span>
+<span class="nv">$issuer</span> <span class="p">=</span> <span class="s2">&quot;rainpole&quot;</span>
+<span class="nv">$signedCertificate</span> <span class="p">=</span> <span class="s2">&quot;F:\Certificates\Root64.cer&quot;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Run the checks required for ESXi Certificate management for a cluster by running the command in the PowerShell console.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Test-EsxiCertMgmtChecks</span> <span class="n">-server</span> <span class="nv">$sddcManagerFqdn</span> <span class="n">-user</span> <span class="nv">$sddcManagerUser</span> <span class="n">-pass</span> <span class="nv">$sddcManagerPass</span> <span class="n">-domain</span> <span class="nv">$workloadDomain</span> <span class="n">-cluster</span> <span class="nv">$cluster</span> <span class="n">-signedCertificate</span> <span class="nv">$signedCertificate</span> <span class="n">-issuer</span> <span class="nv">$issuer</span>
 </code></pre></div>
 </li>
 </ol>
@@ -1439,7 +1498,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-06-08T18:54:30+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-06-08</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-06-13T19:13:08+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-06-13</span>
       
     
   </small>
