@@ -233,7 +233,7 @@ Function Test-EsxiCertMgmtChecks {
         Run the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 
         .DESCRIPTION
-        The Test-VCFCertMgmtChecks runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+        The Test-EsxiCertMgmtChecks runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
         The following checks are run:
         - Check ESXi Certificate Mode
         - Check ESXi Lockdown Mode
@@ -241,11 +241,11 @@ Function Test-EsxiCertMgmtChecks {
         - Check vSAN Health Status
 
         .EXAMPLE
-        Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
+        Test-EsxiCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
         This example runs the checks required for ESXi Certificate Management for the cluster belonging to the domain sfo-m01.
 
         .EXAMPLE
-        Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
+        Test-EsxiCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
         This example runs the checks required for ESXi Certificate Management for an ESXi host belonging to the domain sfo-m01.
 
         .PARAMETER server
@@ -1276,7 +1276,7 @@ Function Install-EsxiCertificate {
                     $esxCertificatePem = Get-Content $crtPath -Raw
                     Set-VIMachineCertificate -PemCertificate $esxCertificatePem -VMHost $esxiFqdn -ErrorAction Stop -Confirm:$false
                     $replacedHosts.Add($esxiFqdn)
-                    
+
                     # Disconnect ESXi host from vCenter Server prior to restarting an ESXi host.
                     Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Disconnected" -timeout $timeout
                     Restart-ESXiHost -esxiFqdn $esxiFqdn -user $($esxiCredential.username) -pass $($esxiCredential.password)
