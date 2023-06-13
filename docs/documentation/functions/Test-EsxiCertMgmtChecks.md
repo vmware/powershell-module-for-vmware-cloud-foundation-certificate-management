@@ -15,9 +15,10 @@ Test-VCFCertMgmtChecks [-server] <String> [-user] <String> [-pass] <String> [-do
 
 The Test-VCFCertMgmtChecks runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 The following checks are run:
+
 - Check ESXi Certificate Mode
 - Check ESXi Lockdown Mode
-- Confirm CA In vCenter Server
+- Confirm Certificate Authority In vCenter Server
 - Check vSAN Health Status
 
 ## EXAMPLES

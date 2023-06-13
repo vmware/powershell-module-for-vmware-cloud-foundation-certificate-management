@@ -30,8 +30,7 @@ This PowerShell module is not supported by VMware Support Services.
 
 We welcome you to use the GitHub [issues][gh-issues] tracker to report bugs or suggest features and enhancements.
 
-When filing an issue, please check existing open, or recently closed, issues to make sure someone else hasn't already
-reported the issue.
+When filing an issue, please check existing open, or recently closed, issues to make sure someone else hasn't already reported the issue.
 
 Please try to include as much information as you can. Details like these are incredibly useful:
 
