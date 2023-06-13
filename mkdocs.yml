@@ -23,7 +23,7 @@ theme:
   logo: assets/images/icon-white.svg
   icon:
     repo: fontawesome/brands/github
-  palette:  
+  palette:
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: indigo
@@ -86,7 +86,7 @@ extra:
     repo_url_raw: https://raw.githubusercontent.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management
   consent:
     title: Cookie Consent
-    description: >- 
+    description: >-
       We use cookies to recognize your repeated visits and preferences, as well
       as to measure the effectiveness of our documentation and whether users
       find what they're searching for. With your consent, you're helping us to
@@ -131,7 +131,7 @@ markdown_extensions:
 
 # Navigation
 nav:
-- Getting Started: 
+- Getting Started:
   - index.md
   - Installation: install.md
   - Updating: update.md
@@ -144,17 +144,18 @@ nav:
     - ESXi Certificate Management: documentation/user-guide/esxi-certificate-management.md
   - Functions:
     - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
-    - Confirm-ESXiCertificateInstalled: documentation/functions/Confirm-ESXiCertificateInstalled.md
-    - Get-ESXiLockdownMode: documentation/functions/Get-ESXiLockdownMode.md
+    - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md
+    - Get-EsxiLockdownMode: documentation/functions/Get-EsxiLockdownMode.md
     - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md
     - Get-EsxiCertificateThumbprint: documentation/functions/Get-EsxiCertificateThumbprint.md
     - Get-vCenterCertificateThumbprint: documentation/functions/Get-vCenterCertificateThumbprint.md
     - Get-vSANHealthSummary: documentation/functions/Get-vSANHealthSummary.md
     - Install-EsxiCertificate: documentation/functions/Install-EsxiCertificate.md
     - Request-EsxiCsr: documentation/functions/Request-EsxiCsr.md
-    - Restart-ESXiHos: documentation/functions/Restart-ESXiHost.md
-    - Set-ESXiLockdownMode: documentation/functions/Set-ESXiLockdownMode.md
+    - Restart-EsxiHos: documentation/functions/Restart-EsxiHost.md
+    - Set-EsxiLockdownMode: documentation/functions/Set-EsxiLockdownMode.md
     - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
+    - Test-EsxiCertMgmtChecks: documentation/functions/Test-EsxiCertMgmtChecks.md
 - Community:
   - Contributing: community/contributing.md
   - Discussions: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/discussions

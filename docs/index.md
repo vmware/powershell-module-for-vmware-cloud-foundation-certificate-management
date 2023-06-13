@@ -16,7 +16,7 @@ The following table lists the supported platforms for this module.
 
 Platform                                                     | Support
 -------------------------------------------------------------|------------------------------------
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-x:{ .red }
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-check:{ .green }
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green }
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }
@@ -29,6 +29,7 @@ Operating System                                                       | Version
 -----------------------------------------------------------------------|-----------
 :fontawesome-brands-windows: &nbsp; Microsoft Windows Server           | 2019, 2022
 :fontawesome-brands-windows: &nbsp; Microsoft Windows                  | 10, 11
+:fontawesome-brands-linux: &nbsp; [VMware Photon OS][github-photon-os] | 3.0, 4.0
 
 ### PowerShell
 
@@ -37,6 +38,7 @@ The following table lists the supported editions and versions of PowerShell for 
 Edition                                                                           | Version
 ----------------------------------------------------------------------------------|----------
 :material-powershell: &nbsp; [Microsoft Windows PowerShell][microsoft-powershell] | 5.1
+:material-powershell: &nbsp; [PowerShell Core][microsoft-powershell]              | >= 7.2.0
 
 ### Module Dependencies
 
@@ -57,3 +59,4 @@ PowerShell Module                                    | Version   | Publisher    
 [developer-module-powercli]: https://developer.vmware.com/tool/vmware-powercli
 [github-module-powervcf]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation
 [github-module-pvs]: https://github.com/vmware-samples/power-validated-solutions-for-cloud-foundation
+[github-photon-os]:  https://github.com/vmware/photon

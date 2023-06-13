@@ -1,4 +1,4 @@
-# Set-ESXiLockdownMode
+# Set-EsxiLockdownMode
 
 ## SYNOPSIS
 
@@ -9,27 +9,27 @@ Set the lockdown mode for all ESXi hosts in a given cluster.
 ### enable
 
 ```powershell
-Set-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
+Set-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
  [-enable] [<CommonParameters>]
 ```
 
 ### disable
 
 ```powershell
-Set-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
+Set-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
  [-disable] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Set-ESXiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The Set-EsxiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```powershell
-Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
+Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
 ```
 
 This example will enable the lockdown mode for all ESXi hosts in a cluster.
@@ -37,7 +37,7 @@ This example will enable the lockdown mode for all ESXi hosts in a cluster.
 ### EXAMPLE 2
 
 ```powershell
-Set-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
+Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
 ```
 
 This example will disable the lockdown mode for all ESXi hosts in a cluster.

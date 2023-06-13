@@ -97,7 +97,7 @@ The [`Confirm-CAInvCenterServer`](/powershell-module-for-vmware-cloud-foundation
 
 ## Set the Lockdown Mode for ESXi Hosts
 
-The [`Set-ESXiLockdownMode`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-ESXiLockdownMode/) cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The [`Set-EsxiLockdownMode`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiLockdownMode/) cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
 
 ### Disable Lockdown Mode for Each ESXi Host in a Cluster
 
@@ -116,7 +116,7 @@ The [`Set-ESXiLockdownMode`](/powershell-module-for-vmware-cloud-foundation-cert
 3. Set the lockdown mode to `disable` by running the command in the PowerShell console.
 
     ```powershell
-    Set-ESXiLockdownMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -disable
+    Set-EsxiLockdownMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -disable
     ```
 
 ### Enable Lockdown Mode for Each ESXi Host in a Cluster
@@ -136,7 +136,7 @@ The [`Set-ESXiLockdownMode`](/powershell-module-for-vmware-cloud-foundation-cert
 3. Set the lockdown mode to `enable` by running the command in the PowerShell console.
 
     ```powershell
-    Set-ESXiLockdownMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -enable
+    Set-EsxiLockdownMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -enable
     ```
 
 ## Get the vSAN Health Summary from vCenter Server for a Cluster
@@ -159,6 +159,35 @@ The [`Get-vSANHealthSummary`](/powershell-module-for-vmware-cloud-foundation-cer
 
     ```powershell
     Get-vSANHealthSummary -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster
+    ```
+
+## Run the checks required for ESXi Certificate Management for a Cluster
+
+The [`Test-EsxiCertMgmtChecks`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/) cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The following checks are run:
+- Check ESXi Certificate Mode
+- Check ESXi Lockdown Mode
+- Confirm CA In vCenter Server
+- Check vSAN Health Status
+
+1. Start PowerShell (Run as Administrator).
+
+2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
+
+    **Example**:
+
+    ```powershell
+    --8<-- "./docs/snippets/vars-vcf.ps1"
+    --8<-- "./docs/snippets/vars-domain.ps1"
+    --8<-- "./docs/snippets/vars-cluster.ps1"
+    --8<-- "./docs/snippets/vars-issuer.ps1"
+    --8<-- "./docs/snippets/vars-signedcer-windows.ps1"
+    ```
+
+3. Run the checks required for ESXi Certificate management for a cluster by running the command in the PowerShell console.
+
+    ```powershell
+    Test-EsxiCertMgmtChecks -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -signedCertificate $signedCertificate -issuer $issuer
     ```
 
 ## Install a Certificate

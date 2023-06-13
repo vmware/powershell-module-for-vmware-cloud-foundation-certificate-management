@@ -1,4 +1,4 @@
-# Restart-ESXiHost
+# Restart-EsxiHost
 
 ## SYNOPSIS
 
@@ -7,13 +7,13 @@ Restart an ESXi host and poll for connection availability.
 ## SYNTAX
 
 ```powershell
-Restart-ESXiHost [-esxiFqdn] <String> [-user] <String> [-pass] <String> [[-poll] <Boolean>]
+Restart-EsxiHost [-esxiFqdn] <String> [-user] <String> [-pass] <String> [[-poll] <Boolean>]
  [[-timeout] <String>] [[-pollInterval] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Restart-ESXiHost cmdlet restarts an ESXi host and polls for connection availability.
+The Restart-EsxiHost cmdlet restarts an ESXi host and polls for connection availability.
 Timeout value is in seconds.
 
 ## EXAMPLES

@@ -1,4 +1,4 @@
-# Get-ESXiLockdownMode
+# Get-EsxiLockdownMode
 
 ## SYNOPSIS
 
@@ -7,13 +7,13 @@ Get the ESXi host lockdown mode state from vCenter Server.
 ## SYNTAX
 
 ```powershell
-Get-ESXiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
+Get-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
  [-cluster] <String> [[-esxiFqdn] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Get-ESXiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
+The Get-EsxiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
 If esxiFqdn is provided, only the value for that host is returned.
 
 ## EXAMPLES
@@ -21,7 +21,7 @@ If esxiFqdn is provided, only the value for that host is returned.
 ### EXAMPLE 1
 
 ```powershell
-Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
 ```
 
 This example retrieves the lockdown mode for each ESXi host in a cluster.
@@ -29,7 +29,7 @@ This example retrieves the lockdown mode for each ESXi host in a cluster.
 ### EXAMPLE 2
 
 ```powershell
-Get-ESXiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
 ```
 
 This example retrieves the lockdown mode state for an ESXi host in a given cluster.
