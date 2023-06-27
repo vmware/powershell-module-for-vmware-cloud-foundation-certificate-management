@@ -157,6 +157,7 @@ nav:
     - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
     - Test-EsxiCertMgmtChecks: documentation/functions/Test-EsxiCertMgmtChecks.md
 - Community:
+  - community/index.md
   - Contributing: community/contributing.md
   - Discussions: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/discussions
   - Search Issues: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/issues

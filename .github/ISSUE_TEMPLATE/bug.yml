@@ -29,7 +29,7 @@ body:
     attributes:
       label: VMware Cloud Foundation
       description: Please provide the VMware Cloud Foundation version.
-      placeholder: 4.5.0
+      placeholder: 5.0
     validations:
       required: true
   - type: input
@@ -62,7 +62,7 @@ body:
         Please provide the PowerShell module version.
         
         Results of: `Get-InstalledModule VMware.CloudFoundation.CertificateManagement`
-      placeholder: v1.0.0
+      placeholder: 1.1.0
     validations:
       required: true
   - type: input
@@ -73,7 +73,7 @@ body:
         Please provide the PowerShell module version.
         
         Results of: `Get-InstalledModule PowerValidatedSolutions`
-      placeholder: v2.3.0
+      placeholder: 2.4.0
     validations:
       required: true
   - type: input
@@ -84,7 +84,7 @@ body:
         Please provide the PowerVCF version.
         
         Results of `Get-InstalledModule PowerVCF`
-      placeholder: v2.3.0
+      placeholder: 2.3.0
     validations:
       required: true
   - type: input
@@ -116,7 +116,8 @@ body:
     attributes:
       label: Error or Debug Output
       description: |
-        Please provide a link to a [GitHub Gist](https://gist.github.com/) containing the complete error or debug output.
+        Please provide a link to a [GitHub Gist](https://gist.github.com/) containing
+        the complete error or debug output.
       placeholder: |
         Link to a GitHub Gist. Please do not paste the debug output in the
         issue.
