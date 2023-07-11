@@ -88,7 +88,7 @@ Function Get-vCenterServer {
         [Parameter (Mandatory = $true, ParameterSetName = "esxifqdn")] [String] $esxiFqdn
     )
 
-    if (Test-Connection -ComputerName $server) {
+    if (Test-VCFConnection -server $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
             if ($PsBoundParameters.ContainsKey("domain")) {
                 $domain = $(Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }).name
@@ -1150,7 +1150,7 @@ Function Restart-EsxiHost {
         $timeout = New-TimeSpan -Seconds $timeout
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         do {
-            if ((Test-NetConnection -ComputerName $esxiFqdn -Port 443 -WarningAction SilentlyContinue -ErrorAction SilentlyContinue).TcpTestSucceeded) {
+            if (Test-EsxiConnection -server $esxiFqdn) {
                 if (Connect-VIServer $esxiFqdn -User $user -Password $pass -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue) {
                     $vmHost = Get-VMHost -Server $esxiFqdn
                     $currentUpTime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
