@@ -47,7 +47,6 @@ theme:
   - content.code.annotate
   - content.code.copy
   - content.tabs.link
-  - navigation.expand
   - navigation.footer
   - navigation.header
   - navigation.indexes
@@ -66,6 +65,7 @@ theme:
 plugins:
 - search:
     separator: '[\s\u200b\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+- open-in-new-tab
 - markdownextradata:
     jinja_options:
       variable_start_string: "${{"
@@ -139,22 +139,22 @@ nav:
   - Release Notes: release-notes.md
   - Release Milestones: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/milestones
   - License: license.md
-- Documentation:
+- Reference:
   - User Guide:
     - ESXi Certificate Management: documentation/user-guide/esxi-certificate-management.md
   - Functions:
     - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
     - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md
-    - Get-EsxiLockdownMode: documentation/functions/Get-EsxiLockdownMode.md
     - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md
     - Get-EsxiCertificateThumbprint: documentation/functions/Get-EsxiCertificateThumbprint.md
+    - Get-EsxiLockdownMode: documentation/functions/Get-EsxiLockdownMode.md
     - Get-vCenterCertificateThumbprint: documentation/functions/Get-vCenterCertificateThumbprint.md
     - Get-vSANHealthSummary: documentation/functions/Get-vSANHealthSummary.md
     - Install-EsxiCertificate: documentation/functions/Install-EsxiCertificate.md
     - Request-EsxiCsr: documentation/functions/Request-EsxiCsr.md
-    - Restart-EsxiHos: documentation/functions/Restart-EsxiHost.md
-    - Set-EsxiLockdownMode: documentation/functions/Set-EsxiLockdownMode.md
+    - Restart-EsxiHost: documentation/functions/Restart-EsxiHost.md
     - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
+    - Set-EsxiLockdownMode: documentation/functions/Set-EsxiLockdownMode.md
     - Test-EsxiCertMgmtChecks: documentation/functions/Test-EsxiCertMgmtChecks.md
 - Community:
   - community/index.md

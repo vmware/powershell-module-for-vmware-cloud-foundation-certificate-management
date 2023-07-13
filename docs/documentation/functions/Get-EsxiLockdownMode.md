@@ -1,24 +1,24 @@
 # Get-EsxiLockdownMode
 
-## SYNOPSIS
+## Synopsis
 
 Get the ESXi host lockdown mode state from vCenter Server.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Get-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [[-esxiFqdn] <String>] [<CommonParameters>]
+Get-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [[-esxiFqdn] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Get-EsxiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
-If esxiFqdn is provided, only the value for that host is returned.
+The `Get-EsxiLockdownMode` cmdlet gets the lockdown mode value for all ESXi hosts in a given cluster or for a given ESXi host within the cluster.
 
-## EXAMPLES
+If `esxiFqdn` is provided, only the value for that host is returned.
 
-### EXAMPLE 1
+## Examples
+
+### Example 1
 
 ```powershell
 Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
@@ -26,7 +26,7 @@ Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphe
 
 This example retrieves the lockdown mode for each ESXi host in a cluster.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
@@ -34,11 +34,11 @@ Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphe
 
 This example retrieves the lockdown mode state for an ESXi host in a given cluster.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -54,7 +54,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -70,7 +70,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The passwordto authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

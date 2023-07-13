@@ -1,38 +1,34 @@
 # Install-EsxiCertificate
 
-## SYNOPSIS
+## Synopsis
 
 Install a certificate for an ESXi host or for each ESXi host in a cluster.
 
-## SYNTAX
+## Syntax
 
 ### cluster
 
 ```powershell
-Install-EsxiCertificate [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
- [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
+Install-EsxiCertificate [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
 ```
 
 ### host
 
 ```powershell
-Install-EsxiCertificate [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String>
- [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
+Install-EsxiCertificate [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Install-EsxiCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster.
-You must provide the directory containing the signed certificate files.
-Certificate names should be in format \<FQDN\>.crt e.g.
-sfo01-m01-esx01.sfo.rainpole.io.crt.
-The workflow will put the ESXi host in maintenance mode with full data migration,
-disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host,
-and the exit maintenance mode once the ESXi host is online.
+The `Install-EsxiCertificate` cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster.
 
-## EXAMPLES
+You must provide the directory containing the signed certificate files. Certificate names should be in format `<FQDN>.crt` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.crt`.)
 
-### EXAMPLE 1
+The workflow will put the ESXi host in maintenance mode with full data migration, disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+
+## Examples
+
+### Example 1
 
 ```powershell
 Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
@@ -40,7 +36,7 @@ Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vs
 
 This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user <administrator@vsphere.local> -pass VMw@re1!
@@ -49,11 +45,11 @@ Install-EsxiCertificate -server sfo-vcf01.sfo.rainpole.io -user <administrator@v
 
 This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -69,7 +65,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -85,7 +81,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

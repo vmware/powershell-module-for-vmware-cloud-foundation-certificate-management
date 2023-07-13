@@ -1,35 +1,34 @@
 # Get-EsxiCertificateThumbprint
 
-## SYNOPSIS
+## Synopsis
 
 Retrieves an ESXi host's certificate thumbprint.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Get-EsxiCertificateThumbprint [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String>
- [<CommonParameters>]
+Get-EsxiCertificateThumbprint [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Get-EsxiCertificateThumbprint cmdlet retrieves an ESXi host's certificate thumbprint.
+The `Get-EsxiCertificateThumbprint` cmdlet retrieves an ESXi host's certificate thumbprint.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Get-EsxiCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
 ```
 
-This example retrieves the ESXI host's certificate thumbprint for an ESXi host with the FQDN of sfo01-m01-esx01.sfo.rainpole.io.
+This example retrieves the ESXi host's certificate thumbprint for an ESXi host with the FQDN of sfo01-m01-esx01.sfo.rainpole.io.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -45,7 +44,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -61,7 +60,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

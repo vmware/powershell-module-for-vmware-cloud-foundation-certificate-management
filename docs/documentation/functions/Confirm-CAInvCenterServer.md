@@ -1,25 +1,26 @@
 # Confirm-CAInvCenterServer
 
-## SYNOPSIS
+## Synopsis
 
 Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Confirm-CAInvCenterServer [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-signedCertificate] <String> [[-issuer] <String>] [<CommonParameters>]
+Confirm-CAInvCenterServer [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-signedCertificate] <String> [[-issuer] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Confirm-CAInvCenterServer cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
+The `Confirm-CAInvCenterServer` cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
+
 You need to pass in the complete path for the certificate file.
-Returns true if thumbprint matches, else returns false.
 
-## EXAMPLES
+Returns `true` if thumbprint matches, else returns `false`.
 
-### EXAMPLE 1
+## Examples
+
+### Example 1
 
 ```powershell
 Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\certificates\Root64.cer
@@ -27,11 +28,11 @@ Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@
 
 This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -47,7 +48,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -63,7 +64,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

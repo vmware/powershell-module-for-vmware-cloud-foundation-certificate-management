@@ -1,29 +1,29 @@
 # Test-EsxiCertMgmtChecks
 
-## SYNOPSIS
+## Synopsis
 
 Run the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Test-VCFCertMgmtChecks [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [-signedCertificate] <String> [[-esxiFqdn] <String>] [[-issuer] <String>] [<CommonParameters>]
+Test-VCFCertMgmtChecks [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-signedCertificate] <String> [[-esxiFqdn] <String>] [[-issuer] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Test-VCFCertMgmtChecks runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The `Test-VCFCertMgmtChecks` runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+
 The following checks are run:
 
 - Check ESXi Certificate Mode
 - Check ESXi Lockdown Mode
-- Confirm Certificate Authority In vCenter Server
+- Confirm Certificate Authority in vCenter Server
 - Check vSAN Health Status
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
@@ -31,7 +31,7 @@ Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsp
 
 This example runs the checks required for ESXi Certificate Management for the cluster belonging to the domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
@@ -39,11 +39,11 @@ Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsp
 
 This example runs the checks required for ESXi Certificate Management for an ESXi host belonging to the domain sfo-m01.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -59,7 +59,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -75,7 +75,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

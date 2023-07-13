@@ -1,25 +1,26 @@
 # Confirm-EsxiCertificateInstalled
 
-## SYNOPSIS
+## Synopsis
 
 Verify if the provided certificate is already on the ESXi host.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Confirm-EsxiCertificateInstalled [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String>
- [-signedCertificate] <String> [<CommonParameters>]
+Confirm-EsxiCertificateInstalled [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String> [-signedCertificate] <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Confirm-EsxiCertificateInstalled cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
+The `Confirm-EsxiCertificateInstalled` cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
+
 You need to pass in the complete path for the certificate file.
-Returns true if certificate is already installed, else returns false.
 
-## EXAMPLES
+Returns `true` if certificate is already installed, else returns `false`.
 
-### EXAMPLE 1
+## Examples
+
+### Example 1
 
 ```powershell
 Confirm-EsxiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w01-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w01-esx01.sfo.rainpole.io.cer
@@ -27,11 +28,11 @@ Confirm-EsxiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user adminis
 
 This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -47,7 +48,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -63,7 +64,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The passwordto authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

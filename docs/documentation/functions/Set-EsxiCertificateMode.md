@@ -1,23 +1,22 @@
 # Set-EsxiCertificateMode
 
-## SYNOPSIS
+## Synopsis
 
 Sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Set-EsxiCertificateMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-mode] <String> [<CommonParameters>]
+Set-EsxiCertificateMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-mode] <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Set-EsxiCertificateMode cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+The `Set-EsxiCertificateMode` cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Set-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -mode custom
@@ -25,11 +24,11 @@ Set-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vs
 
 This example sets the certificate management mode to custom in vCenter Server for the ESXi hosts in workload domain sfo-m01.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -45,7 +44,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -61,7 +60,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

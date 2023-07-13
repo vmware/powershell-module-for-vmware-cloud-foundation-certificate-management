@@ -68,10 +68,10 @@ Function Get-vCenterServer {
         The FQDN of the SDDC Manager appliance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain to retrieve the vCenter Server details from SDDC Manager for the connection object.
@@ -129,16 +129,16 @@ Function Get-EsxiCertificateThumbprint {
 
         .EXAMPLE
         Get-EsxiCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
-        This example retrieves the ESXI host's certificate thumbprint for an ESXi host with the FQDN of sfo01-m01-esx01.sfo.rainpole.io.
+        This example retrieves the ESXi host's certificate thumbprint for an ESXi host with the FQDN of sfo01-m01-esx01.sfo.rainpole.io.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER esxiFqdn
         The FQDN of the ESXi host to retrieve the certificate thumbprint.
@@ -181,13 +181,13 @@ Function Get-vCenterCertificateThumbprint {
         This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer "rainpole".
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
@@ -249,13 +249,13 @@ Function Test-EsxiCertMgmtChecks {
         This example runs the checks required for ESXi Certificate Management for an ESXi host belonging to the domain sfo-m01.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
@@ -398,13 +398,13 @@ Function Confirm-EsxiCertificateInstalled {
         This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER esxiFqdn
         The FQDN of the ESXi host to verify the certificate thumbprint against.
@@ -462,13 +462,13 @@ Function Confirm-CAInvCenterServer {
         This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
@@ -543,13 +543,13 @@ Function Request-EsxiCsr {
         This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain in which the cluster is located.
@@ -655,13 +655,13 @@ Function Get-EsxiCertificateMode {
         This example retrieves the certificate management mode value for the vCenter Server instance for the workload domain sfo-m01.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain to retrieve the certificate management mode value for.
@@ -698,13 +698,13 @@ Function Set-EsxiCertificateMode {
         This example sets the certificate management mode to custom in vCenter Server for the ESXi hosts in workload domain sfo-m01.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain to set the vCenter Server instance certificate management mode setting for.
@@ -751,13 +751,13 @@ Function Get-vSANHealthSummary {
         This example gets the vSAN health summary for cluster sfo-m01-cl01.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain in which the cluster is located.
@@ -925,7 +925,7 @@ Function Get-EsxiLockdownMode {
         Get the ESXi host lockdown mode state from vCenter Server.
 
         .DESCRIPTION
-        The Get-EsxiLockdownMode cmdlet gets the lockdown mode value for all ESXI hosts in a given cluster or for a given ESXi host within the cluster.
+        The Get-EsxiLockdownMode cmdlet gets the lockdown mode value for all ESXi hosts in a given cluster or for a given ESXi host within the cluster.
         If esxiFqdn is provided, only the value for that host is returned.
 
         .EXAMPLE
@@ -937,13 +937,13 @@ Function Get-EsxiLockdownMode {
         This example retrieves the lockdown mode state for an ESXi host in a given cluster.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain in which the cluster is located.
@@ -1007,13 +1007,13 @@ Function Set-EsxiLockdownMode {
         This example will disable the lockdown mode for all ESXi hosts in a cluster.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain in which the cluster is located.
@@ -1194,13 +1194,13 @@ Function Install-EsxiCertificate {
         This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
 
         .PARAMETER server
-        The FQDN of the SDDC Manager.
+        The fully qualified domain name of the SDDC Manager instance.
 
         .PARAMETER user
-        The username to authenticate to SDDC Manager.
+        The username to authenticate to the SDDC Manager instance.
 
         .PARAMETER pass
-        The password to authenticate to SDDC Manager.
+        The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
         The name of the workload domain in which the ESXi host is located.
@@ -1293,7 +1293,7 @@ Function Install-EsxiCertificate {
                         break
                     }
                 } else {
-                    Write-Error "Unable to get credentials for ESXI host $esxiFqdn from SDDC Manager."
+                    Write-Error "Unable to get credentials for ESXi host $esxiFqdn from SDDC Manager."
                     $skippedHosts.Add($esxiFqdn)
                 }
             }
