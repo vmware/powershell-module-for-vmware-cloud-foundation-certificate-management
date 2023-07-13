@@ -1,24 +1,24 @@
 # Get-vSANHealthSummary
 
-## SYNOPSIS
+## Synopsis
 
 Get the vSAN health summary from vCenter Server for a cluster.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Get-vSANHealthSummary [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [<CommonParameters>]
+Get-vSANHealthSummary [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Get-vSANHealthSummary cmdlet gets the vSAN health summary from vCenter Server for a cluster.
+The `Get-vSANHealthSummary` cmdlet gets the vSAN health summary from vCenter Server for a cluster.
+
 If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
@@ -26,11 +26,11 @@ Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsph
 
 This example gets the vSAN health summary for cluster sfo-m01-cl01.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -46,7 +46,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -62,7 +62,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

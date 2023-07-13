@@ -1,23 +1,22 @@
 # Get-EsxiCertificateMode
 
-## SYNOPSIS
+## Synopsis
 
 Retrieves the certificate management mode value from the vCenter Server instance for a workload domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Get-EsxiCertificateMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [<CommonParameters>]
+Get-EsxiCertificateMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Get-EsxiCertificateMode cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
+The `Get-EsxiCertificateMode` cmdlet retrieves the certificate management mode value from vCenter Server instance for a workload domain.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Get-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -25,11 +24,11 @@ Get-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vs
 
 This example retrieves the certificate management mode value for the vCenter Server instance for the workload domain sfo-m01.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -45,7 +44,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -61,7 +60,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

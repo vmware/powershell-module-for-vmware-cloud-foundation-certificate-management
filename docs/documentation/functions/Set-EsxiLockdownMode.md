@@ -1,16 +1,15 @@
 # Set-EsxiLockdownMode
 
-## SYNOPSIS
+## Synopsis
 
 Set the lockdown mode for all ESXi hosts in a given cluster.
 
-## SYNTAX
+## Syntax
 
 ### enable
 
 ```powershell
-Set-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String>
- [-enable] [<CommonParameters>]
+Set-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-enable] [<CommonParameters>]
 ```
 
 ### disable
@@ -20,13 +19,13 @@ Set-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-doma
  [-disable] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Set-EsxiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The `Set-EsxiLockdownMode` cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
@@ -34,7 +33,7 @@ Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphe
 
 This example will enable the lockdown mode for all ESXi hosts in a cluster.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
@@ -42,11 +41,11 @@ Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphe
 
 This example will disable the lockdown mode for all ESXi hosts in a cluster.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -62,7 +61,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -78,7 +77,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The passwordto authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String

@@ -1,25 +1,26 @@
 # Get-vCenterCertificateThumbprint
 
-## SYNOPSIS
+## Synopsis
 
 Retrieves either all of the vCenter Server instance's certificate thumbprints or those which match the provided issuer name.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Get-vCenterCertificateThumbprint [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [[-issuer] <String>] [<CommonParameters>]
+Get-vCenterCertificateThumbprint [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [[-issuer] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server instance's certificate thumbprints.
+The `Get-vCenterCertificateThumbprint` cmdlet retrieves the vCenter Server instance's certificate thumbprints.
+
 By default, it retrieves all thumbprints.
+
 If issuer is provided, then only the thumbprint of the matching certificate is returned.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -27,7 +28,7 @@ Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user adminis
 
 This example retrieves the certificate thumbprints for the vCenter Server instance belonging to the domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole
@@ -35,11 +36,11 @@ Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user adminis
 
 This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer "rainpole".
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-The FQDN of the SDDC Manager.
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -55,7 +56,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to SDDC Manager.
+The username to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -71,7 +72,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to SDDC Manager.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
