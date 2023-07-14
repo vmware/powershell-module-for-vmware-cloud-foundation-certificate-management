@@ -2,122 +2,122 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/install/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/license/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/release-notes/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/update/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/user-access/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/code-of-conduct/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/contributing/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/support/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Confirm-CAInvCenterServer/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Confirm-EsxiCertificateInstalled/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-EsxiCertificateMode/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-EsxiCertificateThumbprint/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-EsxiLockdownMode/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-vCenterCertificateThumbprint/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-vSANHealthSummary/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-EsxiCertificate/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-EsxiCsr/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Restart-EsxiHost/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiCertificateMode/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiLockdownMode/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/user-guide/esxi-certificate-management/</loc>
-         <lastmod>2023-07-13</lastmod>
+         <lastmod>2023-07-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
