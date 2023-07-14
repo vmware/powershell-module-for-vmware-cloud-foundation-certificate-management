@@ -1,5 +1,12 @@
 # Release History
 
+## v1.2.0 (Unreleased)
+
+Enhancement:
+
+- Updated module to use `Test-VCFConnection` instead of `Test-Connection` where applicable. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/45)
+- Updated module to use `Test-EsxiConnection` instead of `Test-NetConnection` where applicable. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/45)
+
 ## [v1.1.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.1.0)
 
 > Release Date: 2023-06-27
