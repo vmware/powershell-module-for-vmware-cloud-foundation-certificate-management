@@ -47,8 +47,8 @@ The following table lists the required PowerShell module dependencies for this m
 PowerShell Module                                    | Version   | Publisher    | Reference
 -----------------------------------------------------|-----------|--------------|---------------------------------------------------------------------------
 [VMware.PowerCLI][psgallery-module-powercli]         | >= 13.0.0 | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
-[PowerVCF][psgallery-module-powervcf]                | >= 2.3.0  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.2.0  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-pvs]
+[PowerVCF][psgallery-module-powervcf]                | >= 2.3.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.5.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
@@ -57,6 +57,6 @@ PowerShell Module                                    | Version   | Publisher    
 [psgallery-module-certificate-management]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.CertificateManagement
 [psgallery-module-pvs]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
 [developer-module-powercli]: https://developer.vmware.com/tool/vmware-powercli
-[github-module-powervcf]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation
-[github-module-pvs]: https://github.com/vmware-samples/power-validated-solutions-for-cloud-foundation
+[docs-module-powervcf]: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation
+[docs-module-pvs]: https://vmware-samples.github.io/power-validated-solutions-for-cloud-foundation
 [github-photon-os]:  https://github.com/vmware/photon
