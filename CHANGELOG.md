@@ -7,6 +7,11 @@ Enhancement:
 - Updated module to use `Test-VCFConnection` instead of `Test-Connection` where applicable. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/45)
 - Updated module to use `Test-EsxiConnection` instead of `Test-NetConnection` where applicable. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/45)
 
+Chore:
+
+- Added the `RequiredModules` key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/48)
+- Updated `PowerValidatedSolutions` module dependency from v2.3.0 to v2.5.0. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/48)
+
 ## [v1.1.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.1.0)
 
 > Release Date: 2023-06-27
