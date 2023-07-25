@@ -58,5 +58,5 @@ PowerShell Module                                    | Version   | Publisher    
 [psgallery-module-pvs]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
 [developer-module-powercli]: https://developer.vmware.com/tool/vmware-powercli
 [docs-module-powervcf]: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation
-[docs-module-pvs]: https://vmware-samples.github.io/power-validated-solutions-for-cloud-foundation
+[docs-module-pvs]: https://vmware.github.io/power-validated-solutions-for-cloud-foundation
 [github-photon-os]:  https://github.com/vmware/photon
