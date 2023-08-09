@@ -1319,8 +1319,7 @@ Function Install-EsxiCertificate {
     }
 }
 
-Function Set-SddcCertificateAuthority
-{
+Function Set-SddcCertificateAuthority {
     <#
         .SYNOPSIS
         Configure Microsoft Certificate Authroity in SDDC Manager
@@ -1330,8 +1329,9 @@ Function Set-SddcCertificateAuthority
         SDDC Manager's Certificate Authority.
 
         .EXAMPLE
-        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! 
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -vcfCertCaFqdn 
+        rpl-ad01.rainpole.io -vcfCertCaUsername svc-vcf-ca -vcfCertCaPassword VMw@re1! -vcfCertCaTemplate VMware
+        This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1342,11 +1342,17 @@ Function Set-SddcCertificateAuthority
         .PARAMETER pass
         The password to authenticate to the SDDC Manager instance.
 
-        .PARAMETER domain
-        The name of the workload domain in which the ESXi host is located.
+        .PARAMETER vcfCertCaFqdn
+        The fully qualified domain name of the Microsoft Certificate Authority.
 
-        .PARAMETER timeout
-        The timeout in seconds for putting the ESXi host in maintenance mode. Default is 18000 seconds (5 hours).
+        .PARAMETER vcfCertCaUsername
+        The username to authenticate to the Microsoft Certificate Authority.
+
+        .PARAMETER vcfCertCaPassword
+        The password to authenticate to the Microsoft Certificate Authority.
+
+        .PARAMETER vcfCertCaTemplate
+        The Certificate Template Name to be used with the Microsoft Certificate Authority.
     #>
 
     Param (
@@ -1359,41 +1365,41 @@ Function Set-SddcCertificateAuthority
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $vcfCertCaTemplate
     )
 
-    # Validate Microosft Certificate Authority 
-    #if (Test-Connection -server $vcfCertCaFqdn) {
-        #validate URL is good
-    #}
-
     # Connect to VMware SDDC Manager
     if (Test-VCFConnection -server $server) {
-        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-            $vcfVersion = Get-VCFManager | select version | Select-String -Pattern '\d+\.\d+' -AllMatches | ForEach-Object {$_.matches.groups[0].value}
+        $connectionStatus = Test-NetConnection -Port 443 -ComputerName $vcfCertCaFqdn
+        if ($connectionStatus.TcpTestSucceeded -eq "True" ) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                $vcfVersion = Get-VCFManager | select version | Select-String -Pattern '\d+\.\d+' -AllMatches | ForEach-Object {$_.matches.groups[0].value}
+                $serverUrl = "https://$vcfCertCaFqdn/certsrv"
+                Try
+                {
+                    Write-Output "Starting the Process of Configuring a Microsoft Certificate Authority in SDDC Manager"
+                    Write-Output "Checking Microsoft Certificate Authority Configuration"
+                    $vcfCertCa = Get-VCFCertificateAuthority
+                    If ($vcfCertCa.username -ne "$vcfCertCaUsername")
+                    {
+                        Write-Output "Configuring Microsoft Certificate Authority Connection in SDDC Manager using ($vcfCertCaUsername)"
+                        Set-VCFMicrosoftCA -serverUrl $serverUrl -username $vcfCertCaUsername -password $vcfCertCaPassword -templateName $vcfCertCaTemplate | Out-Null
+                        Write-Output "Configuration of Microsoft Certificate Authority in SDDC Manager Using ($($vcfCertCaUsername)): SUCCESSFUL"
+                    } else {
+                        Write-Output "Configuration of Microsoft Certificate Authority in SDDC Manager Using ($($vcfCertCa.username)), already exists: SKIPPED"
+                    }
+                    Write-Output "Finished the Process of Configuring a Microsoft Certificate Authority in SDDC Manager"
+                } 
+                Catch 
+                {
+                    $ErrorMessage = $_.Exception.Message
+                    Write-Output "Error was: $ErrorMessage"
+                }
+            } else {
+                Write-Error "Unable to Authenticate SDDC Manager ($server)"
+            }
+        } else {
+            Write-Error "Unable to connect to Microsoft Certificate Authority ($vcfCertCaFqdn)"
         }
-    }
-
-    $serverUrl = "https://$vcfCertCaFqdn/certsrv"
-
-    Try
-    {
-        Write-Output "Starting the Process of Configuring a Microsoft Certificate Authority in SDDC Manager"
-        Write-Output "Checking Microsoft Certificate Authority Configuration"
-        $vcfCertCa = Get-VCFCertificateAuthority
-        If ($vcfCertCa.username -ne "$vcfCertCaUsername")
-        {
-            Write-Output "Configuring Microsoft Certificate Authority Connection in SDDC Manager using ($vcfCertCaUsername)"
-            Set-VCFMicrosoftCA -serverUrl $serverUrl -username $vcfCertCaUsername -password $vcfCertCaPassword -templateName $vcfCertCaTemplate | Out-Null
-            Write-Output "Configuration of Microsoft Certificate Authority in SDDC Manager Using ($($vcfCertCaUsername)): SUCCESSFUL"
-        }
-        else
-        {
-            Write-Output "Configuration of Microsoft Certificate Authority in SDDC Manager Using ($($vcfCertCa.username)), already exists: SKIPPED"
-        }
-        Write-Output "Finished the Process of Configuring a Microsoft Certificate Authority in SDDC Manager"
-    }
-    Catch
-    {
-        $ErrorMessage = $_.Exception.Message
-        Write-Output "Error was: $ErrorMessage"
+    } else {
+        Write-Error "Unable to connect to SDDC Manager ($server)"
     }
 }
 
