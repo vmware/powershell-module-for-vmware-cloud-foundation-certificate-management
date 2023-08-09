@@ -1,5 +1,13 @@
 # Release History
 
+> Release Date: future
+
+Enhancement:
+- Add "Set-SddcCertificateAuthority" cmdlet.
+- Add "Invoke-GenerateCsr" cmdlet.
+- Add "Invoke-GenerateCertificates" cmdlet.
+- Add "Invoke-VCFInstallCertificates" cmdlet.
+
 ## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.2.0)
 
 > Release Date: 2023-07-25

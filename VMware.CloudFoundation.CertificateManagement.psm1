@@ -1319,6 +1319,409 @@ Function Install-EsxiCertificate {
     }
 }
 
+Function Set-SddcCertificateAuthority
+{
+    <#
+        .SYNOPSIS
+        Configure Microsoft Certificate Authroity in SDDC Manager
+
+        .DESCRIPTION
+        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as 
+        SDDC Manager's Certificate Authority.
+
+        .EXAMPLE
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! 
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain in which the ESXi host is located.
+
+        .PARAMETER timeout
+        The timeout in seconds for putting the ESXi host in maintenance mode. Default is 18000 seconds (5 hours).
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $vcfCertCaFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $vcfCertCaUsername,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $vcfCertCaPassword,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $vcfCertCaTemplate
+    )
+
+    # Validate Microosft Certificate Authority 
+    #if (Test-Connection -server $vcfCertCaFqdn) {
+        #validate URL is good
+    #}
+
+    # Connect to VMware SDDC Manager
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $vcfVersion = Get-VCFManager | select version | Select-String -Pattern '\d+\.\d+' -AllMatches | ForEach-Object {$_.matches.groups[0].value}
+        }
+    }
+
+    $serverUrl = "https://$vcfCertCaFqdn/certsrv"
+
+    Try
+    {
+        Write-Output "Starting the Process of Configuring a Microsoft Certificate Authority in SDDC Manager"
+        Write-Output "Checking Microsoft Certificate Authority Configuration"
+        $vcfCertCa = Get-VCFCertificateAuthority
+        If ($vcfCertCa.username -ne "$vcfCertCaUsername")
+        {
+            Write-Output "Configuring Microsoft Certificate Authority Connection in SDDC Manager using ($vcfCertCaUsername)"
+            Set-VCFMicrosoftCA -serverUrl $serverUrl -username $vcfCertCaUsername -password $vcfCertCaPassword -templateName $vcfCertCaTemplate | Out-Null
+            Write-Output "Configuration of Microsoft Certificate Authority in SDDC Manager Using ($($vcfCertCaUsername)): SUCCESSFUL"
+        }
+        else
+        {
+            Write-Output "Configuration of Microsoft Certificate Authority in SDDC Manager Using ($($vcfCertCa.username)), already exists: SKIPPED"
+        }
+        Write-Output "Finished the Process of Configuring a Microsoft Certificate Authority in SDDC Manager"
+    }
+    Catch
+    {
+        $ErrorMessage = $_.Exception.Message
+        Write-Output "Error was: $ErrorMessage"
+    }
+}
+
+Function gatherSddcInventory {
+    Param (
+        [Parameter (Mandatory = $true)] $domainType,
+        [Parameter (Mandatory = $true)] $workloadDomain
+    )
+
+    # Gathers various deployment details from SDDC Manager
+    $sddcMgr = Get-VCFManager
+    $sddcMgrVersion = $sddcMgr.version.split(".")[0]
+
+    $resourcesObject = @()
+    # SDDC Manager
+    IF ($domainType -eq "Management")
+    {
+        $resourcesObject += [pscustomobject]@{
+            'fqdn'       = $sddcMgr.fqdn
+            'name'       = $sddcMgr.fqdn.split(".")[0]
+            'resourceId' = $sddcMgr.id
+            'type'       = "SDDC_MANAGER"
+        } 
+    }
+
+    # vCenters
+    If (([float]$sddcMgrVersion -lt [float]4) -AND ($domainType -eq "Management"))
+    {
+        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq "MGMT" }
+        $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
+    }
+    elseIf (([float]$sddcMgrVersion -lt [float]4) -AND ($domainType -eq "Workload"))
+    {
+        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
+        $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
+        $isLegacyWldnsxT = Get-VCFNsxtCluster | Where-Object {$_.domains.id -eq $domain.id}
+        $isLegacyWldnsxV = Get-VCFNsxvManager | Where-Object {$_.domain.id -eq $domain.id}
+    }
+    elseIf (([float]$sddcMgrVersion -ge [float]4) -AND ($domainType -eq "Management"))
+    {
+        $domain = Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }
+        $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
+    }
+    else
+    {
+        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
+        $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
+    }
+    Foreach ($vCenter in $vCenterServer) {
+        $resourcesObject += [pscustomobject]@{
+            'fqdn'       = $vCenter.fqdn
+            'name'       = $vCenter.fqdn.split(".")[0]
+            'resourceId' = $vCenter.id
+            'type'       = "VCENTER"
+        }
+    }
+
+    # NSX V Manager
+    If (([float]$sddcMgrVersion -lt [float]4) -AND ($domainType -eq "Management") -OR ($isLegacyWldnsxV))
+    {
+        $nsxvManager = Get-VCFNsxvManager | Where-Object { $_.domain.id -eq $domain.id }
+        $resourcesObject += [pscustomobject]@{
+            'fqdn'       = $nsxvManager.fqdn
+            'name'       = $nsxvManager.fqdn.split(".")[0]
+            'resourceId' = $nsxvManager.id
+            'type'       = "NSX_MANAGER"
+        }
+    }
+
+    #VRLI
+    If (([float]$sddcMgrVersion -lt [float]4) -AND ($domainType -eq "Management"))
+    {
+        $logInsight = Get-VCFvRLI *>$null
+        If ($logInsight)
+        {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = ($logInsight.nodes | Where-Object {$_.type -eq "MASTER"}).fqdn
+                'name'       = (($logInsight.nodes | Where-Object {$_.type -eq "MASTER"}).fqdn).split(".")[0]
+                'resourceId' = $logInsight.id
+                'type'       = "VRLI"
+            }    
+        }
+    }
+    
+    #PSCs
+    If (([float]$sddcMgrVersion -lt [float]4) -AND ($domainType -eq "Management"))
+    {
+        $pscs = Get-VCFPsc | Where-Object { $_.domain.id -eq $domain.id }
+        Foreach ($psc in $pscs) {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $psc.fqdn
+                'name'       = $psc.fqdn.split(".")[0]
+                'resourceId' = $psc.id
+                'type'       = "PSC"
+            }
+        }  
+    }
+
+    #NSXT
+    If (([float]$sddcMgrVersion -ge [float]4) -OR ($isLegacyWldnsxT))
+    {
+        $nsxtManager = Get-VCFNsxtCluster | Where-Object { $_.domains.id -eq $domain.id }
+        $nsxtSans = @()
+        Foreach ($nodeFqdn in $nsxtManager.nodes.fqdn) 
+        {
+            $nsxtSans += $nodeFqdn
+        }
+
+        If ([float]$sddcMgrVersion -ge [float]4)
+        {
+            $nsxtSans += $nsxtManager.vipFqdn
+            $nsxtvip = $nsxtManager.vipfqdn
+        }
+        else
+        {
+            $nsxtSans += $nsxtManager.Fqdn
+            $nsxtvip = $nsxtManager.fqdn
+        }
+        Foreach ($nsxtManager in $nsxtManager) {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $nsxtvip
+                'name'       = $nsxtvip.split(".")[0]
+                'resourceId' = $nsxtManager.id
+                'sans'       = $nsxtSans
+                'type'       = "NSXT_MANAGER"
+            }
+        }
+
+    }
+    Return $resourcesObject
+}
+
+Function Invoke-GenerateCsr {
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain,
+        [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
+                "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
+                "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
+                "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
+                "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
+                "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
+                "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
+                "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
+                "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
+                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $locality,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $email
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $domainType = Get-VCFWorkloadDomain -name $workloadDomain
+            $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
+            Write-Output "Populating $($workloadDomain)-requestCsrSpec.json"
+            $path = Join-Path $pwd ""
+            $csrGenerationSpecJson =
+            '{
+            "csrGenerationSpec": {
+                "country": "'+ $country + '",
+                "email": "'+ $email + '",
+                "keyAlgorithm": "'+ "RSA" + '",
+                "keySize": "'+ "2048" + '",
+                "locality": "'+ $locality + '",
+                "organization": "'+ $organization + '",
+                "organizationUnit": "'+ $organizationUnit + '",
+                "state": "'+ $stateOrProvince + '"
+                },
+            '
+            $resourcesBodyObject += [pscustomobject]@{
+                resources = $resourcesObject
+            }
+            $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $path"temp.json"
+            Get-Content $path"temp.json" | Select-Object -Skip 1 | Set-Content $path"temp1.json"
+            $resouresJson = Get-Content $path"temp1.json" -Raw
+            Remove-Item -Path $path"temp.json"
+            Remove-Item -Path $path"temp1.json"
+            $requestCsrSpecJson = $csrGenerationSpecJson + $resouresJson
+            $requestCsrSpecJson | Out-File $path"$($workloadDomain)-requestCsrSpec.json"
+            Write-Output "Requesting CSRs for Components Associated with Domain $($workloadDomain)"
+            $myTask = Request-VCFCertificateCSR -domainName $($workloadDomain) -json $path"$($workloadDomain)-requestCsrSpec.json"
+            Do {
+                Write-Output "Waiting for CSRs to be Created for Components Associated with Domain $($workloadDomain)"
+                Start-Sleep 6
+                $response = Get-VCFTask $myTask.id
+            } While ($response.status -eq "IN_PROGRESS")
+            If ($response.status -eq "FAILED") {
+                Write-Output "Workflow Completed with status $($response.status)" 
+            }
+            elseIf ($response.status -eq "SUCCESSFUL") {
+                Write-Output "Workflow Completed with status $($response.status)"
+            } else {
+                Write-Output "Workflow Completed with an unrecognized status of $($response.status). Please check before proceeding."
+            }
+            Write-Output "CSRs for Components Associated with Domain $($workloadDomain) Created"
+        } else {
+            Write-Error "cannot authenticate to SDDC Manager"
+        }
+    } else {
+        Write-Error "cannot connect to SDDC Manager"
+    }
+}
+
+Function Invoke-GenerateCertificates {
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $domainType = Get-VCFWorkloadDomain -name $workloadDomain
+            $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
+            Write-Output "Populating $($workloadDomain)-requestCertificateSpec.json"
+            $path = Join-Path $pwd ""
+            $caTypeJson = '{
+                "caType": "Microsoft",
+                '
+                $resourcesBodyObject += [pscustomobject]@{
+                    resources = $resourcesObject
+                }
+                $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $path"temp.json"
+                Get-Content $path"temp.json" | Select-Object -Skip 1 | Set-Content $path"temp1.json"
+                $resouresJson = Get-Content $path"temp1.json" -Raw
+                Remove-Item -Path $path"temp.json"
+                Remove-Item -Path $path"temp1.json"
+                $requestCertificateSpecJson = $caTypeJson + $resouresJson
+                $requestCertificateSpecJson | Out-File $path"$($workloadDomain)-requestCertificateSpec.json"
+
+                Write-Output "Requesting Certificates for Components Associated with Domain $($workloadDomain)"
+                $myTask = Request-VCFCertificate -domainName $($workloadDomain) -json $path"$($workloadDomain)-requestCertificateSpec.json"
+                Do {
+                    Write-Output "Waiting for Certificates for Components Associated with Domain $($workloadDomain) to be Created"
+                    Start-Sleep 6
+                    $response = Get-VCFTask $myTask.id
+                } While ($response.status -eq "IN_PROGRESS")
+                If ($response.status -eq "FAILED") {
+                    Write-Error "Workflow Completed with status $($response.status)" 
+                } elseIf ($response.status -eq "SUCCESSFUL") {
+                    Write-Output "Workflow Completed with status $($response.status)"
+                } else {
+                    Write-Output "Workflow Completed with an unrecognized status of $($response.status). Please check before proceeding."
+                }
+                Write-Output "Certificates for Components Associated with Domain $($workloadDomain) Generated"
+        } else {
+            Write-Error "cannot authenticate to SDDC Manager"
+        }
+    } else {
+        Write-Error "cannot connect to SDDC Manager"
+    }
+}
+
+Function Invoke-VCFInstallCertificates {
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain
+    )
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $domainType = Get-VCFWorkloadDomain -name $workloadDomain
+            $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
+            Write-Output "Populating $($workloadDomain)-updateCertificateSpec.json"
+            $path = Join-Path $pwd ""
+            $operationTypeJson = '{
+                "operationType": "INSTALL",
+                '
+              $resourcesBodyObject += [pscustomobject]@{
+                  resources = $resourcesObject
+              }
+              $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $path"temp.json"
+              Get-Content $path"temp.json" | Select-Object -Skip 1 | Set-Content $path"temp1.json"
+              $resouresJson = Get-Content $path"temp1.json" -Raw
+              Remove-Item -Path $path"temp.json"
+              Remove-Item -Path $path"temp1.json"
+              $requestCertificateSpecJson = $operationTypeJson + $resouresJson
+              $requestCertificateSpecJson | Out-File $path"$($workloadDomain)-updateCertificateSpec.json"
+
+              # Install Certificate
+              Try {
+                Write-Output "Installing Signed Certificates for Components Associated with Domain $($workloadDomain) (can take 60+ mins)"
+                $myTaskId = Set-VCFCertificate -domainName $($workloadDomain) -json $path"$($workloadDomain)-updateCertificateSpec.json"
+                $pollLoopCounter = 0
+                Do {
+                    If ($pollLoopCounter % 10 -eq 0) {
+                        Write-Output "Checking Installation of Signed Certificates for Components Associated with Domain $($workloadDomain)"
+                    }
+                    $response = Get-VCFTask $myTaskId.id
+                    If ($response.status -in "In Progress","IN_PROGRESS") {
+                        If (($pollLoopCounter % 10 -eq 0) -AND ($pollLoopCounter -gt 9)) {
+                            Write-Output "Certificate installation still in progress"
+                        }
+                        Start-Sleep 60
+                        $pollLoopCounter ++
+                    }
+                } While ($response.status -in "In Progress","IN_PROGRESS")
+                If ($response.status -eq "FAILED") {
+                    Write-Error "Workflow Completed with status $($response.status)" 
+                }
+                elseIf ($response.status -eq "SUCCESSFUL") {
+                    Write-Output "Workflow Completed with status $($response.status)"
+                }
+                else {
+                    Write-Output "Workflow Completed with an unrecognized status of $($response.status). Please check before proceeding."
+                }
+                Write-Output "Signed Certificates for Components Associated with Domain $($workloadDomain) Completed with Status: $($response.status)"
+                Write-Output "Finished the Process of Installing Signed Certificates to Components Managed by SDDC Manager"
+            }
+            Catch {
+                $ErrorMessage = $_.Exception.Message
+                Write-Error "Error was: $ErrorMessage"
+            }
+        } else {
+            Write-Error "cannot authenticate to SDDC Manager"
+        }
+    } else {
+        Write-Error "cannot connect to SDDC Manager"
+    }
+}
+
 ###################################################  END FUNCTIONS  ###################################################
 #######################################################################################################################
 
