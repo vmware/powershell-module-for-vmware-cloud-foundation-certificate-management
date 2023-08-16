@@ -1,12 +1,13 @@
 # Release History
 
-> Release Date: future
+ ## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.3.0)
+> Release Date: (Not Released)
 
-Enhancement:
-- Add "Set-SddcCertificateAuthority" cmdlet.
-- Add "Invoke-GenerateCsr" cmdlet.
-- Add "Invoke-GenerateCertificates" cmdlet.
-- Add "Invoke-VCFInstallCertificates" cmdlet.
+Enhancements:
+- Added the `Set-SddcCertificateAuthority` cmdlet. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+- Added the `Request-VCFGenerateCsr` cmdlet. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+- Added the `Request-VCFSignedCertificates` cmdlet. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+- Added the `Install-VCFCertificates` cmdlet. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
 
 ## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.2.0)
 
