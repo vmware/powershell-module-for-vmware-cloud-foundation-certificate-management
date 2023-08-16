@@ -1374,8 +1374,7 @@ Function Set-SddcCertificateAuthority {
                     Write-Output "Starting configuration of a Microsoft Certificate Authority in SDDC Manager..."
                     Write-Output "Checking status of the Microsoft Certificate Authority configuration..."
                     $vcfCertCa = Get-VCFCertificateAuthority
-                    if ($vcfCertCa.username -ne "$certAuthorityUser")
-                    {
+                    if ($vcfCertCa.username -ne "$certAuthorityUser") {
                         Write-Output "Configuring the Microsoft Certificate Authority in SDDC Manager using $($certAuthorityUser)..."
                         Set-VCFMicrosoftCA -serverUrl $caServerUrl -username $certAuthorityUser -password $certAuthorityPass -templateName $certAuthorityTemplate | Out-Null
                         Write-Output "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)): SUCCESSFUL."
@@ -1587,10 +1586,9 @@ Function Request-VCFGenerateCsr {
                 Start-Sleep 6
                 $response = Get-VCFTask $myTask.id
             } While ($response.status -eq "IN_PROGRESS")
-            If ($response.status -eq "FAILED") {
+            if ($response.status -eq "FAILED") {
                 Write-Output "Workflow completed with status: $($response.status)." 
-            }
-            elseIf ($response.status -eq "SUCCESSFUL") {
+            } elseif ($response.status -eq "SUCCESSFUL") {
                 Write-Output "Workflow Completed with status: $($response.status)."
             } else {
                 Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check before proceeding."
@@ -1682,9 +1680,9 @@ Function Request-VCFSignedCertificates {
                     Start-Sleep 6
                     $response = Get-VCFTask $myTask.id
                 } While ($response.status -eq "IN_PROGRESS")
-                If ($response.status -eq "FAILED") {
+                if ($response.status -eq "FAILED") {
                     Write-Error "Workflow completed with status: $($response.status)." 
-                } elseIf ($response.status -eq "SUCCESSFUL") {
+                } elseif ($response.status -eq "SUCCESSFUL") {
                     Write-Output "Workflow completed with status: $($response.status)."
                 } else {
                     Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check the state before proceeding."
@@ -1732,6 +1730,7 @@ Function Install-VCFCertificates {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain
     )
+
     if (Test-VCFConnection -server $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
             $domainType = Get-VCFWorkloadDomain -name $workloadDomain
@@ -1773,22 +1772,21 @@ Function Install-VCFCertificates {
                 $myTaskId = Set-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-updateCertificateSpec.json"
                 $pollLoopCounter = 0
                 Do {
-                    If ($pollLoopCounter % 10 -eq 0) {
+                    if ($pollLoopCounter % 10 -eq 0) {
                         Write-Output "Checking status for the Installation of signed certificates for components associated with workload domain ($($workloadDomain))..."
                     }
                     $response = Get-VCFTask $myTaskId.id
-                    If ($response.status -in "In Progress","IN_PROGRESS") {
-                        If (($pollLoopCounter % 10 -eq 0) -AND ($pollLoopCounter -gt 9)) {
+                    if ($response.status -in "In Progress","IN_PROGRESS") {
+                        if (($pollLoopCounter % 10 -eq 0) -AND ($pollLoopCounter -gt 9)) {
                             Write-Output "Installation of signed certificates is still in progress for workload domain ($($workloadDomain))..."
                         }
                         Start-Sleep 60
                         $pollLoopCounter ++
                     }
                 } While ($response.status -in "In Progress","IN_PROGRESS")
-                If ($response.status -eq "FAILED") {
+                if ($response.status -eq "FAILED") {
                     Write-Error "Workflow completed with status: $($response.status)." 
-                }
-                elseIf ($response.status -eq "SUCCESSFUL") {
+                } elseif ($response.status -eq "SUCCESSFUL") {
                     Write-Output "Workflow Completed with status: $($response.status)."
                 } else {
                     Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please review the state before proceeding."
@@ -1797,8 +1795,7 @@ Function Install-VCFCertificates {
 
                 # Remove the temporary directory.
 			    Remove-Item -Recurse -Force $tempPath  | Out-NULL
-            }
-            Catch {
+            } Catch {
                 $ErrorMessage = $_.Exception.Message
                 Write-Error "Error was: $ErrorMessage"
             }
