@@ -1416,11 +1416,24 @@ Function gatherSddcInventory {
             'name'       = $sddcMgr.fqdn.split(".")[0]
             'resourceId' = $sddcMgr.id
             'type'       = "SDDC_MANAGER"
-        } 
+        }
+    }
+
+    # vRealized Lifecycle Manager
+    if ($domainType -eq "Management") {
+        $vrslcmNode = Get-VCFvRSLCM
+        if ($vrslcmNode.id -ne "") {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $vrslcmNode.fqdn
+                'name'       = $vrslcmNode.fqdn.split(".")[0]
+                'resourceId' = $vrslcmNode.id
+                'type'       = "VRSLCM"
+            }
+        }
     }
 
     # vCenter Server
-    if (([float]$sddcMgrVersion -ge [float]4) -AND ($domainType -eq "Management")) {
+    if (([float]$sddcMgrVersion -ge 4) -AND ($domainType -eq "Management")) {
         $domain = Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }
         $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
     } else {
@@ -1438,14 +1451,14 @@ Function gatherSddcInventory {
     }
 
     # NSX
-    if (([float]$sddcMgrVersion -ge [float]4) -OR ($isLegacyWldnsxT)) {
+    if (([float]$sddcMgrVersion -ge 4) -OR ($isLegacyWldnsxT)) {
         $nsxtManager = Get-VCFNsxtCluster | Where-Object { $_.domains.id -eq $domain.id }
         $nsxtSans = @()
         Foreach ($nodeFqdn in $nsxtManager.nodes.fqdn) {
             $nsxtSans += $nodeFqdn
         }
 
-        if ([float]$sddcMgrVersion -ge [float]4) {
+        if ([float]$sddcMgrVersion -ge 4) {
             $nsxtSans += $nsxtManager.vipFqdn
             $nsxtvip = $nsxtManager.vipfqdn
         } else {
@@ -1453,12 +1466,21 @@ Function gatherSddcInventory {
             $nsxtvip = $nsxtManager.fqdn
         }
 
-        Foreach ($nsxtManager in $nsxtManager) {
+        Foreach ($nsxManager in $nsxtManager) {
             $resourcesObject += [pscustomobject]@{
                 'fqdn'       = $nsxtvip
                 'name'       = $nsxtvip.split(".")[0]
-                'resourceId' = $nsxtManager.id
+                'resourceId' = $nsxManager.id
                 'sans'       = $nsxtSans
+                'type'       = "NSXT_MANAGER"
+            }
+        }
+
+        Foreach ($nsxNode in $nsxtManager.nodes) {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $nsxNode.fqdn
+                'name'       = $nsxNode.name
+                'resourceId' = $nsxNode.id
                 'type'       = "NSXT_MANAGER"
             }
         }
@@ -1556,6 +1578,7 @@ Function Request-VCFGenerateCsr {
 				}
 			}
 			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+            $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
             $csrGenerationSpecJson =
@@ -1659,6 +1682,7 @@ Function Request-VCFSignedCertificates {
 				}
 			}
 			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+            $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
             $caTypeJson = '{
@@ -1752,6 +1776,7 @@ Function Install-VCFCertificates {
 				}
 			}
 			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+            $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
             $operationTypeJson = '{
