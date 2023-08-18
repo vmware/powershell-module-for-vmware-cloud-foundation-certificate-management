@@ -1325,12 +1325,10 @@ Function Set-SddcCertificateAuthority {
         Configure Microsoft Certificate Authroity in SDDC Manager
 
         .DESCRIPTION
-        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as 
-        SDDC Manager's Certificate Authority.
+        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as SDDC Manager's Certificate Authority.
 
         .EXAMPLE
-        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn 
-        rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
         This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
 
         .PARAMETER server
@@ -1488,18 +1486,17 @@ Function gatherSddcInventory {
     Return $resourcesObject
 }
 
-Function Request-VCFGenerateCsr {
+Function Request-SddcCsr {
     <#
         .SYNOPSIS
         Request SDDC Manager to generate Certificate Signing Request files and to store the Certificate Signing Request files.
 
         .DESCRIPTION
-        The Request-VCFGenerateCsr will request SDDC Manager to generate certifiate signing request files for each of products associated with a given workload domain
+        The Request-SddcCsr will request SDDC Manager to generate certifiate signing request files for all components associated with the given workload domain.
 
         .EXAMPLE
-        Request-VCFGenerateCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -country US -keysize "3072"
-        -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
-        This example will request SDDC Manager to generate Certificate Signing Request files for all the registered products under the given workload domain
+        Request-SddcCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
+        This example will request SDDC Manager to generate Certificate Signing Request files for all components associated with the given workload domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1628,18 +1625,17 @@ Function Request-VCFGenerateCsr {
     }
 }
 
-Function Request-VCFSignedCertificates {
+Function Request-SddcCertificate {
     <#
         .SYNOPSIS
-        Request SDDC Manager to connect to Certificate Authority server to sign the Certificate Signing Request files and to store the signed certificates.  
+        Request SDDC Manager to connect to Certificate Authority server to sign the Certificate Signing Request files and to store the signed certificates.
 
         .DESCRIPTION
-        The Request-VCFSignedCertificates will request SDDC Manager to connect to Certificate Authority to sign the generated Certificate Signing Request files
-        for all products within a given workload domain
+        The Request-SddcCertificate will request SDDC Manager to connect to Certificate Authority to sign the generated Certificate Signing Request files for all components associated with the given workload domain
 
         .EXAMPLE
-        Request-VCFSignedCertificates -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
-        This example will connect to Certificate Authority to sign the certificate signing request files for a given workload domain.
+        Request-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
+        This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1723,18 +1719,17 @@ Function Request-VCFSignedCertificates {
     }
 }
 
-Function Install-VCFCertificates {
+Function Install-SddcCertificate {
     <#
         .SYNOPSIS
-        Request SDDC Manager to connect to Certificate Authority server to sign the Certificate Signing Request files and to store the signed certificates.  
+        Connect to SDDC Manager to install/replace the signed certificates for all components associated with the given workload domain.
 
         .DESCRIPTION
-        The Install-VCFCertificates will request SDDC Manager to connect to Certificate Authority to sign the generated Certificate Signing Request files
-        for all products within a given workload domain
+        The Install-SddcCertificate will request SDDC Manager to connect to Certificate Authority to sign the generated Certificate Signing Request files for all components associated with the given workload domain.
 
         .EXAMPLE
-        Install-VCFCertificates -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
-        This example will connect to Certificate Authority to sign the certificate signing request files for a given workload domain.
+        Install-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
+        This example will connect to Sddc Manager to install/replace the signed certificates for a given workload domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
