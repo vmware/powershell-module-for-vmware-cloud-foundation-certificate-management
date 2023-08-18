@@ -1322,7 +1322,7 @@ Function Install-EsxiCertificate {
 Function Set-SddcCertificateAuthority {
     <#
         .SYNOPSIS
-        Configure Microsoft Certificate Authroity in SDDC Manager
+        Configure Microsoft Certificate Authority in SDDC Manager
 
         .DESCRIPTION
         The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as SDDC Manager's Certificate Authority.
@@ -1417,7 +1417,7 @@ Function gatherSddcInventory {
         }
     }
 
-    # vRealized Lifecycle Manager
+    # vRealize Suite Lifecycle Manager
     if ($domainType -eq "Management") {
         $vrslcmNode = Get-VCFvRSLCM
         if ($vrslcmNode.id -ne "") {
@@ -1609,11 +1609,11 @@ Function Request-SddcCsr {
             if ($response.status -eq "FAILED") {
                 Write-Output "Workflow completed with status: $($response.status)." 
             } elseif ($response.status -eq "SUCCESSFUL") {
-                Write-Output "Workflow Completed with status: $($response.status)."
+                Write-Output "Workflow completed with status: $($response.status)."
             } else {
                 Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check before proceeding."
             }
-            Write-Output "CSR files for components associated with Domain $($workloadDomain) are generated."
+            Write-Output "Generate certificate signing requests for components associated with workload domain $($workloadDomain)."
 
             # Remove the temporary directory.
 			Remove-Item -Recurse -Force $tempPath  | Out-NULL
@@ -1693,7 +1693,7 @@ Function Request-SddcCertificate {
                 $requestCertificateSpecJson = $caTypeJson + $resouresJson
                 $requestCertificateSpecJson | Out-File $tempPath"$($workloadDomain)-requestCertificateSpec.json"
 
-                Write-Output "Requesting Certificates for components associated with Domain $($workloadDomain)."
+                Write-Output "Requesting certificates for components associated with workload domain $($workloadDomain)."
                 $myTask = Request-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCertificateSpec.json"
                 Do {
                     Write-Output "Checking status for the generation of signed certificates for components associated with workload domain ($($workloadDomain))..."
@@ -1729,7 +1729,7 @@ Function Install-SddcCertificate {
 
         .EXAMPLE
         Install-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
-        This example will connect to Sddc Manager to install/replace the signed certificates for a given workload domain.
+        This example will connect to SDDC Manager to install/replace the signed certificates for a given workload domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1807,11 +1807,11 @@ Function Install-SddcCertificate {
                 if ($response.status -eq "FAILED") {
                     Write-Error "Workflow completed with status: $($response.status)." 
                 } elseif ($response.status -eq "SUCCESSFUL") {
-                    Write-Output "Workflow Completed with status: $($response.status)."
+                    Write-Output "Workflow completed with status: $($response.status)."
                 } else {
                     Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please review the state before proceeding."
                 }
-                Write-Output "Installation of signed Certificates for Components Associated with workload Domain $($workloadDomain) Completed with status: $($response.status)."
+                Write-Output "Installation of signed certificates for components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
 
                 # Remove the temporary directory.
 			    Remove-Item -Recurse -Force $tempPath  | Out-NULL

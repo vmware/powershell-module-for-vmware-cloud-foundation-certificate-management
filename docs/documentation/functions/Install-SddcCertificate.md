@@ -18,7 +18,7 @@ The Install-SddcCertificate will request SDDC Manager to connect to Certificate 
 ### EXAMPLE 1
 ```
 Install-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
-This example will connect to Sddc Manager to install/replace the signed certificates for a given workload domain.
+This example will connect to SDDC Manager to install/replace the signed certificates for a given workload domain.
 ```
 
 ## PARAMETERS

@@ -1,7 +1,7 @@
 # Set-SddcCertificateAuthority
 
 ## SYNOPSIS
-Configure Microsoft Certificate Authroity in SDDC Manager
+Configure Microsoft Certificate Authority in SDDC Manager
 
 ## SYNTAX
 
