@@ -386,7 +386,7 @@ Function Test-EsxiCertMgmtChecks {
 Function Confirm-EsxiCertificateInstalled {
     <#
         .SYNOPSIS
-        Verify if the provided certificate is already on the ESXi host.
+        Verifies if the provided certificate is already on the ESXi host.
 
         .DESCRIPTION
         The Confirm-EsxiCertificateInstalled cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
@@ -450,7 +450,7 @@ Function Confirm-EsxiCertificateInstalled {
 Function Confirm-CAInvCenterServer {
     <#
         .SYNOPSIS
-        Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
+        Verifies the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
         .DESCRIPTION
         The Confirm-CAInvCenterServer cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
@@ -526,10 +526,10 @@ Function Confirm-CAInvCenterServer {
 Function Request-EsxiCsr {
     <#
         .SYNOPSIS
-        Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
+        Requests a certificate signing request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
 
         .DESCRIPTION
-        The Request-EsxiCsr cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
+        The Request-EsxiCsr cmdlet will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
         - Validates that network connectivity and authentication is possible to SDDC Manager.
         - Validates that the workload domain exists in the SDDC Manager inventory.
@@ -558,25 +558,25 @@ Function Request-EsxiCsr {
         The name of the cluster in which the ESXi host is located.
 
         .PARAMETER esxiFqdn
-        The FQDN of the ESXi host to request Certificate Signing Request (CSR) for.
+        The FQDN of the ESXi host to request certificate signing request (CSR) for.
 
         .PARAMETER country
-        The country code for the Certificate Signing Request (CSR).
+        The country code for the certificate signing request (CSR).
 
         .PARAMETER locality
-        The locality for the Certificate Signing Request (CSR).
+        The locality for the certificate signing request (CSR).
 
         .PARAMETER organization
-        The organization for the Certificate Signing Request (CSR).
+        The organization for the certificate signing request (CSR).
 
         .PARAMETER organizationUnit
-        The organization unit for the Certificate Signing Request (CSR).
+        The organization unit for the certificate signing request (CSR).
 
         .PARAMETER stateOrProvince
-        The state or province for the Certificate Signing Request (CSR).
+        The state or province for the certificate signing request (CSR).
 
         .PARAMETER outputDirectory
-        The directory to save the Certificate Signing Request (CSR) files.
+        The directory to save the certificate signing request (CSR) files.
     #>
 
     Param (
@@ -741,7 +741,7 @@ Function Set-EsxiCertificateMode {
 Function Get-vSANHealthSummary {
     <#
         .SYNOPSIS
-        Get the vSAN health summary from vCenter Server for a cluster.
+        Retrieves the vSAN health summary from vCenter Server for a cluster.
 
         .DESCRIPTION
         The Get-vSANHealthSummary cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
@@ -822,7 +822,7 @@ Function Get-vSANHealthSummary {
 Function Get-EsxiConnectionState {
     <#
         .SYNOPSIS
-        Get the ESXi host connection state from vCenter Server.
+        Retrieves the ESXi host connection state from vCenter Server.
 
         .DESCRIPTION
         The Get-EsxiConnectionState cmdlet gets the connection state of an ESXi host. One of "Connected", "Disconnected", "Maintenance", or "NotResponding"
@@ -922,7 +922,7 @@ Function Set-EsxiConnectionState {
 Function Get-EsxiLockdownMode {
     <#
         .SYNOPSIS
-        Get the ESXi host lockdown mode state from vCenter Server.
+        Retrieves the ESXi host lockdown mode state from vCenter Server.
 
         .DESCRIPTION
         The Get-EsxiLockdownMode cmdlet gets the lockdown mode value for all ESXi hosts in a given cluster or for a given ESXi host within the cluster.
@@ -993,7 +993,7 @@ Function Get-EsxiLockdownMode {
 Function Set-EsxiLockdownMode {
     <#
         .SYNOPSIS
-        Set the lockdown mode for all ESXi hosts in a given cluster.
+        Sets the lockdown mode for all ESXi hosts in a given cluster.
 
         .DESCRIPTION
         The Set-EsxiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
@@ -1089,7 +1089,7 @@ Function Set-EsxiLockdownMode {
 Function Restart-EsxiHost {
     <#
         .SYNOPSIS
-        Restart an ESXi host and poll for connection availability.
+        Restarts an ESXi host and poll for connection availability.
 
         .DESCRIPTION
         The Restart-EsxiHost cmdlet restarts an ESXi host and polls for connection availability.
@@ -1137,7 +1137,7 @@ Function Restart-EsxiHost {
         Write-Output "Restarting $esxiFqdn"
     }
 
-    # Get the ESXi host uptime before restart.
+    # Retrieves the ESXi host uptime before restart.
     $esxiUptime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
 
     Restart-VMHost $esxiFqdn -server $esxiFqdn -Confirm:$false
@@ -1175,7 +1175,7 @@ Function Restart-EsxiHost {
 Function Install-EsxiCertificate {
     <#
         .SYNOPSIS
-        Install a certificate for an ESXi host or for each ESXi host in a cluster.
+        Installs a certificate for an ESXi host or for each ESXi host in a cluster.
 
         .DESCRIPTION
         The Install-EsxiCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster.
@@ -1322,7 +1322,7 @@ Function Install-EsxiCertificate {
 Function Set-SddcCertificateAuthority {
     <#
         .SYNOPSIS
-        Configure Microsoft Certificate Authority in SDDC Manager
+        Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority.
 
         .DESCRIPTION
         The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as SDDC Manager's Certificate Authority.
@@ -1489,14 +1489,18 @@ Function gatherSddcInventory {
 Function Request-SddcCsr {
     <#
         .SYNOPSIS
-        Request SDDC Manager to generate Certificate Signing Request files and to store the Certificate Signing Request files.
+        Requests SDDC Manager to generate and store certificate signing request files.
 
         .DESCRIPTION
         The Request-SddcCsr will request SDDC Manager to generate certifiate signing request files for all components associated with the given workload domain.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Validates that the workload domain exists in the SDDC Manager inventory.
+        - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
         .EXAMPLE
         Request-SddcCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
-        This example will request SDDC Manager to generate Certificate Signing Request files for all components associated with the given workload domain.
+        This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1511,25 +1515,25 @@ Function Request-SddcCsr {
         The name of the workload domain in which the certficates signing request to be generated.
 
         .PARAMETER country
-        The country code for the Certificate Signing Request (CSR).
+        The country code for the certificate signing request (CSR).
 
         .PARAMETER keySize
-        The key size for the Certificate Signing Request (CSR).
+        The key size for the certificate signing request (CSR).
 
         .PARAMETER locality
-        The locality for the Certificate Signing Request (CSR).
+        The locality for the certificate signing request (CSR).
 
         .PARAMETER organization
-        The organization for the Certificate Signing Request (CSR).
+        The organization for the certificate signing request (CSR).
 
         .PARAMETER organizationUnit
-        The organization unit for the Certificate Signing Request (CSR).
+        The organization unit for the certificate signing request (CSR).
 
         .PARAMETER stateOrProvince
-        The state or province for the Certificate Signing Request (CSR).
+        The state or province for the certificate signing request (CSR).
 
         .PARAMETER email
-        The contact email for the Certificate Signing Request (CSR).
+        The contact email for the certificate signing request (CSR).
     #>
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
@@ -1616,7 +1620,7 @@ Function Request-SddcCsr {
             Write-Output "Generate certificate signing requests for components associated with workload domain $($workloadDomain)."
 
             # Remove the temporary directory.
-			Remove-Item -Recurse -Force $tempPath  | Out-NULL
+			Remove-Item -Recurse -Force $tempPath | Out-NULL
         } else {
             Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
         }
@@ -1628,10 +1632,10 @@ Function Request-SddcCsr {
 Function Request-SddcCertificate {
     <#
         .SYNOPSIS
-        Request SDDC Manager to connect to Certificate Authority server to sign the Certificate Signing Request files and to store the signed certificates.
+        Requests SDDC Manager to connect to certificate authority to sign the certificate signing request files and to store the signed certificates.
 
         .DESCRIPTION
-        The Request-SddcCertificate will request SDDC Manager to connect to Certificate Authority to sign the generated Certificate Signing Request files for all components associated with the given workload domain
+        The Request-SddcCertificate will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
 
         .EXAMPLE
         Request-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
@@ -1722,14 +1726,14 @@ Function Request-SddcCertificate {
 Function Install-SddcCertificate {
     <#
         .SYNOPSIS
-        Connect to SDDC Manager to install/replace the signed certificates for all components associated with the given workload domain.
+        Installs the signed certificates for all components associated with the given workload domain.
 
         .DESCRIPTION
-        The Install-SddcCertificate will request SDDC Manager to connect to Certificate Authority to sign the generated Certificate Signing Request files for all components associated with the given workload domain.
+        The Install-SddcCertificate will install the signed certificates for all components associated with the given workload domain.
 
         .EXAMPLE
         Install-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
-        This example will connect to SDDC Manager to install/replace the signed certificates for a given workload domain.
+        This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
