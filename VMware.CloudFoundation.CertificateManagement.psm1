@@ -386,7 +386,7 @@ Function Test-EsxiCertMgmtChecks {
 Function Confirm-EsxiCertificateInstalled {
     <#
         .SYNOPSIS
-        Verify if the provided certificate is already on the ESXi host.
+        Verifies if the provided certificate is already on the ESXi host.
 
         .DESCRIPTION
         The Confirm-EsxiCertificateInstalled cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
@@ -450,7 +450,7 @@ Function Confirm-EsxiCertificateInstalled {
 Function Confirm-CAInvCenterServer {
     <#
         .SYNOPSIS
-        Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
+        Verifies the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
         .DESCRIPTION
         The Confirm-CAInvCenterServer cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
@@ -526,10 +526,10 @@ Function Confirm-CAInvCenterServer {
 Function Request-EsxiCsr {
     <#
         .SYNOPSIS
-        Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
+        Requests a certificate signing request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
 
         .DESCRIPTION
-        The Request-EsxiCsr cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
+        The Request-EsxiCsr cmdlet will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
         - Validates that network connectivity and authentication is possible to SDDC Manager.
         - Validates that the workload domain exists in the SDDC Manager inventory.
@@ -558,25 +558,25 @@ Function Request-EsxiCsr {
         The name of the cluster in which the ESXi host is located.
 
         .PARAMETER esxiFqdn
-        The FQDN of the ESXi host to request Certificate Signing Request (CSR) for.
+        The FQDN of the ESXi host to request certificate signing request (CSR) for.
 
         .PARAMETER country
-        The country code for the Certificate Signing Request (CSR).
+        The country code for the certificate signing request (CSR).
 
         .PARAMETER locality
-        The locality for the Certificate Signing Request (CSR).
+        The locality for the certificate signing request (CSR).
 
         .PARAMETER organization
-        The organization for the Certificate Signing Request (CSR).
+        The organization for the certificate signing request (CSR).
 
         .PARAMETER organizationUnit
-        The organization unit for the Certificate Signing Request (CSR).
+        The organization unit for the certificate signing request (CSR).
 
         .PARAMETER stateOrProvince
-        The state or province for the Certificate Signing Request (CSR).
+        The state or province for the certificate signing request (CSR).
 
         .PARAMETER outputDirectory
-        The directory to save the Certificate Signing Request (CSR) files.
+        The directory to save the certificate signing request (CSR) files.
     #>
 
     Param (
@@ -741,7 +741,7 @@ Function Set-EsxiCertificateMode {
 Function Get-vSANHealthSummary {
     <#
         .SYNOPSIS
-        Get the vSAN health summary from vCenter Server for a cluster.
+        Retrieves the vSAN health summary from vCenter Server for a cluster.
 
         .DESCRIPTION
         The Get-vSANHealthSummary cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
@@ -822,7 +822,7 @@ Function Get-vSANHealthSummary {
 Function Get-EsxiConnectionState {
     <#
         .SYNOPSIS
-        Get the ESXi host connection state from vCenter Server.
+        Retrieves the ESXi host connection state from vCenter Server.
 
         .DESCRIPTION
         The Get-EsxiConnectionState cmdlet gets the connection state of an ESXi host. One of "Connected", "Disconnected", "Maintenance", or "NotResponding"
@@ -922,7 +922,7 @@ Function Set-EsxiConnectionState {
 Function Get-EsxiLockdownMode {
     <#
         .SYNOPSIS
-        Get the ESXi host lockdown mode state from vCenter Server.
+        Retrieves the ESXi host lockdown mode state from vCenter Server.
 
         .DESCRIPTION
         The Get-EsxiLockdownMode cmdlet gets the lockdown mode value for all ESXi hosts in a given cluster or for a given ESXi host within the cluster.
@@ -993,7 +993,7 @@ Function Get-EsxiLockdownMode {
 Function Set-EsxiLockdownMode {
     <#
         .SYNOPSIS
-        Set the lockdown mode for all ESXi hosts in a given cluster.
+        Sets the lockdown mode for all ESXi hosts in a given cluster.
 
         .DESCRIPTION
         The Set-EsxiLockdownMode cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
@@ -1089,7 +1089,7 @@ Function Set-EsxiLockdownMode {
 Function Restart-EsxiHost {
     <#
         .SYNOPSIS
-        Restart an ESXi host and poll for connection availability.
+        Restarts an ESXi host and poll for connection availability.
 
         .DESCRIPTION
         The Restart-EsxiHost cmdlet restarts an ESXi host and polls for connection availability.
@@ -1137,7 +1137,7 @@ Function Restart-EsxiHost {
         Write-Output "Restarting $esxiFqdn"
     }
 
-    # Get the ESXi host uptime before restart.
+    # Retrieves the ESXi host uptime before restart.
     $esxiUptime = New-TimeSpan -Start $vmHost.ExtensionData.Summary.Runtime.BootTime.ToLocalTime() -End (Get-Date)
 
     Restart-VMHost $esxiFqdn -server $esxiFqdn -Confirm:$false
@@ -1175,7 +1175,7 @@ Function Restart-EsxiHost {
 Function Install-EsxiCertificate {
     <#
         .SYNOPSIS
-        Install a certificate for an ESXi host or for each ESXi host in a cluster.
+        Installs a certificate for an ESXi host or for each ESXi host in a cluster.
 
         .DESCRIPTION
         The Install-EsxiCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster.
@@ -1316,6 +1316,512 @@ Function Install-EsxiCertificate {
     }
     Finally {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
+    }
+}
+
+Function Set-SddcCertificateAuthority {
+    <#
+        .SYNOPSIS
+        Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority.
+
+        .DESCRIPTION
+        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as SDDC Manager's Certificate Authority.
+
+        .EXAMPLE
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+        This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER certAuthorityFqdn
+        The fully qualified domain name of the Microsoft Certificate Authority.
+
+        .PARAMETER certAuthorityUser
+        The username to authenticate to the Microsoft Certificate Authority.
+
+        .PARAMETER certAuthorityPass
+        The password to authenticate to the Microsoft Certificate Authority.
+
+        .PARAMETER certAuthorityTemplate
+        The Certificate Template Name to be used with the Microsoft Certificate Authority.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityUser,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityPass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityTemplate
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if ((Test-EndpointConnection -server $certAuthorityFqdn -port 443) -eq "True" ) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                $vcfVersion = Get-VCFManager | select version | Select-String -Pattern '\d+\.\d+' -AllMatches | ForEach-Object {$_.matches.groups[0].value}
+                $caServerUrl = "https://$certAuthorityFqdn/certsrv"
+                Try {
+                    Write-Output "Starting configuration of a Microsoft Certificate Authority in SDDC Manager..."
+                    Write-Output "Checking status of the Microsoft Certificate Authority configuration..."
+                    $vcfCertCa = Get-VCFCertificateAuthority
+                    if ($vcfCertCa.username -ne "$certAuthorityUser") {
+                        Write-Output "Configuring the Microsoft Certificate Authority in SDDC Manager using $($certAuthorityUser)..."
+                        Set-VCFMicrosoftCA -serverUrl $caServerUrl -username $certAuthorityUser -password $certAuthorityPass -templateName $certAuthorityTemplate | Out-Null
+                        Write-Output "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)): SUCCESSFUL."
+                    } else {
+                        Write-Warning "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)), already exists: SKIPPED."
+                    }
+                    Write-Output "Configuration a Microsoft Certificate Authority in SDDC Manager completed."
+                } Catch {
+                    $ErrorMessage = $_.Exception.Message
+                    Write-Output "Error was: $ErrorMessage."
+                }
+            } else {
+                Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+            }
+        } else {
+            Write-Error "Unable to connect to Microsoft Certificate Authority ($certAuthorityFqdn)."
+        }
+    } else {
+        Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+    }
+}
+
+Function gatherSddcInventory {
+    Param (
+        [Parameter (Mandatory = $true)] $domainType,
+        [Parameter (Mandatory = $true)] $workloadDomain
+    )
+
+    # Gathers deployment details from SDDC Manager.
+    $sddcMgr = Get-VCFManager
+    $sddcMgrVersion = $sddcMgr.version.split(".")[0]
+
+    $resourcesObject = @()
+    
+    # SDDC Manager
+    if ($domainType -eq "Management") {
+        $resourcesObject += [pscustomobject]@{
+            'fqdn'       = $sddcMgr.fqdn
+            'name'       = $sddcMgr.fqdn.split(".")[0]
+            'resourceId' = $sddcMgr.id
+            'type'       = "SDDC_MANAGER"
+        }
+    }
+
+    # vRealize Suite Lifecycle Manager
+    if ($domainType -eq "Management") {
+        $vrslcmNode = Get-VCFvRSLCM
+        if ($vrslcmNode.id -ne "") {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $vrslcmNode.fqdn
+                'name'       = $vrslcmNode.fqdn.split(".")[0]
+                'resourceId' = $vrslcmNode.id
+                'type'       = "VRSLCM"
+            }
+        }
+    }
+
+    # vCenter Server
+    if (([float]$sddcMgrVersion -ge 4) -AND ($domainType -eq "Management")) {
+        $domain = Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }
+        $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
+    } else {
+        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
+        $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
+    }
+
+    foreach ($vCenter in $vCenterServer) {
+        $resourcesObject += [pscustomobject]@{
+            'fqdn'       = $vCenter.fqdn
+            'name'       = $vCenter.fqdn.split(".")[0]
+            'resourceId' = $vCenter.id
+            'type'       = "VCENTER"
+        }
+    }
+
+    # NSX
+    if ([float]$sddcMgrVersion -ge 4) {
+        $nsxtManager = Get-VCFNsxtCluster | Where-Object { $_.domains.id -eq $domain.id }
+        $nsxtSans = @()
+        foreach ($nodeFqdn in $nsxtManager.nodes.fqdn) {
+            $nsxtSans += $nodeFqdn
+        }
+        $nsxtSans += $nsxtManager.vipFqdn
+        $nsxtvip = $nsxtManager.vipfqdn
+
+        foreach ($nsxManager in $nsxtManager) {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $nsxtvip
+                'name'       = $nsxtvip.split(".")[0]
+                'resourceId' = $nsxManager.id
+                'sans'       = $nsxtSans
+                'type'       = "NSXT_MANAGER"
+            }
+        }
+
+        foreach ($nsxNode in $nsxtManager.nodes) {
+            $resourcesObject += [pscustomobject]@{
+                'fqdn'       = $nsxNode.fqdn
+                'name'       = $nsxNode.name
+                'resourceId' = $nsxNode.id
+                'type'       = "NSXT_MANAGER"
+            }
+        }
+    }
+    Return $resourcesObject
+}
+
+Function Request-SddcCsr {
+    <#
+        .SYNOPSIS
+        Requests SDDC Manager to generate and store certificate signing request files.
+
+        .DESCRIPTION
+        The Request-SddcCsr will request SDDC Manager to generate certifiate signing request files for all components associated with the given workload domain.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Validates that the workload domain exists in the SDDC Manager inventory.
+        - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
+
+        .EXAMPLE
+        Request-SddcCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
+        This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER workloadDomain
+        The name of the workload domain in which the certficates signing request to be generated.
+
+        .PARAMETER country
+        The country code for the certificate signing request (CSR).
+
+        .PARAMETER keySize
+        The key size for the certificate signing request (CSR).
+
+        .PARAMETER locality
+        The locality for the certificate signing request (CSR).
+
+        .PARAMETER organization
+        The organization for the certificate signing request (CSR).
+
+        .PARAMETER organizationUnit
+        The organization unit for the certificate signing request (CSR).
+
+        .PARAMETER stateOrProvince
+        The state or province for the certificate signing request (CSR).
+
+        .PARAMETER email
+        The contact email for the certificate signing request (CSR).
+    #>
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain,
+        [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
+                "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
+                "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
+                "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
+                "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
+                "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
+                "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
+                "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
+                "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
+                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country,
+        [Parameter (Mandatory = $true)] [ValidateSet ("2048", "3072", "4096")] [String] $keySize,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $locality,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $email
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $domainType = Get-VCFWorkloadDomain -name $workloadDomain
+            $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
+
+            # Create a temporary directory under reportDirectory
+            $createPathCounter = 0
+			for ($createPathCounter -lt 4) {
+				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
+				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
+				if (!(Test-Path -Path $tempPath)) {
+					Break
+				} else {
+					if ($createPathCounter -eq 3) {
+						Write-Error "Unable to write to ($tempPath): PRE_VALIDATION_FAILED.."
+                        Exit
+					}
+					$createPathCounter++
+				}
+			}
+			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+            $tempPath = Join-Path $tempPath ""
+
+            # Generate a temporay JSON configuration file
+            $csrGenerationSpecJson =
+            '{
+            "csrGenerationSpec": {
+                "country": "'+ $country + '",
+                "email": "'+ $email + '",
+                "keyAlgorithm": "'+ "RSA" + '",
+                "keySize": "'+ $keySize + '",
+                "locality": "'+ $locality + '",
+                "organization": "'+ $organization + '",
+                "organizationUnit": "'+ $organizationUnit + '",
+                "state": "'+ $stateOrProvince + '"
+                },
+            '
+            $resourcesBodyObject += [pscustomobject]@{
+                resources = $resourcesObject
+            }
+            $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempPath"temp.json"
+            Get-Content $tempPath"temp.json" | Select-Object -Skip 1 | Set-Content $tempPath"temp1.json"
+            $resouresJson = Get-Content $tempPath"temp1.json" -Raw
+            $requestCsrSpecJson = $csrGenerationSpecJson + $resouresJson
+            $requestCsrSpecJson | Out-File $tempPath"$($workloadDomain)-requestCsrSpec.json"
+            Write-Output "Requesting certificate signing requests for components associated with workload domain ($($workloadDomain))..."
+            $myTask = Request-VCFCertificateCSR -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCsrSpec.json"
+            Do {
+                Write-Output "Checking status for the generation of certificate signing requests for components associated with workload domain ($($workloadDomain))..."
+                Start-Sleep 6
+                $response = Get-VCFTask $myTask.id
+            } While ($response.status -eq "IN_PROGRESS")
+            if ($response.status -eq "FAILED") {
+                Write-Output "Workflow completed with status: $($response.status)." 
+            } elseif ($response.status -eq "SUCCESSFUL") {
+                Write-Output "Workflow completed with status: $($response.status)."
+            } else {
+                Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check before proceeding."
+            }
+            Write-Output "Generate certificate signing requests for components associated with workload domain $($workloadDomain)."
+
+            # Remove the temporary directory.
+			Remove-Item -Recurse -Force $tempPath | Out-NULL
+        } else {
+            Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+        }
+    } else {
+        Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+    }
+}
+
+Function Request-SddcCertificate {
+    <#
+        .SYNOPSIS
+        Requests SDDC Manager to connect to certificate authority to sign the certificate signing request files and to store the signed certificates.
+
+        .DESCRIPTION
+        The Request-SddcCertificate will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
+
+        .EXAMPLE
+        Request-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
+        This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER workloadDomain
+        The name of the workload domain in which the certficates signing request to be signed.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $domainType = Get-VCFWorkloadDomain -name $workloadDomain
+            $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
+
+            # Create a temporary directory under reportDirectory
+            $createPathCounter = 0
+			for ($createPathCounter -lt 4) {
+				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
+				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
+				if (!(Test-Path -Path $tempPath)) {
+					Break
+				} else {
+					if ($createPathCounter -eq 3) {
+						Write-Error "Unable to write to $tempPath."
+                        Exit
+					}
+					$createPathCounter++
+				}
+			}
+			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+            $tempPath = Join-Path $tempPath ""
+
+            # Generate a temporay JSON configuration file
+            $caTypeJson = '{
+                "caType": "Microsoft",
+                '
+                $resourcesBodyObject += [pscustomobject]@{
+                    resources = $resourcesObject
+                }
+                $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempPath"temp.json"
+                Get-Content $tempPath"temp.json" | Select-Object -Skip 1 | Set-Content $tempPath"temp1.json"
+                $resouresJson = Get-Content $tempPath"temp1.json" -Raw
+                $requestCertificateSpecJson = $caTypeJson + $resouresJson
+                $requestCertificateSpecJson | Out-File $tempPath"$($workloadDomain)-requestCertificateSpec.json"
+
+                Write-Output "Requesting certificates for components associated with workload domain $($workloadDomain)."
+                $myTask = Request-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCertificateSpec.json"
+                Do {
+                    Write-Output "Checking status for the generation of signed certificates for components associated with workload domain ($($workloadDomain))..."
+                    Start-Sleep 6
+                    $response = Get-VCFTask $myTask.id
+                } While ($response.status -eq "IN_PROGRESS")
+                if ($response.status -eq "FAILED") {
+                    Write-Error "Workflow completed with status: $($response.status)." 
+                } elseif ($response.status -eq "SUCCESSFUL") {
+                    Write-Output "Workflow completed with status: $($response.status)."
+                } else {
+                    Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check the state before proceeding."
+                }
+                Write-Output "Request signed certficates for the components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
+
+                # Remove the temporary directory.
+			    Remove-Item -Recurse -Force $tempPath  | Out-NULL
+        } else {
+            Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+        }
+    } else {
+        Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+    }
+}
+
+Function Install-SddcCertificate {
+    <#
+        .SYNOPSIS
+        Installs the signed certificates for all components associated with the given workload domain.
+
+        .DESCRIPTION
+        The Install-SddcCertificate will install the signed certificates for all components associated with the given workload domain.
+
+        .EXAMPLE
+        Install-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
+        This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER workloadDomain
+        The name of the workload domain in which the certficates signing request to be installed.
+    #>
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            $domainType = Get-VCFWorkloadDomain -name $workloadDomain
+            $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
+
+            # Create a temporary directory under reportDirectory
+            $createPathCounter = 0
+			for ($createPathCounter -lt 4) {
+				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
+				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
+				if (!(Test-Path -Path $tempPath)) {
+					Break
+				} else {
+					if ($createPathCounter -eq 3) {
+						Write-Error "Unable to write to $tempPath."
+                        Exit
+					}
+					$createPathCounter++
+				}
+			}
+			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+            $tempPath = Join-Path $tempPath ""
+
+            # Generate a temporay JSON configuration file
+            $operationTypeJson = '{
+                "operationType": "INSTALL",
+                '
+              $resourcesBodyObject += [pscustomobject]@{
+                  resources = $resourcesObject
+              }
+              $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempPath"temp.json"
+              Get-Content $tempPath"temp.json" | Select-Object -Skip 1 | Set-Content $tempPath"temp1.json"
+              $resouresJson = Get-Content $tempPath"temp1.json" -Raw
+              $requestCertificateSpecJson = $operationTypeJson + $resouresJson
+              $requestCertificateSpecJson | Out-File $tempPath"$($workloadDomain)-updateCertificateSpec.json"
+
+              # Install Certificates
+              Try {
+                Write-Output "Installing signed certificates for components associated with workload domain $($workloadDomain). This process may take some time to complete (60 minutes or greater)..."
+                $myTaskId = Set-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-updateCertificateSpec.json"
+                $pollLoopCounter = 0
+                Do {
+                    if ($pollLoopCounter % 10 -eq 0) {
+                        Write-Output "Checking status for the Installation of signed certificates for components associated with workload domain ($($workloadDomain))..."
+                    }
+                    $response = Get-VCFTask $myTaskId.id
+                    if ($response.status -in "In Progress","IN_PROGRESS") {
+                        if (($pollLoopCounter % 10 -eq 0) -AND ($pollLoopCounter -gt 9)) {
+                            Write-Output "Installation of signed certificates is still in progress for workload domain ($($workloadDomain))..."
+                        }
+                        Start-Sleep 60
+                        $pollLoopCounter ++
+                    }
+                } While ($response.status -in "In Progress","IN_PROGRESS")
+                if ($response.status -eq "FAILED") {
+                    Write-Error "Workflow completed with status: $($response.status)." 
+                } elseif ($response.status -eq "SUCCESSFUL") {
+                    Write-Output "Workflow completed with status: $($response.status)."
+                } else {
+                    Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please review the state before proceeding."
+                }
+                Write-Output "Installation of signed certificates for components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
+
+                # Remove the temporary directory.
+			    Remove-Item -Recurse -Force $tempPath  | Out-NULL
+            } Catch {
+                $ErrorMessage = $_.Exception.Message
+                Write-Error "Error was: $ErrorMessage"
+            }
+        } else {
+            Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
+        }
+    } else {
+        Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
     }
 }
 

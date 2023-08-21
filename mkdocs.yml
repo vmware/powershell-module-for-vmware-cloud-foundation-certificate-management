@@ -138,10 +138,14 @@ nav:
     - Get-vCenterCertificateThumbprint: documentation/functions/Get-vCenterCertificateThumbprint.md
     - Get-vSANHealthSummary: documentation/functions/Get-vSANHealthSummary.md
     - Install-EsxiCertificate: documentation/functions/Install-EsxiCertificate.md
+    - Install-SddcCertificate: documentation/functions/Install-SddcCertificate.md
+    - Request-SddcCertificate: documentation/functions/Request-SddcCertificate.md
     - Request-EsxiCsr: documentation/functions/Request-EsxiCsr.md
+    - Request-SddcCsr: documentation/functions/Request-SddcCsr.md
     - Restart-EsxiHost: documentation/functions/Restart-EsxiHost.md
     - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
     - Set-EsxiLockdownMode: documentation/functions/Set-EsxiLockdownMode.md
+    - Set-SddcCertificateAuthority: documentation/functions/Set-SddcCertificateAuthority.md
     - Test-EsxiCertMgmtChecks: documentation/functions/Test-EsxiCertMgmtChecks.md
 - Community:
   - community/index.md

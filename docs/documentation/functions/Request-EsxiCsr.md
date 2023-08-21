@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Requests a Certificate Signing Request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
+Requests a certificate signing request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
 
 ## Syntax
 
@@ -20,7 +20,7 @@ Request-EsxiCsr [-server] <String> [-user] <String> [-pass] <String> [-domain] <
 
 ## Description
 
-The `Request-EsxiCsr` cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
+The `Request-EsxiCsr` cmdlet will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory.
 
 The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-password` values.
 
@@ -29,9 +29,7 @@ The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass
 - Validates that network connectivity and authentication is possible to vCenter Server.
 - Gathers the ESXi hosts from the cluster.
 - Requests the ESXi host CSR and saves it in the output directory as `<esxi-host-fqdn>.csr` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.csr`.)
-- Defines possible country codes.
-
-Reference: <https://www.digicert.com/kb/ssl-certificate-country-codes.htm>
+- Defines possible country codes. [Reference](https://www.digicert.com/kb/ssl-certificate-country-codes.htm)
 
 ## Examples
 
@@ -127,7 +125,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host to request Certificate Signing Request (CSR) for.
+The FQDN of the ESXi host to request certificate signing request (CSR) for.
 
 ```yaml
 Type: String
@@ -143,7 +141,7 @@ Accept wildcard characters: False
 
 ### -outputDirectory
 
-The directory to save the Certificate Signing Request (CSR) files.
+The directory to save the certificate signing request (CSR) files.
 
 ```yaml
 Type: String
@@ -159,7 +157,7 @@ Accept wildcard characters: False
 
 ### -country
 
-The country code for the Certificate Signing Request (CSR).
+The country code for the certificate signing request (CSR).
 
 ```yaml
 Type: String
@@ -175,7 +173,7 @@ Accept wildcard characters: False
 
 ### -locality
 
-The locality for the Certificate Signing Request (CSR).
+The locality for the certificate signing request (CSR).
 
 ```yaml
 Type: String
@@ -191,7 +189,7 @@ Accept wildcard characters: False
 
 ### -organization
 
-The organization for the Certificate Signing Request (CSR).
+The organization for the certificate signing request (CSR).
 
 ```yaml
 Type: String
@@ -207,7 +205,7 @@ Accept wildcard characters: False
 
 ### -organizationUnit
 
-The organization unit for the Certificate Signing Request (CSR).
+The organization unit for the certificate signing request (CSR).
 
 ```yaml
 Type: String
@@ -223,7 +221,7 @@ Accept wildcard characters: False
 
 ### -stateOrProvince
 
-The state or province for the Certificate Signing Request (CSR).
+The state or province for the certificate signing request (CSR).
 
 ```yaml
 Type: String

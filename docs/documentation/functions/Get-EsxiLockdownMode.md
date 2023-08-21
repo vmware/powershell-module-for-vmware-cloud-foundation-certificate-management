@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Get the ESXi host lockdown mode state from vCenter Server.
+Retrieves the ESXi host lockdown mode state from vCenter Server.
 
 ## Syntax
 

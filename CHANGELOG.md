@@ -1,5 +1,16 @@
 # Release History
 
+## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.3.0)
+
+> Release Date: (Not Released)
+
+Enhancements:
+
+- Added the `Set-SddcCertificateAuthority` cmdlet to set the certificate authority in SDDC Manager to use a Microsoft Certificate Authority. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+- Added the `Request-SddcCsr` cmdlet to request SDDC Manager to generate and store certificate signing request files. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+- Added the `Request-SddcCertificate` cmdlet to request SDDC Manager to connect to certificate authority to sign the certificate signing request files and to store the signed certificates. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+- Added the `Install-SddcCertificates` cmdlet to install the signed certificates for all components associated with the given workload domain. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
+
 ## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.2.0)
 
 > Release Date: 2023-07-25

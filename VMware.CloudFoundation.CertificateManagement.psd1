@@ -12,7 +12,7 @@
     RootModule = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.2.0.1001'
+    ModuleVersion = '1.3.0.1000'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -78,7 +78,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = 'Get-EsxiCertificateThumbprint', 'Get-vCenterCertificateThumbprint', 'Confirm-EsxiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-EsxiCsr', 'Get-EsxiCertificateMode', 'Set-EsxiCertificateMode', 'Get-vSANHealthSummary', 'Get-EsxiLockdownMode', 'Set-EsxiLockdownMode', 'Restart-EsxiHost', 'Install-EsxiCertificate', 'Test-EsxiCertMgmtChecks'
+    FunctionsToExport = 'Get-EsxiCertificateThumbprint', 'Get-vCenterCertificateThumbprint', 'Confirm-EsxiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-EsxiCsr', 'Get-EsxiCertificateMode', 'Set-EsxiCertificateMode', 'Get-vSANHealthSummary', 'Get-EsxiLockdownMode', 'Set-EsxiLockdownMode', 'Restart-EsxiHost', 'Install-EsxiCertificate', 'Test-EsxiCertMgmtChecks', 'Set-SddcCertificateAuthority', 'Request-SddcCsr', 'Request-SddcCertificate', 'Install-SddcCertificate'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()
