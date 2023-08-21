@@ -21,6 +21,10 @@ Platform                                                     | Support
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }
 
+!!! note
+
+    ESXi certificate management for VMware Cloud Foundation on Dell EMC VxRail is not supported.
+
 ### Operating Systems
 
 The following table lists the supported operating systems for this module.
