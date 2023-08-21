@@ -1439,7 +1439,7 @@ Function gatherSddcInventory {
         $vCenterServer = Get-VCFvCenter | Where-Object { $_.domain.id -eq $domain.id }
     }
 
-    Foreach ($vCenter in $vCenterServer) {
+    foreach ($vCenter in $vCenterServer) {
         $resourcesObject += [pscustomobject]@{
             'fqdn'       = $vCenter.fqdn
             'name'       = $vCenter.fqdn.split(".")[0]
@@ -1452,7 +1452,7 @@ Function gatherSddcInventory {
     if (([float]$sddcMgrVersion -ge 4) -OR ($isLegacyWldnsxT)) {
         $nsxtManager = Get-VCFNsxtCluster | Where-Object { $_.domains.id -eq $domain.id }
         $nsxtSans = @()
-        Foreach ($nodeFqdn in $nsxtManager.nodes.fqdn) {
+        foreach ($nodeFqdn in $nsxtManager.nodes.fqdn) {
             $nsxtSans += $nodeFqdn
         }
 
@@ -1464,7 +1464,7 @@ Function gatherSddcInventory {
             $nsxtvip = $nsxtManager.fqdn
         }
 
-        Foreach ($nsxManager in $nsxtManager) {
+        foreach ($nsxManager in $nsxtManager) {
             $resourcesObject += [pscustomobject]@{
                 'fqdn'       = $nsxtvip
                 'name'       = $nsxtvip.split(".")[0]
@@ -1474,7 +1474,7 @@ Function gatherSddcInventory {
             }
         }
 
-        Foreach ($nsxNode in $nsxtManager.nodes) {
+        foreach ($nsxNode in $nsxtManager.nodes) {
             $resourcesObject += [pscustomobject]@{
                 'fqdn'       = $nsxNode.fqdn
                 'name'       = $nsxNode.name
