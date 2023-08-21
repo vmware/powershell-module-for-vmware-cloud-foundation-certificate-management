@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Install a certificate for an ESXi host or for each ESXi host in a cluster.
+Installs a certificate for an ESXi host or for each ESXi host in a cluster.
 
 ## Syntax
 

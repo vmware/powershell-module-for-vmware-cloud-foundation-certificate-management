@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Verify if the provided certificate is already on the ESXi host.
+Verifies if the provided certificate is already on the ESXi host.
 
 ## Syntax
 

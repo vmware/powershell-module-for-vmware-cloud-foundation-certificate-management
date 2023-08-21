@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Restart an ESXi host and poll for connection availability.
+Restarts an ESXi host and poll for connection availability.
 
 ## Syntax
 

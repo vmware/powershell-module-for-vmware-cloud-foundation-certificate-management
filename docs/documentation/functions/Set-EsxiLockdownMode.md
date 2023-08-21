@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Set the lockdown mode for all ESXi hosts in a given cluster.
+Sets the lockdown mode for all ESXi hosts in a given cluster.
 
 ## Syntax
 
