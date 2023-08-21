@@ -1449,20 +1449,14 @@ Function gatherSddcInventory {
     }
 
     # NSX
-    if (([float]$sddcMgrVersion -ge 4) -OR ($isLegacyWldnsxT)) {
+    if ([float]$sddcMgrVersion -ge 4) {
         $nsxtManager = Get-VCFNsxtCluster | Where-Object { $_.domains.id -eq $domain.id }
         $nsxtSans = @()
         Foreach ($nodeFqdn in $nsxtManager.nodes.fqdn) {
             $nsxtSans += $nodeFqdn
         }
-
-        if ([float]$sddcMgrVersion -ge 4) {
-            $nsxtSans += $nsxtManager.vipFqdn
-            $nsxtvip = $nsxtManager.vipfqdn
-        } else {
-            $nsxtSans += $nsxtManager.Fqdn
-            $nsxtvip = $nsxtManager.fqdn
-        }
+        $nsxtSans += $nsxtManager.vipFqdn
+        $nsxtvip = $nsxtManager.vipfqdn
 
         Foreach ($nsxManager in $nsxtManager) {
             $resourcesObject += [pscustomobject]@{
