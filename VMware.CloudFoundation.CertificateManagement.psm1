@@ -1557,7 +1557,7 @@ Function Request-SddcCsr {
             $domainType = Get-VCFWorkloadDomain -name $workloadDomain
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
-            # Create a temporary directory under reportDirectory
+            # Create a temporary directory under current directory
             $createPathCounter = 0
 			for ($createPathCounter -lt 4) {
 				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
@@ -1660,7 +1660,7 @@ Function Request-SddcCertificate {
             $domainType = Get-VCFWorkloadDomain -name $workloadDomain
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
-            # Create a temporary directory under reportDirectory
+            # Create a temporary directory under current directory
             $createPathCounter = 0
 			for ($createPathCounter -lt 4) {
 				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
@@ -1753,7 +1753,7 @@ Function Install-SddcCertificate {
             $domainType = Get-VCFWorkloadDomain -name $workloadDomain
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
-            # Create a temporary directory under reportDirectory
+            # Create a temporary directory under current directory
             $createPathCounter = 0
 			for ($createPathCounter -lt 4) {
 				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
