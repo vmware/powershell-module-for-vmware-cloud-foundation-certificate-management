@@ -11,6 +11,11 @@ Enhancements:
 - Added the `Request-SddcCertificate` cmdlet to request SDDC Manager to connect to certificate authority to sign the certificate signing request files and to store the signed certificates. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
 - Added the `Install-SddcCertificates` cmdlet to install the signed certificates for all components associated with the given workload domain. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
 
+Chore:
+
+- Updated `VMware.PowerCLI` from v13.0.0 to v13.1.0 [GH-58](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/58)
+- Updated `PowerValidatedSolutions` from v2.5.0 to v2.6.0. [GH-58](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/58)
+
 ## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.2.0)
 
 > Release Date: 2023-07-25
