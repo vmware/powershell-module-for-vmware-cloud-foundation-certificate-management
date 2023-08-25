@@ -4,6 +4,8 @@
 
 # PowerShell Module for VMware Cloud Foundation Certificate Management
 
+<img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.CertificateManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">
+
 `VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage certificates across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] such as:
 * Configuring the Certificate Authority for SDDC Manager.
 * Generating certificate signing requests for a workload domain.
