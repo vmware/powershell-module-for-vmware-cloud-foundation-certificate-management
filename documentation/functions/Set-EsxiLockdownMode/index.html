@@ -18,10 +18,10 @@
         <link rel="prev" href="../Set-EsxiCertificateMode/">
       
       
-        <link rel="next" href="../Test-EsxiCertMgmtChecks/">
+        <link rel="next" href="../Set-SddcCertificateAuthority/">
       
       <link rel="icon" href="../../../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.eebd395e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.26e3688c.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ecc896b0.min.css">
@@ -47,8 +47,6 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../../css/timeago.css">
     
       <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
     
@@ -601,6 +599,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -733,8 +739,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../Install-SddcCertificate/" class="md-nav__link">
+        Install-SddcCertificate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Request-SddcCertificate/" class="md-nav__link">
+        Request-SddcCertificate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../Request-EsxiCsr/" class="md-nav__link">
         Request-EsxiCsr
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Request-SddcCsr/" class="md-nav__link">
+        Request-SddcCsr
       </a>
     </li>
   
@@ -949,6 +997,20 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Set-SddcCertificateAuthority/" class="md-nav__link">
+        Set-SddcCertificateAuthority
+      </a>
     </li>
   
 
@@ -1322,7 +1384,7 @@
 
 <h1 id="set-esxilockdownmode">Set-EsxiLockdownMode<a class="headerlink" href="#set-esxilockdownmode" title="Permanent link">&para;</a></h1>
 <h2 id="synopsis">Synopsis<a class="headerlink" href="#synopsis" title="Permanent link">&para;</a></h2>
-<p>Set the lockdown mode for all ESXi hosts in a given cluster.</p>
+<p>Sets the lockdown mode for all ESXi hosts in a given cluster.</p>
 <h2 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link">&para;</a></h2>
 <h3 id="enable">enable<a class="headerlink" href="#enable" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">Set-EsxiLockdownMode</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-domain</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-cluster</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-enable</span><span class="p">]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
@@ -1430,17 +1492,6 @@
 <h3 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h3>
 <p>This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see <a href="http://go.microsoft.com/fwlink/?LinkID=113216">about_CommonParameters</a>.</p>
 
-  <hr>
-<div class="md-source-file">
-  <small>
-    
-      Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-07-13T16:31:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-07-13</span>
-      
-    
-  </small>
-</div>
-
 
 
 
@@ -1484,13 +1535,13 @@
         
         
           
-          <a href="../Test-EsxiCertMgmtChecks/" class="md-footer__link md-footer__link--next" aria-label="Next: Test-EsxiCertMgmtChecks" rel="next">
+          <a href="../Set-SddcCertificateAuthority/" class="md-footer__link md-footer__link--next" aria-label="Next: Set-SddcCertificateAuthority" rel="next">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Test-EsxiCertMgmtChecks
+                Set-SddcCertificateAuthority
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1530,14 +1581,6 @@
     
     
       <script src="../../../assets/javascripts/bundle.220ee61c.min.js"></script>
-      
-        
-          <script src="../../../js/timeago.min.js"></script>
-        
-      
-        
-          <script src="../../../js/timeago_mkdocs_material.js"></script>
-        
       
         
           <script src="../../../js/open_in_new_tab.js"></script>
