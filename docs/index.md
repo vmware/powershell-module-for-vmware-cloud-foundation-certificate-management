@@ -4,7 +4,16 @@
 
 # PowerShell Module for VMware Cloud Foundation Certificate Management
 
-`VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage ESXi host certificates across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
+<img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.CertificateManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">
+
+`VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage certificates across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] such as:
+* Configuring the Certificate Authority for SDDC Manager.
+* Generating certificate signing requests for a workload domain.
+* Requesting signed-certificates for a workload domain.
+* Installing and replacing CA-signed certificates for a workload domain.
+* Generating certificate signing requests for ESXi hosts.
+* Setting the ESXi Certificate Mode in vCenter Server.
+* Installing and replacing CA-signed certificates for a ESXi hosts.
 
 [:material-powershell: &nbsp; PowerShell Gallery][psgallery-module-certificate-management]{ .md-button .md-button--primary }
 
@@ -20,6 +29,10 @@ Platform                                                     | Support
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green }
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }
+
+!!! note
+
+    ESXi certificate management for VMware Cloud Foundation on Dell EMC VxRail is not supported.
 
 ### Operating Systems
 
@@ -46,9 +59,9 @@ The following table lists the required PowerShell module dependencies for this m
 
 PowerShell Module                                    | Version   | Publisher    | Reference
 -----------------------------------------------------|-----------|--------------|---------------------------------------------------------------------------
-[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.0.0 | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
+[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.1.0 | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
 [PowerVCF][psgallery-module-powervcf]                | >= 2.3.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.5.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.6.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell

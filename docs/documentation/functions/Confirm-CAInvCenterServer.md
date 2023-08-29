@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Verify the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
+Verifies the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
 
 ## Syntax
 

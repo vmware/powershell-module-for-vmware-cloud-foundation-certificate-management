@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Get the vSAN health summary from vCenter Server for a cluster.
+Retrieves the vSAN health summary from vCenter Server for a cluster.
 
 ## Syntax
 
