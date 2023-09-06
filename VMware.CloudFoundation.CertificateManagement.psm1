@@ -1417,7 +1417,7 @@ Function gatherSddcInventory {
         }
     }
 
-    # vRealize Suite Lifecycle Manager
+    # Aria Suite Lifecycle
     if ($domainType -eq "Management") {
         $vrslcmNode = Get-VCFvRSLCM
         if ($vrslcmNode.id -ne "") {
