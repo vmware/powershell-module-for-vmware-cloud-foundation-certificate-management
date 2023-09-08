@@ -13,13 +13,14 @@
 ## Overview
 
 `VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage certificates across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] such as:
-* Configuring the Certificate Authority for SDDC Manager.
-* Generating certificate signing requests for a workload domain.
-* Requesting signed-certificates for a workload domain.
-* Installing and replacing CA-signed certificates for a workload domain.
-* Generating certificate signing requests for ESXi hosts.
-* Setting the ESXi Certificate Mode in vCenter Server.
-* Installing and replacing CA-signed certificates for a ESXi hosts.
+
+- Configuring the Certificate Authority for SDDC Manager.
+- Generating certificate signing requests for a workload domain.
+- Requesting signed-certificates for a workload domain.
+- Installing and replacing CA-signed certificates for a workload domain.
+- Generating certificate signing requests for ESXi hosts.
+- Setting the ESXi Certificate Mode in vCenter Server.
+- Installing and replacing CA-signed certificates for a ESXi hosts.
 
 ## Documentation
 
