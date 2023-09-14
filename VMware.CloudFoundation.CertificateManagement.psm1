@@ -1322,14 +1322,17 @@ Function Install-EsxiCertificate {
 Function Set-SddcCertificateAuthority {
     <#
         .SYNOPSIS
-        Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority.
+        Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority or an OpenSSL Certificate Authority.
 
         .DESCRIPTION
-        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority as SDDC Manager's Certificate Authority.
+        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
         .EXAMPLE
         Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
         This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
+
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -commonName sfo-vcf01.sfo.rainpole.io -organization Rainpole -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
+        This example will configure an OpenSSL Certificate Authority in SDDC Manager.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1351,50 +1354,110 @@ Function Set-SddcCertificateAuthority {
 
         .PARAMETER certAuthorityTemplate
         The Certificate Template Name to be used with the Microsoft Certificate Authority.
+
+        .PARAMETER commonName
+        Specifies the common name for the OpenSSL Certificate Authority.
+
+        .PARAMETER organization
+        Specifies the organization name for the OpenSSL Certificate Authority.
+
+        .PARAMETER organizationUnit
+        Specifies the organization unit for the OpenSSL Certificate Authority.
+
+        .PARAMETER locality
+        Specifies the locality for the OpenSSL Certificate Authority.
+
+        .PARAMETER state
+        Specifies the state for the OpenSSL Certificate Authority.
+
+        .PARAMETER country
+        Specifies the country for the OpenSSL Certificate Authority.
     #>
 
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityUser,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityPass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $certAuthorityTemplate
+        [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityFqdn,
+        [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityUser,
+        [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityPass,
+        [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityTemplate, 
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $commonName,
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organization,
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organizationUnit,            
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $locality,
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $state,
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
+        "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
+        "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
+        "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
+        "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
+        "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
+        "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
+        "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
+        "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
+        "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country
     )
 
     if (Test-VCFConnection -server $server) {
-        if ((Test-EndpointConnection -server $certAuthorityFqdn -port 443) -eq "True" ) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                $vcfVersion = Get-VCFManager | select version | Select-String -Pattern '\d+\.\d+' -AllMatches | ForEach-Object {$_.matches.groups[0].value}
-                $caServerUrl = "https://$certAuthorityFqdn/certsrv"
-                Try {
-                    Write-Output "Starting configuration of a Microsoft Certificate Authority in SDDC Manager..."
-                    Write-Output "Checking status of the Microsoft Certificate Authority configuration..."
-                    $vcfCertCa = Get-VCFCertificateAuthority
-                    if ($vcfCertCa.username -ne "$certAuthorityUser") {
-                        Write-Output "Configuring the Microsoft Certificate Authority in SDDC Manager using $($certAuthorityUser)..."
-                        Set-VCFMicrosoftCA -serverUrl $caServerUrl -username $certAuthorityUser -password $certAuthorityPass -templateName $certAuthorityTemplate | Out-Null
-                        Write-Output "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)): SUCCESSFUL."
-                    } else {
-                        Write-Warning "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)), already exists: SKIPPED."
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if ($PsBoundParameters.ContainsKey("commonName")){
+                if (Test-EndpointConnection -server $commonName -port 443) {
+                    Try {
+                        Write-Output "Starting configuration of the OpenSSL Certificate Authority in SDDC Manager..."
+                        Write-Output "Checking status of the OpenSSL Certificate Authority configuration..."
+                        if ((Get-VCFCertificateAuthority).id -eq "OpenSSL") {
+                            $vcfCommonName = (Get-VCFCertificateAuthority -caType OpenSSL).commonName 
+                            Write-Output "OpenSSL Certificate Authority is currently configured on SDDC Manager using $($vcfCommonName)."
+                        }
+                        else {
+                            Write-Output "OpenSSL Certificate Authority is currently not configured on SDDC Manager."
+                        }
+                        if ($vcfCommonName -ne $commonName) {
+                            Write-Output "Configuring the OpenSSL Certificate Authority in SDDC Manager using $($commonName)..."
+                            Set-VCFOpensslCa -commonName $commonName -organization $organization -organizationUnit $organizationUnit -locality $locality -state $state -country $country
+                            Write-Output "Configuration of the OpenSSL Certificate Authority in SDDC Manager using $($commonName): SUCCESSFUL."
+                        } else {
+                            Write-Warning "Configuration of the OpenSSL Certificate Authority in SDDC Manager using $($commonName), already exists: SKIPPED."
+                        }
+                        Write-Output "Configuration the OpenSSL Certificate Authority in SDDC Manager completed."
+                    } Catch {
+                        $ErrorMessage = $_.Exception.Message
+                        Write-Output "Error was: $ErrorMessage."
                     }
-                    Write-Output "Configuration a Microsoft Certificate Authority in SDDC Manager completed."
-                } Catch {
-                    $ErrorMessage = $_.Exception.Message
-                    Write-Output "Error was: $ErrorMessage."
+                } else {
+                    Write-Error "Unable to connect to Openssl Certificate Authority ($commonName)."
                 }
             } else {
-                Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
-            }
+                if (Test-EndpointConnection -server $certAuthorityFqdn -port 443) {
+                    $caServerUrl = "https://$certAuthorityFqdn/certsrv"
+                    Try {
+                        Write-Output "Starting configuration of the Microsoft Certificate Authority in SDDC Manager..."
+                        Write-Output "Checking status of the Microsoft Certificate Authority configuration..."
+                        $vcfCertCa = Get-VCFCertificateAuthority
+                        if ($vcfCertCa.username -ne "$certAuthorityUser") {
+                            Write-Output "Configuring the Microsoft Certificate Authority in SDDC Manager using $($certAuthorityUser)..."
+                            Set-VCFMicrosoftCA -serverUrl $caServerUrl -username $certAuthorityUser -password $certAuthorityPass -templateName $certAuthorityTemplate | Out-Null
+                            Write-Output "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)): SUCCESSFUL."
+                        } else {
+                            Write-Warning "Configuration of the Microsoft Certificate Authority in SDDC Manager using ($($certAuthorityUser)), already exists: SKIPPED."
+                        }
+                        Write-Output "Configuration a Microsoft Certificate Authority in SDDC Manager completed."
+                    } Catch {
+                        $ErrorMessage = $_.Exception.Message
+                        Write-Output "Error was: $ErrorMessage."
+                    }
+                } else {
+                    Write-Error "Unable to connect to Microsoft Certificate Authority ($certAuthorityFqdn)."
+                }
+            } 
         } else {
-            Write-Error "Unable to connect to Microsoft Certificate Authority ($certAuthorityFqdn)."
+            Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
         }
     } else {
         Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
     }
 }
-
 Function gatherSddcInventory {
     Param (
         [Parameter (Mandatory = $true)] $domainType,
