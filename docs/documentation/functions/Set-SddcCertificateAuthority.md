@@ -7,7 +7,7 @@ Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Au
 ## Syntax
 
 ```powershell
-Set-SddcCertificateAuthority [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
+Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
 ```
 
 ## Description

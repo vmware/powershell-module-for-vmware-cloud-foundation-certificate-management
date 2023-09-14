@@ -119,66 +119,28 @@ Function Get-vCenterServer {
     }
 }
 
-Function Get-EsxiCertificateThumbprint {
+
+Function Get-VCFCertificateThumbprint {
     <#
         .SYNOPSIS
-        Retrieves an ESXi host's certificate thumbprint.
+        Retrieves certificate thumbprints for ESXi hosts or vCenter Server instances.
 
         .DESCRIPTION
-        The Get-EsxiCertificateThumbprint cmdlet retrieves an ESXi host's certificate thumbprint.
-
+        The Get-VCFCertificateThumbprint cmdlet retrieves certificate thumbprints for ESXi hosts or vCenter Server instances.
+        
         .EXAMPLE
-        Get-EsxiCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+        Get-VCFCertificateThumbprint -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
         This example retrieves the ESXi host's certificate thumbprint for an ESXi host with the FQDN of sfo01-m01-esx01.sfo.rainpole.io.
 
-        .PARAMETER server
-        The fully qualified domain name of the SDDC Manager instance.
-
-        .PARAMETER user
-        The username to authenticate to the SDDC Manager instance.
-
-        .PARAMETER pass
-        The password to authenticate to the SDDC Manager instance.
-
-        .PARAMETER esxiFqdn
-        The FQDN of the ESXi host to retrieve the certificate thumbprint.
-    #>
-
-    Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
-    )
-
-    Try {
-        $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
-        $esxiCertificateThumbprint = $(Get-VIMachineCertificate -Server $($vCenterServer.details.fqdn) -VMHost $esxiFqdn).Certificate.Thumbprint
-        return $esxiCertificateThumbprint
-    }
-    Catch {
-        Debug-ExceptionWriter -object $_
-    } Finally {
-        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
-    }
-}
-
-Function Get-vCenterCertificateThumbprint {
-    <#
-        .SYNOPSIS
-        Retrieves either all of the vCenter Server instance's certificate thumbprints or those which match the provided issuer name.
-
-        .DESCRIPTION
-        The Get-vCenterCertificateThumbprint cmdlet retrieves the vCenter Server instance's certificate thumbprints. By default, it retrieves all thumbprints.
-        If issuer is provided, then only the thumbprint of the matching certificate is returned.
-
         .EXAMPLE
-        Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the certificate thumbprints for the vCenter Server instance belonging to the domain sfo-m01.
-
-        .EXAMPLE
-        Get-vCenterCertificateThumbprint -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole
+        Get-VCFCertificateThumbprint -vcenter -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole
         This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer "rainpole".
+
+        .PARAMETER esxi
+        Used to retrieve the certificate thumbprint for ESXi host.
+
+        .PARAMETER vcenter
+        Used to retrieve the certificate thumbprint for vCenter Server.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -190,33 +152,42 @@ Function Get-vCenterCertificateThumbprint {
         The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
-        The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
+        The name of the workload domain (only required when using the "vCenter" parameter).
 
         .PARAMETER issuer
-        The name of the issuer to match with the vCenter Server instance's certificate thumbprints.
+        The name of the issuer to match with the vCenter Server instance's certificate thumbprints (only required when using the "vCenter" parameter).
     #>
 
     Param (
+        [Parameter (Mandatory = $true, ParameterSetName = "ESXi")] [ValidateNotNullOrEmpty()] [Switch] $esxi,
+        [Parameter (Mandatory = $true, ParameterSetName = "vCenter")] [ValidateNotNullOrEmpty()] [Switch] $vcenter,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $issuer
+        [Parameter (Mandatory = $false, ParameterSetName = "ESXi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $false, ParameterSetName = "vCenter")] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $false, ParameterSetName = "vCenter")] [ValidateNotNullOrEmpty()] [String] $issuer
     )
 
     Try {
-        $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
-        $vcTrustedCert = Get-VITrustedCertificate -Server $vCenterServer.details.fqdn
-
-        if ($vcTrustedCert) {
-            if ($PsBoundParameters.ContainsKey("issuer")) {
-                $vcTrustedCert = $vcTrustedCert | Where-Object { $_.issuer -match $issuer }
-            }
-            $vcCertificateThumbprint = $vcTrustedCert.Certificate.Thumbprint
+        if ($PsBoundParameters.ContainsKey("esxi")) {
+            $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
+            $esxiCertificateThumbprint = $(Get-VIMachineCertificate -Server $($vCenterServer.details.fqdn) -VMHost $esxiFqdn).Certificate.Thumbprint
+            return $esxiCertificateThumbprint
         } else {
-            Write-Error "Unable to retrieve certificates from vCenter Server instance $($vCenterServer.details.fqdn)." -ErrorAction Stop
+            $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
+            $vcTrustedCert = Get-VITrustedCertificate -Server $vCenterServer.details.fqdn
+
+            if ($vcTrustedCert) {
+                if ($PsBoundParameters.ContainsKey("issuer")) {
+                    $vcTrustedCert = $vcTrustedCert | Where-Object { $_.issuer -match $issuer }
+                }
+                $vcCertificateThumbprint = $vcTrustedCert.Certificate.Thumbprint
+                return $vcCertificateThumbprint
+            } else {
+                Write-Error "Unable to retrieve certificates from vCenter Server instance $($vCenterServer.details.fqdn)." -ErrorAction Stop
+            }
         }
-        return $vcCertificateThumbprint
     }
     Catch {
         Debug-ExceptionWriter -object $_
@@ -428,7 +399,7 @@ Function Confirm-EsxiCertificateInstalled {
             Write-Error "Could not find certificate in $signedCertificate." -ErrorAction Stop
             return
         }
-        $esxiCertificateThumbprint = Get-EsxiCertificateThumbprint -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
+        $esxiCertificateThumbprint = Get-VCFCertificateThumbprint -esxi -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn
         $crt = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2($signedCertificate)
         $signedCertThumbprint = $crt.Thumbprint
 
@@ -491,9 +462,9 @@ Function Confirm-CAInvCenterServer {
 
     Try {
         if ($PsBoundParameters.ContainsKey("issuer")) {
-            $vcThumbprints = Get-vCenterCertificateThumbprint -server $server -user $user -pass $pass -domain $domain -issuer $issuer
+            $vcThumbprints = Get-VCFCertificateThumbprint -vcenter -server $server -user $user -pass $pass -domain $domain -issuer $issuer
         } else {
-            $vcThumbprints = Get-vCenterCertificateThumbprint -server $server -user $user -pass $pass -domain $domain
+            $vcThumbprints = Get-VCFCertificateThumbprint -vcenter -server $server -user $user -pass $pass -domain $domain
         }
         if (Test-Path $signedCertificate -PathType Leaf ) {
             Write-Output "Certificate file found - $signedCertificate."
@@ -1328,11 +1299,14 @@ Function Set-SddcCertificateAuthority {
         The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
         .EXAMPLE
-        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -certAuthority Microsoft -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
         This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
 
-        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -commonName sfo-vcf01.sfo.rainpole.io -organization Rainpole -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
+        Set-SddcCertificateAuthority -server sfo-vcf01.sfo.rainpole.io -certAuthority OpenSSL -user administrator@vsphere.local -pass VMw@re123! -commonName sfo-vcf01.sfo.rainpole.io -organization Rainpole -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
         This example will configure an OpenSSL Certificate Authority in SDDC Manager.
+
+        .PARAMETER certAuthority
+        The type of Certificate Authority to be configured Microsoft or OpenSSL
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1375,6 +1349,7 @@ Function Set-SddcCertificateAuthority {
     #>
 
     Param (
+        [Parameter (Mandatory = $true)] [ValidateSet ("Microsoft", "OpenSSL")] [String] $certAuthority,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
@@ -1401,7 +1376,7 @@ Function Set-SddcCertificateAuthority {
 
     if (Test-VCFConnection -server $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-            if ($PsBoundParameters.ContainsKey("commonName")){
+            if ($certAuthority -eq "OpenSSL"){
                 if (Test-EndpointConnection -server $commonName -port 443) {
                     Try {
                         Write-Output "Starting configuration of the OpenSSL Certificate Authority in SDDC Manager..."
