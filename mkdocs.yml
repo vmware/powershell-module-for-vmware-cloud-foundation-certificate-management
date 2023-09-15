@@ -134,7 +134,7 @@ nav:
     - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
     - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md
     - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md
-    - Get-EsxiCertificateThumbprint: documentation/functions/Get-EsxiCertificateThumbprint.md
+    - Get-VCFCertificateThumbprint: documentation/functions/Get-VCFCertificateThumbprint.md
     - Get-EsxiLockdownMode: documentation/functions/Get-EsxiLockdownMode.md
     - Get-VCFCertificateThumbprint: documentation/functions/Get-VCFCertificateThumbprint.md
     - Get-vSANHealthSummary: documentation/functions/Get-vSANHealthSummary.md

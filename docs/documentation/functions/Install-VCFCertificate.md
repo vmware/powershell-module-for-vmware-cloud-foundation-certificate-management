@@ -30,11 +30,14 @@ Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <Stri
 ## Description
 
 The `Install-VCFCertificate` will install the signed certificates for all components associated with the given workload domain when used with the -sddcManager switch.
-The `Install-VCFCertificate` will replace the certificate for an ESXi host or for each ESXi host in a cluster when used with the -esxi switch
+
+The `Install-VCFCertificate` will replace the certificate for an ESXi host or for each ESXi host in a cluster when used with the -esxi switch.
+
 When used with -esxi switch:
-    - You must provide the directory containing the signed certificate files. 
-    - Certificate names should be in format `<FQDN>.crt` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.crt`.)
-    - The workflow will put the ESXi host in maintenance mode with full data migration, disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+
+- You must provide the directory containing the signed certificate files. 
+- Certificate names should be in format `<FQDN>.crt` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.crt`.)
+- The workflow will put the ESXi host in maintenance mode with full data migration, disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
 
 ## Examples
 

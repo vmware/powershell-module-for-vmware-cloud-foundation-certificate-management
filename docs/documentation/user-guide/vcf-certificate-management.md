@@ -3,11 +3,11 @@
 This section provides information on how to use the PowerShell module for VMware Cloud Foundation Certificate Management to manage certificates across all components (except ESXi Hosts) in your VMware Cloud Foundation instance.
 
 
-## Configuring the Certificate Authority for SDDC Manager.
+## Configuring the Certificate Authority for SDDC Manager
 
 The [`Set-SddcCertificateAuthority`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-SddcCertificateAuthority/)  will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
-### Configuring the Microsoft Certificate Authority for SDDC Manager.
+### Configuring the Microsoft Certificate Authority for SDDC Manager
 
 1. Start PowerShell (Run as Administrator).
 
@@ -23,12 +23,12 @@ The [`Set-SddcCertificateAuthority`](/powershell-module-for-vmware-cloud-foundat
 3. Configuring the Certificate Authority for SDDC Manager by running the command in the PowerShell console.
 
 ```powershell
-Set-SddcCertificateAuthority -certAuthority Microsoft -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+Set-SddcCertificateAuthority -certAuthority Microsoft -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn $certAuthorityFqdn -certAuthorityUser $certAuthorityUser -certAuthorityPass $certAuthorityPass -certAuthorityTemplate $certAuthorityTemplate
 ```
 This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
 
 
-### Configuring the OpenSSL Certificate Authority for SDDC Manager.
+### Configuring the OpenSSL Certificate Authority for SDDC Manager
 
 1. Start PowerShell (Run as Administrator).
 
@@ -45,10 +45,6 @@ This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io
 3. Configuring the Certificate Authority for SDDC Manager by running the command in the PowerShell console.
 
 ```powershell
-Set-SddcCertificateAuthority -certAuthority Microsoft -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
-```
-
-```powershell
 Set-SddcCertificateAuthority -certAuthority OpenSSL -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass 
 -commonName $commonName -organization $organization -organizationUnit $organizationUnit -locality $locality -state $stateOrProvince -country $country
 ```
@@ -56,7 +52,7 @@ Set-SddcCertificateAuthority -certAuthority OpenSSL -server $sddcManagerFqdn -us
 This example will configure an OpenSSL Certificate Authority in SDDC Manager.
 
 
-## Request a Certificate Signing Request for a Workload Domain.
+## Request a Certificate Signing Request for a Workload Domain
 
 The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/) cmdlet will request SDDC Manager to generate and store certificate signing request files. 
 
@@ -71,7 +67,7 @@ The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificat
     --8<-- "./docs/snippets/vars-domain.ps1"
     --8<-- "./docs/snippets/vars-csr.ps1"
     --8<-- "./docs/snippets/vars-csr-windows.ps1"
-    --8<-- "./docs/snippets/vars-sddc-csr-windows.ps1"
+    --8<-- "./docs/snippets/vars-csr-sddc-windows.ps1"
     ```
 
 3. Request Certificate Signing Request files by running the command in the PowerShell console.
@@ -83,7 +79,7 @@ The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificat
 This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.
 
 
-## Request Certificate Authority Signed Certificates for a Workload Domain.
+## Request Certificate Authority Signed Certificates for a Workload Domain
 
 The [`Request-SddcCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-SddcCertificate/) will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
 
@@ -91,8 +87,8 @@ The [`Request-SddcCertificate`](/powershell-module-for-vmware-cloud-foundation-c
 
 2. Replace the values in the sample code with values for the instance of VMware Cloud Foundation and run the commands in the PowerShell console.
 
- **Example**:
-
+    **Example**:
+    
     ```powershell
     --8<-- "./docs/snippets/vars-vcf.ps1"
     --8<-- "./docs/snippets/vars-domain.ps1"
@@ -108,7 +104,7 @@ Request-SddcCertificate -server $sddcManagerFqdn -user $sddcManagerUser -pass $s
 This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed.
 
 
-## Installing and Replacing Certificate Authority Signed Certificates for a Workload Domain.
+## Installing and Replacing Certificate Authority Signed Certificates for a Workload Domain
 
 
 The [`Install-VCFCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VCFCertificate/) cmdlet installs the signed certificates for all components (except ESXi hosts) associated with the given workload domain.

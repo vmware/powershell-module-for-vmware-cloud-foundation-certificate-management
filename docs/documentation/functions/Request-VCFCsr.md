@@ -35,9 +35,11 @@ The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass
 - Validates that the workload domain exists in the SDDC Manager inventory.
 - Validates that network connectivity and authentication is possible to vCenter Server.
 - Defines possible country codes. [Reference](https://www.digicert.com/kb/ssl-certificate-country-codes.htm)
- When used with -esxi switch, this cmdlet 
-    - Gathers the ESXi hosts from the cluster.
-    - Requests the ESXi host CSR and saves it in the output directory as `<esxi-host-fqdn>.csr` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.csr`.)
+ 
+ When used with -esxi switch, this cmdlet -
+
+- Gathers the ESXi hosts from the cluster.
+- Requests the ESXi host CSR and saves it in the output directory as `<esxi-host-fqdn>.csr` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.csr`.)
 
 ## Examples
 
