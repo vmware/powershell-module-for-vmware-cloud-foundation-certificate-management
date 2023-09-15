@@ -129,19 +129,18 @@ nav:
 - Reference:
   - User Guide:
     - ESXi Certificate Management: documentation/user-guide/esxi-certificate-management.md
+    - VCF Certificate Management: documentation/user-guide/vcf-certificate-management.md
   - Functions:
     - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
     - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md
     - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md
     - Get-EsxiCertificateThumbprint: documentation/functions/Get-EsxiCertificateThumbprint.md
     - Get-EsxiLockdownMode: documentation/functions/Get-EsxiLockdownMode.md
-    - Get-vCenterCertificateThumbprint: documentation/functions/Get-vCenterCertificateThumbprint.md
+    - Get-VCFCertificateThumbprint: documentation/functions/Get-VCFCertificateThumbprint.md
     - Get-vSANHealthSummary: documentation/functions/Get-vSANHealthSummary.md
-    - Install-EsxiCertificate: documentation/functions/Install-EsxiCertificate.md
-    - Install-SddcCertificate: documentation/functions/Install-SddcCertificate.md
+    - Install-VCFCertificate: documentation/functions/Install-VCFCertificate.md
     - Request-SddcCertificate: documentation/functions/Request-SddcCertificate.md
-    - Request-EsxiCsr: documentation/functions/Request-EsxiCsr.md
-    - Request-SddcCsr: documentation/functions/Request-SddcCsr.md
+    - Request-VCFCsr: documentation/functions/Request-VCFCsr.md
     - Restart-EsxiHost: documentation/functions/Restart-EsxiHost.md
     - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
     - Set-EsxiLockdownMode: documentation/functions/Set-EsxiLockdownMode.md

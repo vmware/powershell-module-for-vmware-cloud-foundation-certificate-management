@@ -213,7 +213,7 @@ The [`Install-VCFCertificate`](/powershell-module-for-vmware-cloud-foundation-ce
 3. Install a Certificate for each ESXi host in cluster by running the command in the PowerShell console.
 
     ```powershell
-    Install-VCFCertificate -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+    Install-VCFCertificate -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
     ```
 
 ### Install a Certificate to an ESXi Host

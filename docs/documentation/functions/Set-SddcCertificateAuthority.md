@@ -4,10 +4,17 @@
 
 Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority or an OpenSSL Certificate Authority.
 
-## Syntax
+## Configure Microsoft Certificate Authority
 
 ```powershell
 Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
+```
+
+## Configure OpenSSL Certificate Authority
+
+```powershell
+Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> 
+[-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
 ```
 
 ## Description
@@ -23,6 +30,8 @@ Set-SddcCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rain
 ```
 
 This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
+
+### Example 2
 
 ```powershell
 Set-SddcCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -commonName "sfo-vcf01.sfo.rainpole.io" -organization "Rainpole" -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US

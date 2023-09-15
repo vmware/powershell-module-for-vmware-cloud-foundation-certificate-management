@@ -51,7 +51,7 @@ This example generates CSRs and stores them in the provided output directory for
 
 ### Example 2
 ```powershell
-Request-VCFCsr -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
+Request-VCFCsr -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
 ```
 
 This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.

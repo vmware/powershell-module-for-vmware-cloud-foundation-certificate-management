@@ -10,6 +10,9 @@ Enhancements:
 - Refactored `Request-EsxiCsr` and `Request-SddcCsr` to a single function `Request-VcfCsr` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - Refactored `Install-EsxiCertificate` and `Install-SddcCertificate` to a single function `Install-VcfCertificate` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
+Docs:
+- Added reference guide for VCF Certificate Operations [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+
 Chore:
 
 - Updated cmdlet content for Aria Suite, formerly known as vRealize Suite, products to use the new Aria names where applicable. [GH-66](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/66)

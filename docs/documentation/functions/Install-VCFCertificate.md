@@ -6,21 +6,21 @@ Installs the signed certificates for all components associated with the given wo
 
 ## Syntax
 
-## For installing certificates for all components except ESXi hosts
+## For Installing Certificates for All Components (except ESXi Hosts)
 
 ```powershell
 Install-VCFCertificate [-sddcManager] [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [<CommonParameters>]
 ```
 
 
-### For ESXi hosts in a cluster
+### For ESXi hosts in a Cluster
 
 
 ```powershell
 Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
 ```
 
-### For an ESXi host
+### For an ESXi Host
 
 
 ```powershell
