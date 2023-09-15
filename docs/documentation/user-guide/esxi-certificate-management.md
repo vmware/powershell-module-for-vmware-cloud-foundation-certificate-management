@@ -26,7 +26,7 @@ The [`Set-EsxiCertificateMode`](/powershell-module-for-vmware-cloud-foundation-c
 
 ## Request a Certificate Signing Request
 
-The [`Request-EsxiCsr`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-EsxiCsr/) cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
+The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/) cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
 
 ## Request Certificate Signing Request for each ESXi Host in a Cluster
 
@@ -47,7 +47,7 @@ The [`Request-EsxiCsr`](/powershell-module-for-vmware-cloud-foundation-certifica
 3. Request Certificate Signing Request files by running the command in the PowerShell console.
 
     ```powershell
-    Request-EsxiCsr -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -Country $country -Locality $location -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
+    Request-VCFCsr -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -Country $country -Locality $location -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
     ```
 
 ## Request a Certificate Signing Request for an ESXi Host
@@ -69,7 +69,7 @@ The [`Request-EsxiCsr`](/powershell-module-for-vmware-cloud-foundation-certifica
 3. Request a Certificate Signing Request file by running the command in the PowerShell console.
 
     ```powershell
-    Request-EsxiCsr -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -esxiFqdn $esxiFqdn -Country $country -Locality $locality -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
+    Request-VCFCsr -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -esxiFqdn $esxiFqdn -Country $country -Locality $locality -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
     ```
 
 ## Verify the Certificate Authority is Trusted in vCenter Server
@@ -192,7 +192,7 @@ The following checks are run:
 
 ## Install a Certificate
 
-The [`Install-EsxiCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-EsxiCertificate/) cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (_e.g._, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+The [`Install-VCFCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VCFCertificate/) cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (_e.g._, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
 
 ### Install a Certificate to Each ESXi Host in a Cluster
 
@@ -213,7 +213,7 @@ The [`Install-EsxiCertificate`](/powershell-module-for-vmware-cloud-foundation-c
 3. Install a Certificate for each ESXi host in cluster by running the command in the PowerShell console.
 
     ```powershell
-    Install-EsxiCertificate -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+    Install-VCFCertificate -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
     ```
 
 ### Install a Certificate to an ESXi Host
@@ -235,5 +235,5 @@ The [`Install-EsxiCertificate`](/powershell-module-for-vmware-cloud-foundation-c
 3. Install a certificate to an ESXi host by running the command in the PowerShell console.
 
     ```powershell
-    Install-EsxiCertificate -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+    Install-VCFCertificate -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
     ```

@@ -494,124 +494,6 @@ Function Confirm-CAInvCenterServer {
     }
 }
 
-Function Request-EsxiCsr {
-    <#
-        .SYNOPSIS
-        Requests a certificate signing request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
-
-        .DESCRIPTION
-        The Request-EsxiCsr cmdlet will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
-        - Validates that network connectivity and authentication is possible to SDDC Manager.
-        - Validates that the workload domain exists in the SDDC Manager inventory.
-        - Validates that network connectivity and authentication is possible to vCenter Server.
-        - Gathers the ESXi hosts from the cluster.
-        - Requests the ESXi host CSR and saves it in the output directory as <esxi-host-fqdn>.csr. e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
-        - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
-
-        .EXAMPLE
-        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
-        This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
-
-        .PARAMETER server
-        The fully qualified domain name of the SDDC Manager instance.
-
-        .PARAMETER user
-        The username to authenticate to the SDDC Manager instance.
-
-        .PARAMETER pass
-        The password to authenticate to the SDDC Manager instance.
-
-        .PARAMETER domain
-        The name of the workload domain in which the cluster is located.
-
-        .PARAMETER cluster
-        The name of the cluster in which the ESXi host is located.
-
-        .PARAMETER esxiFqdn
-        The FQDN of the ESXi host to request certificate signing request (CSR) for.
-
-        .PARAMETER country
-        The country code for the certificate signing request (CSR).
-
-        .PARAMETER locality
-        The locality for the certificate signing request (CSR).
-
-        .PARAMETER organization
-        The organization for the certificate signing request (CSR).
-
-        .PARAMETER organizationUnit
-        The organization unit for the certificate signing request (CSR).
-
-        .PARAMETER stateOrProvince
-        The state or province for the certificate signing request (CSR).
-
-        .PARAMETER outputDirectory
-        The directory to save the certificate signing request (CSR) files.
-    #>
-
-    Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $outputDirectory,
-        [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
-                "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
-                "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
-                "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
-                "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
-                "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
-                "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
-                "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
-                "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
-                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $locality,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince
-    )
-
-    Try {
-        if (!(Test-Path $outputDirectory)) {
-            Write-Error "Please specify a valid directory to save the CSR files." -ErrorAction Stop
-            return
-        }
-        $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
-        if ($PsBoundParameters.ContainsKey("cluster")) {
-            if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
-                $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
-                if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
-            } else {
-                Write-Error "Unable to locate cluster $cluster in vCenter Server instance $($vCenterServer.details.fqdn): PRE_VALIDATION_FAILED"
-                Throw "Unable to locate cluster $cluster in vCenter Server $($vCenterServer.details.fqdn): PRE_VALIDATION_FAILED"
-            }
-        } else {
-            $esxiHosts = Get-VMHost -Name $esxiFqdn
-            if (!$esxiHosts) { Write-Warning "No ESXi host $esxiFqdn found within workload domain $domain." }
-        }
-
-        if ($esxiHosts) {
-            foreach ($esxiHost in $esxiHosts) {
-                $csrPath = "$outputDirectory\$($esxiHost.Name).csr"
-                $esxRequest = New-VIMachineCertificateSigningRequest -Server $vCenterServer.details.fqdn -VMHost $esxiHost.Name -Country "$country" -Locality "$locality" -Organization "$organization" -OrganizationUnit "$organizationUnit" -StateOrProvince "$stateOrProvince" -CommonName $esxiHost.Name
-                $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
-                if (Test-Path $csrPath -PathType Leaf ) {
-                    Write-Output "CSR for $($esxiHost.Name) has been generated and saved to $csrPath."
-                } else {
-                    Write-Error "Unable to generate CSR for $($esxiHost.name)."
-                    Throw "Unable to generate CSR for $($esxiHost.name)."
-                }
-            }
-        }
-    } Catch {
-        Debug-ExceptionWriter -object $_
-    } Finally {
-        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
-    }
-}
 
 Function Get-EsxiCertificateMode {
     <#
@@ -1518,6 +1400,243 @@ Function gatherSddcInventory {
     Return $resourcesObject
 }
 
+Function Request-VCFCsr {
+    <#
+        .SYNOPSIS
+        Requests SDDC Manager to generate and store certificate signing request files or requests a certificate signing request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
+
+        .DESCRIPTION
+        The Request-VCFCsr will request SDDC Manager to generate certifiate signing request files for all components associated with the given domain when used with -sddcManager switch.
+        The Request-VCFCsr cmdlet will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory when used with -esxi switch.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Validates that the workload domain exists in the SDDC Manager inventory.
+        - Validates that network connectivity and authentication is possible to vCenter Server.
+        When used with -esxi switch, this cmdlet 
+        - Gathers the ESXi hosts from the cluster  
+        - Requests the ESXi host CSR and saves it in the output directory as <esxi-host-fqdn>.csr. e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
+        - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
+
+        .EXAMPLE
+        Request-VCFCsr -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
+        This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
+
+        .EXAMPLE
+        Request-VCFCsr -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -domain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
+        This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.
+
+
+        .PARAMETER esxi
+        Switch to request and save certificate signing request files for ESXi hosts
+
+        .PARAMETER sddcManager
+        Switch to request and store certificate signing request files on SDDC Manager
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain in which the cluster is located.
+
+        .PARAMETER cluster
+        The name of the cluster in which the ESXi host is located. (Only required when using -esxi parameter)
+
+        .PARAMETER esxiFqdn
+        The FQDN of the ESXi host to request certificate signing request (CSR) for. (Only required when using -esxi parameter)
+
+        .PARAMETER country
+        The country code for the certificate signing request (CSR).
+
+        .PARAMETER locality
+        The locality for the certificate signing request (CSR).
+
+        .PARAMETER keySize
+        The key size for the certificate signing request (CSR). (Only required when using -sddcManager parameter)
+
+        .PARAMETER organization
+        The organization for the certificate signing request (CSR).
+
+        .PARAMETER organizationUnit
+        The organization unit for the certificate signing request (CSR).
+
+        .PARAMETER stateOrProvince
+        The state or province for the certificate signing request (CSR).
+
+        .PARAMETER outputDirectory
+        The directory to save the certificate signing request (CSR) files. (Only required when using -esxi parameter)
+
+        .PARAMETER email
+        The contact email for the certificate signing request (CSR). (Only required when using -sddcManager parameter)
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [Switch] $esxi,
+        [Parameter (Mandatory = $true, ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [Switch] $sddcManager,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")][ValidateNotNullOrEmpty()] [String] $cluster,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $outputDirectory,
+        [Parameter (Mandatory = $true, ParameterSetName = "sddc")] [ValidateSet ("2048", "3072", "4096")] [String] $keySize,
+        [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
+                "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
+                "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
+                "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
+                "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
+                "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
+                "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
+                "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
+                "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
+                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $locality,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince,
+        [Parameter (Mandatory = $true,  ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [String] $email
+    )
+
+    if ($PSBoundParameters.ContainsKey("esxi")){
+        if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
+            Write-Error "Please provide either -cluster or -esxiFqdn paramater."
+        } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
+            Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
+        } elseif ($PSBoundParameters.ContainsKey("cluster")){
+            Request-EsxiCsr -server $server -user $user -pass $pass -domain $domain -cluster $cluster -country $country -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $stateOrProvince -outputDirectory $outputDirectory
+        } else {
+            Request-EsxiCsr -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -country $country -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $stateOrProvince -outputDirectory $outputDirectory
+        }
+    }else{
+        Request-SddcCsr -server $server -user $user -pass $pass -keysize $keySize -workloadDomain $domain -country $country -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $stateOrProvince -email $email
+    }
+}
+
+Function Request-EsxiCsr {
+    <#
+        .SYNOPSIS
+        Requests a certificate signing request (CSR) for an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
+
+        .DESCRIPTION
+        The Request-EsxiCsr cmdlet will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values.
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Validates that the workload domain exists in the SDDC Manager inventory.
+        - Validates that network connectivity and authentication is possible to vCenter Server.
+        - Gathers the ESXi hosts from the cluster.
+        - Requests the ESXi host CSR and saves it in the output directory as <esxi-host-fqdn>.csr. e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
+        - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
+
+        .EXAMPLE
+        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
+        This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain in which the cluster is located.
+
+        .PARAMETER cluster
+        The name of the cluster in which the ESXi host is located.
+
+        .PARAMETER esxiFqdn
+        The FQDN of the ESXi host to request certificate signing request (CSR) for.
+
+        .PARAMETER country
+        The country code for the certificate signing request (CSR).
+
+        .PARAMETER locality
+        The locality for the certificate signing request (CSR).
+
+        .PARAMETER organization
+        The organization for the certificate signing request (CSR).
+
+        .PARAMETER organizationUnit
+        The organization unit for the certificate signing request (CSR).
+
+        .PARAMETER stateOrProvince
+        The state or province for the certificate signing request (CSR).
+
+        .PARAMETER outputDirectory
+        The directory to save the certificate signing request (CSR) files.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
+        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $outputDirectory,
+        [Parameter (Mandatory = $true)] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
+                "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
+                "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
+                "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
+                "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
+                "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
+                "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
+                "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
+                "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
+                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $locality,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince
+    )
+
+    Try {
+        if (!(Test-Path $outputDirectory)) {
+            Write-Error "Please specify a valid directory to save the CSR files." -ErrorAction Stop
+            return
+        }
+        $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
+        if ($PsBoundParameters.ContainsKey("cluster")) {
+            if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
+                $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+                if (!$esxiHosts) { Write-Warning "No ESXi hosts found within $cluster cluster." }
+            } else {
+                Write-Error "Unable to locate cluster $cluster in vCenter Server instance $($vCenterServer.details.fqdn): PRE_VALIDATION_FAILED"
+                Throw "Unable to locate cluster $cluster in vCenter Server $($vCenterServer.details.fqdn): PRE_VALIDATION_FAILED"
+            }
+        } else {
+            $esxiHosts = Get-VMHost -Name $esxiFqdn
+            if (!$esxiHosts) { Write-Warning "No ESXi host $esxiFqdn found within workload domain $domain." }
+        }
+
+        if ($esxiHosts) {
+            foreach ($esxiHost in $esxiHosts) {
+                $csrPath = "$outputDirectory\$($esxiHost.Name).csr"
+                $esxRequest = New-VIMachineCertificateSigningRequest -Server $vCenterServer.details.fqdn -VMHost $esxiHost.Name -Country "$country" -Locality "$locality" -Organization "$organization" -OrganizationUnit "$organizationUnit" -StateOrProvince "$stateOrProvince" -CommonName $esxiHost.Name
+                $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
+                if (Test-Path $csrPath -PathType Leaf ) {
+                    Write-Output "CSR for $($esxiHost.Name) has been generated and saved to $csrPath."
+                } else {
+                    Write-Error "Unable to generate CSR for $($esxiHost.name)."
+                    Throw "Unable to generate CSR for $($esxiHost.name)."
+                }
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
+    }
+}
+
 Function Request-SddcCsr {
     <#
         .SYNOPSIS
@@ -1753,6 +1872,93 @@ Function Request-SddcCertificate {
     } else {
         Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
     }
+}
+
+Function Install-VCFCertificate {
+    <#
+        .SYNOPSIS
+        Installs the signed certificates for all components associated with the given workload domain, or an ESXi Host or for each ESXi host in a given cluster.
+
+        .DESCRIPTION
+        The Install-VCFCertificate will install the signed certificates for all components associated with the given workload domain when used with the -sddcManager switch.
+        The Install-VCFCertificate cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster when used with the -esxi switch
+        When used with -esxi switch:
+            - You must provide the directory containing the signed certificate files.
+            - Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt.
+            - The workflow will put the ESXi host in maintenance mode with full data migration,
+                disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host,
+                and the exit maintenance mode once the ESXi host is online.
+
+        .EXAMPLE
+        Install-VCFCertificate -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-w01
+        This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
+
+         .EXAMPLE
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
+
+        .EXAMPLE
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the domain in which the certficates signing request to be installed or in which the ESXi hosts are located.
+
+        .PARAMETER cluster
+        The name of the cluster in which the ESXi host is located. (Only required when -esxi switch is used)
+
+        .PARAMETER esxiFqdn
+        The FQDN of the ESXi host. (Only required when -esxi switch is used)
+
+        .PARAMETER certificateDirectory
+        The directory containing the signed certificate files. (Only required when -esxi switch is used)
+
+        .PARAMETER certificateFileExt
+        The file extension of the certificate files. One of ".crt", ".cer", ".pem", ".p7b", or ".p7c". (Only required when -esxi switch is used)
+
+        .PARAMETER timeout
+        The timeout in seconds for putting the ESXi host in maintenance mode. Default is 18000 seconds (5 hours). (Only required when -esxi switch is used)
+    #>
+
+
+    Param (
+        [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [Switch] $esxi,
+        [Parameter (Mandatory = $true, ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [Switch] $sddcManager,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain, 
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true, ParameterSetName = "esxi") ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
+        [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
+    )
+
+
+    if ($PSBoundParameters.ContainsKey("esxi")){
+        if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
+            Write-Error "Please provide either -cluster or -esxiFqdn paramater."
+        } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
+            Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
+        } elseif ($PSBoundParameters.ContainsKey("cluster")){
+            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+        } else {
+            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+        }
+    }else{
+        Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+    }
+
 }
 
 Function Install-SddcCertificate {

@@ -5,13 +5,15 @@
 > Release Date: Unreleased
 
 Enhancements:
-- Updated the `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration
-- Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to Get-VCFCertificateThumbprint 
+- Updated the `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to a single function `Get-VCFCertificateThumbprint` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Refactored `Request-EsxiCsr` and `Request-SddcCsr` to a single function `Request-VcfCsr` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Refactored `Install-EsxiCertificate` and `Install-SddcCertificate` to a single function `Install-VcfCertificate` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
 Chore:
 
 - Updated cmdlet content for Aria Suite, formerly known as vRealize Suite, products to use the new Aria names where applicable. [GH-66](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/66)
-- Updated cmdlet content in the `/docs/documentation/functions`
+- Updated cmdlet content in the `/docs/documentation` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
 ## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.3.0)
 

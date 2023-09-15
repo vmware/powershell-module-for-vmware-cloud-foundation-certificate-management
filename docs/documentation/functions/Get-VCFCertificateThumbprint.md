@@ -56,7 +56,7 @@ Retrieve the certificate thumbprint for ESXi host.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (ESXi)
+Parameter Sets: (esxi)
 Aliases:
 
 Required: True
@@ -72,7 +72,7 @@ Retrieve the certificate thumbprint for vCenter Server.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (vCenter)
+Parameter Sets: (vcenter)
 Aliases:
 
 Required: True
@@ -136,7 +136,7 @@ The FQDN of the ESXi host to retrieve the certificate thumbprint.
 
 ```yaml
 Type: String
-Parameter Sets: (ESXi)
+Parameter Sets: (esxi)
 Aliases:
 
 Required: True
@@ -152,7 +152,7 @@ The name of the workload domain to retrieve the vCenter Server instance's certif
 
 ```yaml
 Type: String
-Parameter Sets: (vCenter)
+Parameter Sets: (vcenter)
 Aliases:
 
 Required: True
@@ -168,7 +168,7 @@ The name of the issuer to match with the vCenter Server instance's certificate t
 
 ```yaml
 Type: String
-Parameter Sets: (vCenter)
+Parameter Sets: (vcenter)
 Aliases:
 
 Required: False
