@@ -12,6 +12,7 @@ Enhancements:
 
 Docs:
 - Added reference guide for VCF Certificate Operations [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Restructured navigation menu for functions
 
 Chore:
 
