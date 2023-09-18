@@ -30,7 +30,7 @@ This example restarts an ESXi host and polls the connection availability every 3
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host.
+The fully qualified domain name of the ESXi host.
 
 ```yaml
 Type: String

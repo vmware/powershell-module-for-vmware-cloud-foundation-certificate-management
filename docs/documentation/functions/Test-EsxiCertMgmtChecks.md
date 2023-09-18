@@ -155,7 +155,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host.
+The fully qualified domain name of the ESXi host.
 
 ```yaml
 Type: String

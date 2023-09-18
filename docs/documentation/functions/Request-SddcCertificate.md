@@ -76,7 +76,7 @@ Accept wildcard characters: False
 
 ### -workloadDomain
 
-The name of the workload domain in which the certficates signing request to be signed.
+The name of the workload domain in which the certificate is requested to be signed.
 
 ```yaml
 Type: String

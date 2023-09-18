@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Retrieves the ESXi host lockdown mode state from vCenter Server.
+Retrieves the ESXi host lockdown mode state from a vCenter Server instance.
 
 ## Syntax
 
@@ -118,7 +118,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host to retrieve the lockdown mode state for.
+The fully qualified domain name of the ESXi host to retrieve the lockdown mode state for.
 
 ```yaml
 Type: String
