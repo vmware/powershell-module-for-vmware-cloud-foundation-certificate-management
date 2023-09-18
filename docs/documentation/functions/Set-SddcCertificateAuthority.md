@@ -4,17 +4,18 @@
 
 Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority or an OpenSSL Certificate Authority.
 
-## Configure Microsoft Certificate Authority
+## Syntax
+
+### Microsoft Certificate Authority
 
 ```powershell
 Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
 ```
 
-## Configure OpenSSL Certificate Authority
+### OpenSSL Certificate Authority
 
 ```powershell
-Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> 
-[-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
+Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
 ```
 
 ## Description
@@ -29,7 +30,7 @@ The `Set-SddcCertificateAuthority` will configure Microsoft Certificate Authorit
 Set-SddcCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
 ```
 
-This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manger.
+This example will configure Microsoft Certificate Authority `rpl-ad01.rainpole.io` in SDDC Manager.
 
 ### Example 2
 
@@ -39,12 +40,11 @@ Set-SddcCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpo
 
 This example will configure an OpenSSL Certificate Authority in SDDC Manager.
 
-
 ## Parameters
 
 ### -certAuthority
 
-The type of Certificate Authority to be configured - Microsoft or OpenSSL
+The type of Certificate Authority to be configured. One of: `Microsoft`, `OpenSSL`.
 
 ```yaml
 Type: String
@@ -233,7 +233,6 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-
 
 ### -state
 

@@ -4,26 +4,27 @@
 
 > Release Date: Unreleased
 
-Enhancements:
-- Updated the `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
-- Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to a single function `Get-VCFCertificateThumbprint` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
-- Refactored `Request-EsxiCsr` and `Request-SddcCsr` to a single function `Request-VcfCsr` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
-- Refactored `Install-EsxiCertificate` and `Install-SddcCertificate` to a single function `Install-VcfCertificate` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+Enhancement:
 
-Docs:
-- Added reference guide for VCF Certificate Operations [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
-- Restructured navigation menu for functions
+- **Breaking Change**: Refactored `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- **Breaking Change**: Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to a single function `Get-VCFCertificateThumbprint`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Added `Request-VcfCsr`as a wrapper for `Request-EsxiCsr` and `Request-SddcCsr`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Added `Install-VcfCertificate` as a wrapper for `Install-EsxiCertificate` and `Install-SddcCertificate`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+
+Documentation:
+
+- Added reference guide for VMware Cloud Foundation Certificate Operations. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
 Chore:
 
 - Updated cmdlet content for Aria Suite, formerly known as vRealize Suite, products to use the new Aria names where applicable. [GH-66](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/66)
-- Updated cmdlet content in the `/docs/documentation` [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- Updated cmdlet content in the `/docs/documentation`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
 ## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.3.0)
 
 > Release Date: 2023-08-29
 
-Enhancements:
+Enhancement:
 
 - Added the `Set-SddcCertificateAuthority` cmdlet to set the certificate authority in SDDC Manager to use a Microsoft Certificate Authority. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)
 - Added the `Request-SddcCsr` cmdlet to request SDDC Manager to generate and store certificate signing request files. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/52)

@@ -6,22 +6,19 @@ Installs the signed certificates for all components associated with the given wo
 
 ## Syntax
 
-## For Installing Certificates for All Components (except ESXi Hosts)
+### Installing Certificates for a Workload Domain
 
 ```powershell
 Install-VCFCertificate [-sddcManager] [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [<CommonParameters>]
 ```
 
-
-### For ESXi hosts in a Cluster
-
+### Installing Certificates ESXi Hosts in a Cluster
 
 ```powershell
 Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
 ```
 
-### For an ESXi Host
-
+### Installing a Certificate for an ESXi Host
 
 ```powershell
 Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
@@ -29,13 +26,13 @@ Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <Stri
 
 ## Description
 
-The `Install-VCFCertificate` will install the signed certificates for all components associated with the given workload domain when used with the -sddcManager switch.
+The `Install-VCFCertificate` will install the signed certificates for all components associated with the given workload domain when used with the `-sddcManager` switch.
 
-The `Install-VCFCertificate` will replace the certificate for an ESXi host or for each ESXi host in a cluster when used with the -esxi switch.
+The `Install-VCFCertificate` will replace the certificate for an ESXi host or for each ESXi host in a cluster when used with the `-esxi` switch.
 
-When used with -esxi switch:
+When used with the `-esxi` switch, this cmdlet:
 
-- You must provide the directory containing the signed certificate files. 
+- You must provide the directory containing the signed certificate files.
 - Certificate names should be in format `<FQDN>.crt` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.crt`.)
 - The workflow will put the ESXi host in maintenance mode with full data migration, disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
 
@@ -60,8 +57,7 @@ This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.r
 ### Example 3
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user <administrator@vsphere.local> -pass VMw@re1!
--domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user <administrator@vsphere.local> -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
 This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
@@ -70,7 +66,7 @@ This example will install certificates for each ESXi host in cluster sfo-m01-cl0
 
 ### -esxi
 
-Switch to install certificate(s) on ESXi host(s)
+Switch to indicate that the certificate is to be installed on an ESXi host.
 
 ```yaml
 Type: SwitchParameter
@@ -86,7 +82,7 @@ Accept wildcard characters: False
 
 ### -sddcManager
 
-Switch to install certificate(s) on all components associated with the given workload domain excluding ESXi hosts.
+Switch to indicate that the certificate is to be installed for all components associated with the given workload domain, excluding ESXi hosts.
 
 ```yaml
 Type: SwitchParameter
@@ -150,7 +146,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain in which the certficates signing request to be installed or where the ESXi host is located.
+The name of the workload domain in which the certificate is requested to be installed or where the ESXi host is located.
 
 ```yaml
 Type: String
@@ -182,7 +178,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host.
+The fully qualified domain name of the ESXi host.
 
 ```yaml
 Type: String

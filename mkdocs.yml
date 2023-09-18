@@ -128,14 +128,17 @@ nav:
   - License: license.md
 - Reference:
   - User Guide:
+    - VMware Cloud Foundation Certificate Management: documentation/user-guide/vcf-certificate-management.md
     - ESXi Certificate Management: documentation/user-guide/esxi-certificate-management.md
-    - VCF Certificate Management: documentation/user-guide/vcf-certificate-management.md
   - Functions:
     - Common: 
       - Get-VCFCertificateThumbprint: documentation/functions/Get-VCFCertificateThumbprint.md
       - Install-VCFCertificate: documentation/functions/Install-VCFCertificate.md
       - Request-VCFCsr: documentation/functions/Request-VCFCsr.md
-    - For ESXi Certificate Management:
+    - VMware Cloud Foundation Certificate Management:
+      - Request-SddcCertificate: documentation/functions/Request-SddcCertificate.md
+      - Set-SddcCertificateAuthority: documentation/functions/Set-SddcCertificateAuthority.md
+    - ESXi Certificate Management:
       - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
       - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md
       - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md
@@ -145,9 +148,6 @@ nav:
       - Set-EsxiCertificateMode: documentation/functions/Set-EsxiCertificateMode.md
       - Set-EsxiLockdownMode: documentation/functions/Set-EsxiLockdownMode.md
       - Test-EsxiCertMgmtChecks: documentation/functions/Test-EsxiCertMgmtChecks.md
-    - For VCF Certificate Management:
-      - Request-SddcCertificate: documentation/functions/Request-SddcCertificate.md
-      - Set-SddcCertificateAuthority: documentation/functions/Set-SddcCertificateAuthority.md
 - Community:
   - community/index.md
   - Contributing: community/contributing.md

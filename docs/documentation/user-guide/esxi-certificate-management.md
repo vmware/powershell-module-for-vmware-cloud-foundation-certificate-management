@@ -165,6 +165,7 @@ The [`Get-vSANHealthSummary`](/powershell-module-for-vmware-cloud-foundation-cer
 
 The [`Test-EsxiCertMgmtChecks`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/) cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 The following checks are run:
+
 - Check ESXi Certificate Mode
 - Check ESXi Lockdown Mode
 - Confirm CA In vCenter Server

@@ -6,13 +6,13 @@ Retrieves certificate thumbprints for ESXi hosts or vCenter Server instances.
 
 ## Syntax
 
-## For ESXi Hosts
+### Certificate Thumbprint from an ESXi Host
 
 ```powershell
 Get-VCFCertificateThumbprint [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String> [<CommonParameters>]
 ```
 
-## For vCenter Server
+### Certificate Thumbprint from a vCenter Server Instance
 
 ```powershell
 Get-VCFCertificateThumbprint [-vcenter] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [[-issuer] <String>] [<CommonParameters>]
@@ -30,7 +30,7 @@ The `Get-VCFCertificateThumbprint` cmdlet retrieves certificate thumbprints for 
 Get-VCFCertificateThumbprint -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
 ```
 
-This example retrieves the ESXi host's certificate thumbprint for an ESXi host with the FQDN of sfo01-m01-esx01.sfo.rainpole.io.
+This example retrieves the ESXi host's certificate thumbprint for an ESXi host with The fully qualified domain name of sfo01-m01-esx01.sfo.rainpole.io.
 
 ### Example 2
 
@@ -52,7 +52,7 @@ This example retrieves the vCenter Server instance's certificate thumbprints for
 
 ### -esxi
 
-Retrieve the certificate thumbprint for ESXi host.
+Switch to retrieve the certificate thumbprint for an ESXi host.
 
 ```yaml
 Type: SwitchParameter
@@ -68,7 +68,7 @@ Accept wildcard characters: False
 
 ### -vcenter
 
-Retrieve the certificate thumbprint for vCenter Server.
+Switch to retrieve the certificate thumbprints for a vCenter Server instance.
 
 ```yaml
 Type: SwitchParameter
@@ -132,7 +132,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host to retrieve the certificate thumbprint.
+The fully qualified domain name of the ESXi host to retrieve the certificate thumbprint.
 
 ```yaml
 Type: String

@@ -64,7 +64,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The passwordto authenticate to the SDDC Manager instance.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
@@ -80,7 +80,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The FQDN of the ESXi host to verify the certificate thumbprint against.
+The fully qualified domain name of the ESXi host to verify the certificate thumbprint against.
 
 ```yaml
 Type: String
