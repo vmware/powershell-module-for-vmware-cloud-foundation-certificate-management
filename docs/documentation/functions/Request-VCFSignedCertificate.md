@@ -1,4 +1,4 @@
-# Request-SddcCertificate
+# Request-VCFSignedCertificate
 
 ## Synopsis
 
@@ -7,22 +7,30 @@ Requests SDDC Manager to connect to certificate authority to sign the certificat
 ## Syntax
 
 ```powershell
-Request-SddcCertificate [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [<CommonParameters>]
+Request-VCFSignedCertificate [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [-certAuthority] <String>[<CommonParameters>]
 ```
 
 ## Description
 
-The `Request-SddcCertificate` will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
+The `Request-VCFSignedCertificate` will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Request-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
+Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority Microsoft
 ```
 
-This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed.
+This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by Microsft CA
+
+### Example 2
+
+```powershell
+Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority OpenSSL
+```
+
+This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by OpenSSL CA
 
 ## Parameters
 
@@ -85,6 +93,22 @@ Aliases:
 
 Required: True
 Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -certAuthority
+
+The type of Certificate Authority to be configured. One of: `Microsoft`, `OpenSSL`.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
