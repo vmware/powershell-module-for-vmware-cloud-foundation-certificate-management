@@ -5,8 +5,8 @@
 > Release Date: Unreleased
 
 Enhancement:
-- **Breaking Change**: Renamed `Set-SddcCertificateAuthority` to `Set-VCFCertificateAuthority`
-- **Breaking Change**: Renamed `Request-SddcCertificate` to `Request-VCFSignedCertificate` 
+- **Breaking Change**: Renamed `Set-SddcCertificateAuthority` to `Set-VCFCertificateAuthority`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
+- **Breaking Change**: Renamed `Request-SddcCertificate` to `Request-VCFSignedCertificate`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
 - **Breaking Change**: Refactored `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - **Breaking Change**: Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to a single function `Get-VCFCertificateThumbprint`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - Added `Request-VcfCsr`as a wrapper for `Request-EsxiCsr` and `Request-SddcCsr`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)

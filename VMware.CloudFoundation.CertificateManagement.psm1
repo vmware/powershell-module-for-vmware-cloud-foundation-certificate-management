@@ -1,4 +1,4 @@
- # Copyright 2023 VMware, Inc.
+# Copyright 2023 VMware, Inc.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
@@ -1825,7 +1825,7 @@ Function Request-VCFSignedCertificate {
         The name of the workload domain in which the certificate is requested to be signed.
 
         .PARAMETER certAuthority
-        The type of Certificate Authority to be used for signing certificates - Microsoft or OpenSSL
+        The type of Certificate Authority to be used for signing certificates. One of: Microsoft, OpenSSL.
 
     #>
 
