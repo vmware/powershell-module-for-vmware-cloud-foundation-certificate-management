@@ -136,8 +136,8 @@ nav:
       - Install-VCFCertificate: documentation/functions/Install-VCFCertificate.md
       - Request-VCFCsr: documentation/functions/Request-VCFCsr.md
     - VMware Cloud Foundation Certificate Management:
-      - Request-SddcCertificate: documentation/functions/Request-SddcCertificate.md
-      - Set-SddcCertificateAuthority: documentation/functions/Set-SddcCertificateAuthority.md
+      - Request-VCFSignedCertificate: documentation/functions/Request-VCFSignedCertificate.md
+      - Set-VCFCertificateAuthority: documentation/functions/Set-VCFCertificateAuthority.md
     - ESXi Certificate Management:
       - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
       - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md

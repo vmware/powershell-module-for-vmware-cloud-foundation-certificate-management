@@ -1,4 +1,4 @@
-# Set-SddcCertificateAuthority
+# Set-VCFCertificateAuthority
 
 ## Synopsis
 
@@ -9,25 +9,25 @@ Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Au
 ### Microsoft Certificate Authority
 
 ```powershell
-Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
+Set-VCFCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
 ```
 
 ### OpenSSL Certificate Authority
 
 ```powershell
-Set-SddcCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
+Set-VCFCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
 ```
 
 ## Description
 
-The `Set-SddcCertificateAuthority` will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
+The `Set-VCFCertificateAuthority` will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Set-SddcCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+Set-VCFCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
 ```
 
 This example will configure Microsoft Certificate Authority `rpl-ad01.rainpole.io` in SDDC Manager.
@@ -35,7 +35,7 @@ This example will configure Microsoft Certificate Authority `rpl-ad01.rainpole.i
 ### Example 2
 
 ```powershell
-Set-SddcCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -commonName "sfo-vcf01.sfo.rainpole.io" -organization "Rainpole" -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
+Set-VCFCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -commonName "sfo-vcf01.sfo.rainpole.io" -organization "Rainpole" -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
 ```
 
 This example will configure an OpenSSL Certificate Authority in SDDC Manager.

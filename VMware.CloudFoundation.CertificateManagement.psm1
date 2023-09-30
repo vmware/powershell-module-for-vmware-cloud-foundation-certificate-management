@@ -1177,21 +1177,21 @@ Function Install-EsxiCertificate {
     }
 }
 
-Function Set-SddcCertificateAuthority {
+Function Set-VCFCertificateAuthority {
     <#
         .SYNOPSIS
         Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Authority or an
         OpenSSL Certificate Authority.
 
         .DESCRIPTION
-        The Set-SddcCertificateAuthority will configure Microsoft Certificate Authority or
+        The Set-VCFCertificateAuthority will configure Microsoft Certificate Authority or
         OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
         .EXAMPLE
-        Set-SddcCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+        Set-VCFCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
         This example will configure Microsoft Certificate Authority rpl-ad01.rainpole.io in SDDC Manager.
 
-        Set-SddcCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -commonName sfo-vcf01.sfo.rainpole.io -organization Rainpole -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
+        Set-VCFCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re123! -commonName sfo-vcf01.sfo.rainpole.io -organization Rainpole -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
         This example will configure an OpenSSL Certificate Authority in SDDC Manager.
 
         .PARAMETER certAuthority
@@ -1769,7 +1769,7 @@ Function Request-SddcCsr {
             $requestCsrSpecJson = $csrGenerationSpecJson + $resouresJson
             $requestCsrSpecJson | Out-File $tempPath"$($workloadDomain)-requestCsrSpec.json"
             Write-Output "Requesting certificate signing requests for components associated with workload domain ($($workloadDomain))..."
-            $myTask = Request-VCFCertificateCSR -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCsrSpec.json"
+            $myTask = Request-VCFSignedCertificateCSR -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCsrSpec.json"
             Do {
                 Write-Output "Checking status for the generation of certificate signing requests for components associated with workload domain ($($workloadDomain))..."
                 Start-Sleep 6
@@ -1794,19 +1794,23 @@ Function Request-SddcCsr {
     }
 }
 
-Function Request-SddcCertificate {
+Function Request-VCFSignedCertificate {
     <#
         .SYNOPSIS
         Requests SDDC Manager to connect to certificate authority to sign the certificate signing request files and to
         store the signed certificates.
 
         .DESCRIPTION
-        The Request-SddcCertificate will request SDDC Manager to connect to the certificate authority to sign the
+        The Request-VCFSignedCertificate will request SDDC Manager to connect to the certificate authority to sign the
         generated certificate signing request files for all components associated with the given workload domain
 
         .EXAMPLE
-        Request-SddcCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
-        This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed.
+        Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority Microsoft
+        This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by Microsoft CA.
+
+         .EXAMPLE
+        Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority OpenSSL
+        This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by OpenSSL CA.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1819,13 +1823,18 @@ Function Request-SddcCertificate {
 
         .PARAMETER workloadDomain
         The name of the workload domain in which the certificate is requested to be signed.
+
+        .PARAMETER certAuthority
+        The type of Certificate Authority to be used for signing certificates. One of: Microsoft, OpenSSL.
+
     #>
 
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain,
+        [Parameter (Mandatory = $true)] [ValidateSet ("Microsoft", "OpenSSL")] [String] $certAuthority
     )
 
     if (Test-VCFConnection -server $server) {
@@ -1852,36 +1861,31 @@ Function Request-SddcCertificate {
             $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
-            $caTypeJson = '{
-                "caType": "Microsoft",
-                '
-                $resourcesBodyObject += [pscustomobject]@{
-                    resources = $resourcesObject
-                }
-                $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempPath"temp.json"
-                Get-Content $tempPath"temp.json" | Select-Object -Skip 1 | Set-Content $tempPath"temp1.json"
-                $resouresJson = Get-Content $tempPath"temp1.json" -Raw
-                $requestCertificateSpecJson = $caTypeJson + $resouresJson
-                $requestCertificateSpecJson | Out-File $tempPath"$($workloadDomain)-requestCertificateSpec.json"
+            $requestCertificateSpec = [pscustomobject]@{
+                caType = $certAuthority
+                resources = $resourcesObject
+            }
+         
+            $requestCertificateSpec | ConvertTo-Json -Depth 10 | Out-File $tempPath"$($workloadDomain)-requestCertificateSpec.json"
 
-                Write-Output "Requesting certificates for components associated with workload domain $($workloadDomain)."
-                $myTask = Request-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCertificateSpec.json"
-                Do {
-                    Write-Output "Checking status for the generation of signed certificates for components associated with workload domain ($($workloadDomain))..."
-                    Start-Sleep 6
-                    $response = Get-VCFTask $myTask.id
-                } While ($response.status -eq "IN_PROGRESS")
-                if ($response.status -eq "FAILED") {
-                    Write-Error "Workflow completed with status: $($response.status)." 
-                } elseif ($response.status -eq "SUCCESSFUL") {
-                    Write-Output "Workflow completed with status: $($response.status)."
-                } else {
-                    Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check the state before proceeding."
-                }
-                Write-Output "Request signed certficates for the components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
+            Write-Output "Requesting certificates for components associated with workload domain $($workloadDomain)."
+            $myTask = Request-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCertificateSpec.json"
+            Do {
+                Write-Output "Checking status for the generation of signed certificates for components associated with workload domain ($($workloadDomain))..."
+                Start-Sleep 6
+                $response = Get-VCFTask $myTask.id
+            } While ($response.status -eq "IN_PROGRESS")
+            if ($response.status -eq "FAILED") {
+                Write-Error "Workflow completed with status: $($response.status)." 
+            } elseif ($response.status -eq "SUCCESSFUL") {
+                Write-Output "Workflow completed with status: $($response.status)."
+            } else {
+                Write-Warning "Workflow completed with an unrecognized status: $($response.status). Please check the state before proceeding."
+            }
+            Write-Output "Request signed certficates for the components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
 
-                # Remove the temporary directory.
-			    Remove-Item -Recurse -Force $tempPath  | Out-NULL
+            # Remove the temporary directory.
+            Remove-Item -Recurse -Force $tempPath  | Out-NULL
         } else {
             Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
         }
