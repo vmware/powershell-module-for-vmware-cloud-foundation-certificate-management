@@ -12,6 +12,9 @@ Enhancement:
 - Added `Request-VcfCsr`as a wrapper for `Request-EsxiCsr` and `Request-SddcCsr`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - Added `Install-VcfCertificate` as a wrapper for `Install-EsxiCertificate` and `Install-SddcCertificate`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
+Bug Fixes:
+- Updated `Get-vSANHealthSummary` to report correct status [GH-78](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/78)
+
 Documentation:
 
 - Added reference guide for VMware Cloud Foundation Certificate Operations. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)

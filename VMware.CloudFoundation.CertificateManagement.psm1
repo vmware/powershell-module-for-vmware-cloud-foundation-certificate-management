@@ -632,7 +632,7 @@ Function Get-vSANHealthSummary {
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
         $vSANClusterHealthSystem = Get-VSANView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
-
+        $overallStatus = 0
         if (!$vSANClusterHealthSystem) {
             Write-Error "Cannot run the Get-vSANHealthSummary cmdlet because the vSAN health service is not running."
             return 2
