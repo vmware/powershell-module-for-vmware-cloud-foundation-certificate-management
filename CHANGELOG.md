@@ -1,10 +1,11 @@
 # Release History
 
-## [v1.4.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.4.0)
+## v1.4.0
 
 > Release Date: Unreleased
 
 Enhancement:
+
 - **Breaking Change**: Renamed `Set-SddcCertificateAuthority` to `Set-VCFCertificateAuthority`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
 - **Breaking Change**: Renamed `Request-SddcCertificate` to `Request-VCFSignedCertificate`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
 - **Breaking Change**: Refactored `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
@@ -12,7 +13,8 @@ Enhancement:
 - Added `Request-VcfCsr`as a wrapper for `Request-EsxiCsr` and `Request-SddcCsr`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - Added `Install-VcfCertificate` as a wrapper for `Install-EsxiCertificate` and `Install-SddcCertificate`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
-Bug Fixes:
+Bugfix:
+
 - Updated `Get-vSANHealthSummary` to report correct status [GH-78](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/78)
 
 Documentation:
@@ -21,10 +23,11 @@ Documentation:
 
 Chore:
 
+- Updated `PowerVCF` from v2.3.0 to v2.4.0.
 - Updated cmdlet content for Aria Suite, formerly known as vRealize Suite, products to use the new Aria names where applicable. [GH-66](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/66)
 - Updated cmdlet content in the `/docs/documentation`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
-## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.3.0)
+## v1.3.0
 
 > Release Date: 2023-08-29
 
@@ -40,7 +43,7 @@ Chore:
 - Updated `VMware.PowerCLI` from v13.0.0 to v13.1.0 [GH-58](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/58)
 - Updated `PowerValidatedSolutions` from v2.5.0 to v2.6.0. [GH-58](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/58)
 
-## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.2.0)
+## v1.2.0
 
 > Release Date: 2023-07-25
 
@@ -54,7 +57,7 @@ Chore:
 - Added the `RequiredModules` key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/48)
 - Updated `PowerValidatedSolutions` from v2.2.0 to v2.5.0. [GH-49](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/49)
 
-## [v1.1.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.1.0)
+## v1.1.0
 
 > Release Date: 2023-06-27
 
@@ -69,7 +72,7 @@ Bugfix:
 
 - Added a disconnect from vCenter Server prior to an ESXi host reboot. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/36)
 
-## [v1.0.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/releases/tag/v1.0.0)
+## v1.0.0
 
 > Release Date: 2023-05-30
 
