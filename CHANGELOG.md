@@ -23,7 +23,6 @@ Documentation:
 
 Chore:
 
-- Updated supported VMware Cloud Foundation platforms. 
 - Updated `PowerVCF` from v2.3.0 to v2.4.0. [GH-81](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/81)
 - Updated cmdlet content for Aria Suite, formerly known as vRealize Suite, products to use the new Aria names where applicable. [GH-66](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/66)
 - Updated cmdlet content in the `/docs/documentation`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
