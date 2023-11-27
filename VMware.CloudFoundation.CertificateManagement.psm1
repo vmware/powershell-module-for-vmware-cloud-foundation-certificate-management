@@ -294,7 +294,7 @@ Function Test-EsxiCertMgmtChecks {
 		Write-Output "Check ESXi Lockdown Mode: $status"
 
 		$status = "FAILED"
-        $caStatus = Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user $user -pass $pass -domain $domain -issuer $issuer -signedCertificate $signedCertificate
+        $caStatus = Confirm-CAInvCenterServer -server $server -user $user -pass $pass -domain $domain -issuer $issuer -signedCertificate $signedCertificate
         if ($caStatus -eq $true) {
             $msg = "Signed certificate thumbprint matches with the vCenter Server certificate authority thumbprint."
             $statusMessage += $msg
@@ -311,7 +311,7 @@ Function Test-EsxiCertMgmtChecks {
 		Write-Output "Confirm CA In vCenter Server: $status"
 
 		$status = "FAILED"
-        $vsanStatus = Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user $user -pass $pass -domain $domain -cluster $cluster -errorAction SilentlyContinue -ErrorVariable errorMsg -WarningAction SilentlyContinue -WarningVariable warnMsg
+        $vsanStatus = Get-vSANHealthSummary -server $server -user $user -pass $pass -domain $domain -cluster $cluster -errorAction SilentlyContinue -ErrorVariable errorMsg -WarningAction SilentlyContinue -WarningVariable warnMsg
         if ($warnMsg){
             $warningMessage += $warnMsg
             $status = "WARNING"
@@ -1808,7 +1808,7 @@ Function Request-VCFSignedCertificate {
         Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority Microsoft
         This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by Microsoft CA.
 
-         .EXAMPLE
+        .EXAMPLE
         Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority OpenSSL
         This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by OpenSSL CA.
 
@@ -1915,7 +1915,7 @@ Function Install-VCFCertificate {
         Install-VCFCertificate -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-w01
         This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
 
-         .EXAMPLE
+        .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
 

@@ -1,5 +1,13 @@
 # Release History
 
+## v1.4.1
+
+> Release Date: 2023-11-27
+
+Bug Fix:
+
+- Updated `Test-EsxiCertMgmtChecks` to pass the `server` parameter value for the Certificate Authority and vSAN status checks. [GH-90](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/90)
+
 ## v1.4.0
 
 > Release Date: 2023-10-05
