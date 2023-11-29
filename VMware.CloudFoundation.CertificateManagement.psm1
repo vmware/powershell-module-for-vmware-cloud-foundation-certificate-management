@@ -1,11 +1,13 @@
-# Copyright 2023 VMware, Inc.
+# Copyright 2023 Broadcom. All Rights Reserved.
+# SPDX-License-Identifier: BSD-2
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Allow communication with self-signed certificates when using Powershell Core. If you require all communications to be
-# secure and do not wish to allow communication with self-signed certificates, remove lines 17-37 before importing the
+# secure and do not wish to allow communication with self-signed certificates, remove lines 19-39 before importing the
 # module.
 
 if ($PSEdition -eq 'Core') {
@@ -1429,7 +1431,7 @@ Function Request-VCFCsr {
         - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
         .EXAMPLE
-        Request-VCFCsr -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
+        Request-VCFCsr -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "Rainpole" -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
         This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
 
         .EXAMPLE
@@ -1547,7 +1549,7 @@ Function Request-EsxiCsr {
         - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
         .EXAMPLE
-        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
+        Request-EsxiCsr -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "Rainpole" -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
         This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
 
         .PARAMETER server

@@ -46,7 +46,7 @@ When used with the `-esxi` switch, this cmdlet:
 ### Example 1
 
 ```powershell
-Request-VCFCsr -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "VMware, Inc." -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
+Request-VCFCsr -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "Rainpole" -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
 ```
 
 This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
