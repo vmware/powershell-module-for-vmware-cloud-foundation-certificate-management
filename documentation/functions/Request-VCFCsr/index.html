@@ -9,7 +9,7 @@
         <meta name="description" content="PowerShell Module for VMware Cloud Foundation Certificate Management">
       
       
-        <meta name="author" content="VMware, Inc.">
+        <meta name="author" content="Broadcom">
       
       
         <link rel="canonical" href="https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/">
@@ -2036,7 +2036,7 @@
 </ul>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="example-1">Example 1<a class="headerlink" href="#example-1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Request-VCFCsr</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-domain</span> <span class="n">sfo-m01</span> <span class="n">-cluster</span> <span class="n">sfo-m01-cl01</span> <span class="n">-country</span> <span class="n">US</span> <span class="n">-locality</span> <span class="s2">&quot;Palo Alto&quot;</span> <span class="n">-organization</span> <span class="s2">&quot;VMware, Inc.&quot;</span> <span class="n">-organizationUnit</span> <span class="s2">&quot;Engineering&quot;</span> <span class="n">-stateOrProvince</span> <span class="s2">&quot;California&quot;</span> <span class="n">-outputDirectory</span> <span class="n">F</span><span class="p">:\</span><span class="n">csr</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Request-VCFCsr</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-domain</span> <span class="n">sfo-m01</span> <span class="n">-cluster</span> <span class="n">sfo-m01-cl01</span> <span class="n">-country</span> <span class="n">US</span> <span class="n">-locality</span> <span class="s2">&quot;Palo Alto&quot;</span> <span class="n">-organization</span> <span class="s2">&quot;Rainpole&quot;</span> <span class="n">-organizationUnit</span> <span class="s2">&quot;Engineering&quot;</span> <span class="n">-stateOrProvince</span> <span class="s2">&quot;California&quot;</span> <span class="n">-outputDirectory</span> <span class="n">F</span><span class="p">:\</span><span class="n">csr</span>
 </code></pre></div>
 <p>This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.</p>
 <h3 id="example-2">Example 2<a class="headerlink" href="#example-2" title="Permanent link">&para;</a></h3>
@@ -2220,7 +2220,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-09-18T21:31:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-09-18</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-11-29T16:16:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-11-29</span>
       
     
   </small>
@@ -2294,7 +2294,9 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 - VMware, Inc.
+      Copyright &copy; 2023 Broadcom. All Rights Reserved.<br/>
+The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br/>
+
     </div>
   
   
