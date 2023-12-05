@@ -1151,7 +1151,7 @@ Function Install-EsxiCertificate {
         $skippedHosts = New-Object Collections.Generic.List[String]
         foreach ($esxiHost in $esxiHosts) {
             $esxiFqdn = $esxiHost.fqdn
-            $crtPath = "$certificateDirectory\$esxiFqdn$certificateFileExt"
+            $crtPath = Join-Path -Path $certificateDirectory -childPath $esxiFqdn$certificateFileExt
 
             if (!(Test-Path $crtPath -PathType Leaf )) {
                 Write-Error "Certificate not found at $crtPath. Skipping certificate replacement for ESXi host $esxiFqdn."
@@ -1676,7 +1676,7 @@ Function Request-EsxiCsr {
 
         if ($esxiHosts) {
             foreach ($esxiHost in $esxiHosts) {
-                $csrPath = "$outputDirectory\$($esxiHost.Name).csr"
+                $csrPath = Join-Path -Path $outputDirectory -childPath "$($esxiHost.Name).csr"
                 $esxRequest = New-VIMachineCertificateSigningRequest -Server $vCenterServer.details.fqdn -VMHost $esxiHost.Name -Country "$country" -Locality "$locality" -Organization "$organization" -OrganizationUnit "$organizationUnit" -StateOrProvince "$stateOrProvince" -CommonName $esxiHost.Name
                 $esxRequest.CertificateRequestPEM | Out-File $csrPath -Force
                 if (Test-Path $csrPath -PathType Leaf ) {

@@ -4,6 +4,10 @@
 
 > Release Date: Unreleased
 
+Bug Fix:
+
+- Fixes issue with the file path on Linux that is not present on Windows. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/97)
+
 Enhancement:
 
 - Added support for use of secure strings for sensitive parameters. [GH-95](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/95)
