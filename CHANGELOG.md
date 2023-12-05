@@ -1,5 +1,13 @@
 # Release History
 
+## v1.5.0
+
+> Release Date: Unreleased
+
+Enhancement:
+
+- Added support for use of secure strings for sensitive parameters. [GH-95](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/95)
+
 ## v1.4.1
 
 > Release Date: 2023-11-27

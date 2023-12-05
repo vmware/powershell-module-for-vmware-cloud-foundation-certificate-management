@@ -38,6 +38,24 @@ if ($PSEdition -eq 'Desktop') {
     }
 }
 
+##########################################################################
+#Region     Non Exported Functions                                  ######
+Function Get-Password {
+    param (
+        [string]$user,
+        [string]$password
+    )
+
+    if ([string]::IsNullOrEmpty($password)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $password = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    return $password
+}
+
+#EndRegion  Non Exported Functions                                  ######
+##########################################################################
+
 #######################################################################################################################
 #####################################################  FUNCTIONS  #####################################################
 
@@ -164,11 +182,13 @@ Function Get-VCFCertificateThumbprint {
         [Parameter (Mandatory = $true, ParameterSetName = "vCenter")] [ValidateNotNullOrEmpty()] [Switch] $vcenter,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $false, ParameterSetName = "ESXi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $false, ParameterSetName = "vCenter")] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $false, ParameterSetName = "vCenter")] [ValidateNotNullOrEmpty()] [String] $issuer
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         if ($PsBoundParameters.ContainsKey("esxi")) {
@@ -248,13 +268,15 @@ Function Test-EsxiCertMgmtChecks {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $issuer
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     $errorMessage = @()
     $warningMessage = @()
@@ -388,10 +410,12 @@ Function Confirm-EsxiCertificateInstalled {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         if (Test-Path $signedCertificate -PathType Leaf ) {
@@ -455,11 +479,13 @@ Function Confirm-CAInvCenterServer {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $signedCertificate,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $issuer
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         if ($PsBoundParameters.ContainsKey("issuer")) {
@@ -525,9 +551,11 @@ Function Get-EsxiCertificateMode {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -572,10 +600,12 @@ Function Set-EsxiCertificateMode {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateSet ("custom", "vmca")] [String] $mode
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -626,10 +656,12 @@ Function Get-vSANHealthSummary {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -818,11 +850,13 @@ Function Get-EsxiLockdownMode {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -891,12 +925,14 @@ Function Set-EsxiLockdownMode {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $true, ParameterSetName = "enable")] [ValidateNotNullOrEmpty()] [Switch] $enable,
         [Parameter (Mandatory = $true, ParameterSetName = "disable")] [ValidateNotNullOrEmpty()] [Switch] $disable
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
@@ -981,11 +1017,13 @@ Function Restart-EsxiHost {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [bool] $poll = $true,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 1800,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pollInterval = 30
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     # Connect to the ESXi host.
     Connect-VIServer $esxiFqdn -User $user -password $pass -Force
@@ -1243,7 +1281,7 @@ Function Set-VCFCertificateAuthority {
         [Parameter (Mandatory = $true)] [ValidateSet ("Microsoft", "OpenSSL")] [String] $certAuthority,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityFqdn,
         [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityUser,
         [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityPass,
@@ -1264,6 +1302,8 @@ Function Set-VCFCertificateAuthority {
         "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
         "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     if (Test-VCFConnection -server $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -1493,7 +1533,7 @@ Function Request-VCFCsr {
         [Parameter (Mandatory = $true, ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [Switch] $sddcManager,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")][ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
@@ -1515,6 +1555,8 @@ Function Request-VCFCsr {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince,
         [Parameter (Mandatory = $true,  ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [String] $email
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     if ($PSBoundParameters.ContainsKey("esxi")){
         if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
@@ -1834,10 +1876,12 @@ Function Request-VCFSignedCertificate {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $workloadDomain,
         [Parameter (Mandatory = $true)] [ValidateSet ("Microsoft", "OpenSSL")] [String] $certAuthority
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
     if (Test-VCFConnection -server $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -1965,7 +2009,7 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $true, ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [Switch] $sddcManager,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain, 
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
@@ -1973,6 +2017,8 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
+
+    $pass = Get-Password -User $user -Password $pass
 
 
     if ($PSBoundParameters.ContainsKey("esxi")){
