@@ -8,6 +8,11 @@ Breaking Change:
 
 - Removes support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-105](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/105)
 
+Enhancement:
+
+- Added vSAN Data Migration mode option for `Install-EsxiCertificate` cmdlet, options are Full Migration and Ensure Accessibility. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/100)
+- Added `Get-EsxiHostVsanMaintenanceModePrecheck` cmdlet. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/100)
+
 Chore:
 
 - Updated `PowerValidatedSolutions` from v2.6.0 to v2.8.0. [GH-104](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/104)
