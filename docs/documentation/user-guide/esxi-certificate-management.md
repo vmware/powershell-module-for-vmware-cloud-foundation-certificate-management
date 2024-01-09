@@ -4,7 +4,7 @@ This section provides information on how to use the PowerShell module for VMware
 
 ## Set the ESXi Certificate Mode in vCenter Server
 
-The [`Set-EsxiCertificateMode`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiCertificateMode/) cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+The [`Set-EsxiCertificateMode`](../functions/Set-EsxiCertificateMode.md) cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -26,7 +26,7 @@ The [`Set-EsxiCertificateMode`](/powershell-module-for-vmware-cloud-foundation-c
 
 ## Request a Certificate Signing Request
 
-The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/) cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
+The [`Request-VCFCsr`](../functions/Request-VCFCsr.md) cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
 
 ## Request Certificate Signing Request for each ESXi Host in a Cluster
 
@@ -74,7 +74,7 @@ The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificat
 
 ## Verify the Certificate Authority is Trusted in vCenter Server
 
-The [`Confirm-CAInvCenterServer`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Confirm-CAInvCenterServer/) cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance. You need to pass in the complete path for the certificate file. Returns true if thumbprint matches, else returns false.
+The [`Confirm-CAInvCenterServer`](../functions/Confirm-CAInvCenterServer.md) cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance. You need to pass in the complete path for the certificate file. Returns true if thumbprint matches, else returns false.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -97,7 +97,7 @@ The [`Confirm-CAInvCenterServer`](/powershell-module-for-vmware-cloud-foundation
 
 ## Set the Lockdown Mode for ESXi Hosts
 
-The [`Set-EsxiLockdownMode`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiLockdownMode/) cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The [`Set-EsxiLockdownMode`](../functions/Set-EsxiLockdownMode.md) cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
 
 ### Disable Lockdown Mode for Each ESXi Host in a Cluster
 
@@ -141,7 +141,7 @@ The [`Set-EsxiLockdownMode`](/powershell-module-for-vmware-cloud-foundation-cert
 
 ## Get the vSAN Health Summary from vCenter Server for a Cluster
 
-The [`Get-vSANHealthSummary`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-vSANHealthSummary/) cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
+The [`Get-vSANHealthSummary`](../functions/Get-vSANHealthSummary.md) cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -163,7 +163,7 @@ The [`Get-vSANHealthSummary`](/powershell-module-for-vmware-cloud-foundation-cer
 
 ## Run the checks required for ESXi Certificate Management for a Cluster
 
-The [`Test-EsxiCertMgmtChecks`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/) cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The [`Test-EsxiCertMgmtChecks`](../functions/Test-EsxiCertMgmtChecks.md) cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 The following checks are run:
 
 - Check ESXi Certificate Mode
@@ -193,7 +193,7 @@ The following checks are run:
 
 ## Install a Certificate
 
-The [`Install-VCFCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VCFCertificate/) cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (_e.g._, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+The [`Install-VCFCertificate`](../functions/Install-VCFCertificate.md) cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (_e.g._, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
 
 ### Install a Certificate to Each ESXi Host in a Cluster
 
