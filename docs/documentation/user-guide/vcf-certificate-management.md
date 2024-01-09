@@ -4,7 +4,7 @@ This section provides information on how to use the PowerShell module for VMware
 
 ## Configuring the Certificate Authority for SDDC Manager
 
-The [`Set-VCFCertificateAuthority`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-VCFCertificateAuthority/) configures Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
+The [`Set-VCFCertificateAuthority`](../functions/Set-VCFCertificateAuthority.md) configures Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
 ### Configuring the Microsoft Certificate Authority for SDDC Manager
 
@@ -51,7 +51,7 @@ This example will configure an OpenSSL Certificate Authority in SDDC Manager.
 
 ## Request a Certificate Signing Request for a Workload Domain
 
-The [`Request-VCFCsr`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/) cmdlet will request SDDC Manager to generate and store certificate signing request files.
+The [`Request-VCFCsr`](../functions/Request-VCFCsr.md) cmdlet will request SDDC Manager to generate and store certificate signing request files.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -77,7 +77,7 @@ This example will request SDDC Manager to generate certificate signing request f
 
 ## Request Certificate Authority Signed Certificates for a Workload Domain
 
-The [`Request-VCFSignedCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFSignedCertificate/) will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
+The [`Request-VCFSignedCertificate`](../functions/Request-VCFSignedCertificate.md) will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
 
 1. Start PowerShell (Run as Administrator).
 
@@ -100,7 +100,7 @@ This example will connect to SDDC Manager to request to have the certificate sig
 
 ## Installing and Replacing Certificate Authority Signed Certificates for a Workload Domain
 
-The [`Install-VCFCertificate`](/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VCFCertificate/) cmdlet installs the signed certificates for all components (except ESXi hosts) associated with the given workload domain.
+The [`Install-VCFCertificate`](../functions/Install-VCFCertificate.md) cmdlet installs the signed certificates for all components (except ESXi hosts) associated with the given workload domain.
 
 1. Start PowerShell (Run as Administrator).
 
