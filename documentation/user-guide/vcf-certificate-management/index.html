@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
     
     
       
@@ -1641,7 +1641,7 @@
 <h1 id="vmware-cloud-foundation-certificate-management">VMware Cloud Foundation Certificate Management<a class="headerlink" href="#vmware-cloud-foundation-certificate-management" title="Permanent link">&para;</a></h1>
 <p>This section provides information on how to use the PowerShell module for VMware Cloud Foundation Certificate Management to manage certificates for SDDC Manager and workload domain components <a href="../esxi-certificate-management/">with the exception of ESXi hosts</a> in your VMware Cloud Foundation instance.</p>
 <h2 id="configuring-the-certificate-authority-for-sddc-manager">Configuring the Certificate Authority for SDDC Manager<a class="headerlink" href="#configuring-the-certificate-authority-for-sddc-manager" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-VCFCertificateAuthority/"><code>Set-VCFCertificateAuthority</code></a> configures Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.</p>
+<p>The <a href="../../functions/Set-VCFCertificateAuthority/"><code>Set-VCFCertificateAuthority</code></a> configures Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.</p>
 <h3 id="configuring-the-microsoft-certificate-authority-for-sddc-manager">Configuring the Microsoft Certificate Authority for SDDC Manager<a class="headerlink" href="#configuring-the-microsoft-certificate-authority-for-sddc-manager" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -1693,7 +1693,7 @@
 </code></pre></div>
 <p>This example will configure an OpenSSL Certificate Authority in SDDC Manager.</p>
 <h2 id="request-a-certificate-signing-request-for-a-workload-domain">Request a Certificate Signing Request for a Workload Domain<a class="headerlink" href="#request-a-certificate-signing-request-for-a-workload-domain" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/"><code>Request-VCFCsr</code></a> cmdlet will request SDDC Manager to generate and store certificate signing request files.</p>
+<p>The <a href="../../functions/Request-VCFCsr/"><code>Request-VCFCsr</code></a> cmdlet will request SDDC Manager to generate and store certificate signing request files.</p>
 <ol>
 <li>
 <p>Start PowerShell (Run as Administrator).</p>
@@ -1723,7 +1723,7 @@
 </ol>
 <p>This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.</p>
 <h2 id="request-certificate-authority-signed-certificates-for-a-workload-domain">Request Certificate Authority Signed Certificates for a Workload Domain<a class="headerlink" href="#request-certificate-authority-signed-certificates-for-a-workload-domain" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFSignedCertificate/"><code>Request-VCFSignedCertificate</code></a> will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain</p>
+<p>The <a href="../../functions/Request-VCFSignedCertificate/"><code>Request-VCFSignedCertificate</code></a> will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain</p>
 <ol>
 <li>
 <p>Start PowerShell (Run as Administrator).</p>
@@ -1745,7 +1745,7 @@
 </code></pre></div>
 <p>This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by Microsoft CA</p>
 <h2 id="installing-and-replacing-certificate-authority-signed-certificates-for-a-workload-domain">Installing and Replacing Certificate Authority Signed Certificates for a Workload Domain<a class="headerlink" href="#installing-and-replacing-certificate-authority-signed-certificates-for-a-workload-domain" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VCFCertificate/"><code>Install-VCFCertificate</code></a> cmdlet installs the signed certificates for all components (except ESXi hosts) associated with the given workload domain.</p>
+<p>The <a href="../../functions/Install-VCFCertificate/"><code>Install-VCFCertificate</code></a> cmdlet installs the signed certificates for all components (except ESXi hosts) associated with the given workload domain.</p>
 <ol>
 <li>
 <p>Start PowerShell (Run as Administrator).</p>
@@ -1785,21 +1785,23 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-09-30T03:06:09+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-09-30</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-09T21:06:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-09</span>
   </span>
 
     
     
     
       
+  
   <span class="md-source-file__fact">
     <span class="md-icon" title="Contributors">
       
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.536 5.536 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13v-1.75M0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20H0m24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9V20Z"/></svg>
       
     </span>
     <nav>
       
+        <a href="mailto:ryan.johnson@broadcom.com">Ryan Johnson</a>, 
         <a href="mailto:bnagar@vmware.com">bnagar</a>
     </nav>
   </span>
@@ -1877,7 +1879,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2005-2023 Broadcom. All Rights Reserved.<br/>
+      Copyright &copy; 2005-2024 Broadcom. All Rights Reserved.<br/>
 The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br/>
 
     </div>

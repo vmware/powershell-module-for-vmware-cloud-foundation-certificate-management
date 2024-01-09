@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
     
     
       
@@ -1779,7 +1779,7 @@
 <h1 id="esxi-certificate-management">ESXi Certificate Management<a class="headerlink" href="#esxi-certificate-management" title="Permanent link">&para;</a></h1>
 <p>This section provides information on how to use the PowerShell module for VMware Cloud Foundation Certificate Management to manage ESXi host certificates across your VMware Cloud Foundation instance.</p>
 <h2 id="set-the-esxi-certificate-mode-in-vcenter-server">Set the ESXi Certificate Mode in vCenter Server<a class="headerlink" href="#set-the-esxi-certificate-mode-in-vcenter-server" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiCertificateMode/"><code>Set-EsxiCertificateMode</code></a> cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.</p>
+<p>The <a href="../../functions/Set-EsxiCertificateMode/"><code>Set-EsxiCertificateMode</code></a> cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.</p>
 <ol>
 <li>
 <p>Start PowerShell (Run as Administrator).</p>
@@ -1801,7 +1801,7 @@
 </li>
 </ol>
 <h2 id="request-a-certificate-signing-request">Request a Certificate Signing Request<a class="headerlink" href="#request-a-certificate-signing-request" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VCFCsr/"><code>Request-VCFCsr</code></a> cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.</p>
+<p>The <a href="../../functions/Request-VCFCsr/"><code>Request-VCFCsr</code></a> cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.</p>
 <h2 id="request-certificate-signing-request-for-each-esxi-host-in-a-cluster">Request Certificate Signing Request for each ESXi Host in a Cluster<a class="headerlink" href="#request-certificate-signing-request-for-each-esxi-host-in-a-cluster" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
@@ -1857,7 +1857,7 @@
 </li>
 </ol>
 <h2 id="verify-the-certificate-authority-is-trusted-in-vcenter-server">Verify the Certificate Authority is Trusted in vCenter Server<a class="headerlink" href="#verify-the-certificate-authority-is-trusted-in-vcenter-server" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Confirm-CAInvCenterServer/"><code>Confirm-CAInvCenterServer</code></a> cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance. You need to pass in the complete path for the certificate file. Returns true if thumbprint matches, else returns false.</p>
+<p>The <a href="../../functions/Confirm-CAInvCenterServer/"><code>Confirm-CAInvCenterServer</code></a> cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance. You need to pass in the complete path for the certificate file. Returns true if thumbprint matches, else returns false.</p>
 <ol>
 <li>
 <p>Start PowerShell (Run as Administrator).</p>
@@ -1880,7 +1880,7 @@
 </li>
 </ol>
 <h2 id="set-the-lockdown-mode-for-esxi-hosts">Set the Lockdown Mode for ESXi Hosts<a class="headerlink" href="#set-the-lockdown-mode-for-esxi-hosts" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiLockdownMode/"><code>Set-EsxiLockdownMode</code></a> cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.</p>
+<p>The <a href="../../functions/Set-EsxiLockdownMode/"><code>Set-EsxiLockdownMode</code></a> cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.</p>
 <h3 id="disable-lockdown-mode-for-each-esxi-host-in-a-cluster">Disable Lockdown Mode for Each ESXi Host in a Cluster<a class="headerlink" href="#disable-lockdown-mode-for-each-esxi-host-in-a-cluster" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -1924,7 +1924,7 @@
 </li>
 </ol>
 <h2 id="get-the-vsan-health-summary-from-vcenter-server-for-a-cluster">Get the vSAN Health Summary from vCenter Server for a Cluster<a class="headerlink" href="#get-the-vsan-health-summary-from-vcenter-server-for-a-cluster" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-vSANHealthSummary/"><code>Get-vSANHealthSummary</code></a> cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.</p>
+<p>The <a href="../../functions/Get-vSANHealthSummary/"><code>Get-vSANHealthSummary</code></a> cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.</p>
 <ol>
 <li>
 <p>Start PowerShell (Run as Administrator).</p>
@@ -1946,7 +1946,7 @@
 </li>
 </ol>
 <h2 id="run-the-checks-required-for-esxi-certificate-management-for-a-cluster">Run the checks required for ESXi Certificate Management for a Cluster<a class="headerlink" href="#run-the-checks-required-for-esxi-certificate-management-for-a-cluster" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/"><code>Test-EsxiCertMgmtChecks</code></a> cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+<p>The <a href="../../functions/Test-EsxiCertMgmtChecks/"><code>Test-EsxiCertMgmtChecks</code></a> cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 The following checks are run:</p>
 <ul>
 <li>Check ESXi Certificate Mode</li>
@@ -1977,7 +1977,7 @@ The following checks are run:</p>
 </li>
 </ul>
 <h2 id="install-a-certificate">Install a Certificate<a class="headerlink" href="#install-a-certificate" title="Permanent link">&para;</a></h2>
-<p>The <a href="/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VCFCertificate/"><code>Install-VCFCertificate</code></a> cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (<em>e.g.</em>, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.</p>
+<p>The <a href="../../functions/Install-VCFCertificate/"><code>Install-VCFCertificate</code></a> cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (<em>e.g.</em>, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.</p>
 <h3 id="install-a-certificate-to-each-esxi-host-in-a-cluster">Install a Certificate to Each ESXi Host in a Cluster<a class="headerlink" href="#install-a-certificate-to-each-esxi-host-in-a-cluster" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -2044,13 +2044,14 @@ The following checks are run:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-09-30T03:06:09+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-09-30</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-09T21:06:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-09</span>
   </span>
 
     
     
     
       
+  
   <span class="md-source-file__fact">
     <span class="md-icon" title="Contributors">
       
@@ -2060,6 +2061,7 @@ The following checks are run:</p>
     <nav>
       
         <a href="mailto:johnsonryan@vmware.com">Ryan Johnson</a>, 
+        <a href="mailto:ryan.johnson@broadcom.com">Ryan Johnson</a>, 
         <a href="mailto:bnagar@vmware.com">bnagar</a>
     </nav>
   </span>
@@ -2137,7 +2139,7 @@ The following checks are run:</p>
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2005-2023 Broadcom. All Rights Reserved.<br/>
+      Copyright &copy; 2005-2024 Broadcom. All Rights Reserved.<br/>
 The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br/>
 
     </div>
