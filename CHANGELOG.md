@@ -10,8 +10,8 @@ Breaking Change:
 
 Enhancement:
 
-- Added vSAN Data Migration mode option for `Install-EsxiCertificate` cmdlet, options are Full Migration and Ensure Accessibility. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/100)
-- Added `Get-EsxiHostVsanMaintenanceModePrecheck` cmdlet. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/100)
+- Added `sanDataMigrationMode` option to `Install-EsxiCertificate` cmdlet. Options include `Full` and `EnsureAccessibility`. [GH-101](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/101)
+- Added `Get-EsxiHostVsanMaintenanceModePrecheck` cmdlet. [GH-101](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/101)
 
 Chore:
 

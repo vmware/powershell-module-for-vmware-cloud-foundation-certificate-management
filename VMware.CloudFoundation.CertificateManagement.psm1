@@ -737,11 +737,11 @@ Function Get-EsxiConnectionState {
 Function Get-EsxiHostVsanMaintenanceModePrecheck {
     <#
         .SYNOPSIS
-        Get-EsxiHostMaintenaceModePrecheck cmdlet checks if there's any issues for the ESXi Host to enter a particular vSAN maintenance mode.
+        Checks for any issues when the ESXi H=host enters a particular vSAN maintenance mode.
 
         .DESCRIPTION
-        Get-EsxiHostMaintenaceModePrecheck cmdlet checks if there's any issues for the ESXi Host to enter a particular vSAN maintenance mode.  The cmdlet will 
-        halt the script if the pre check fails.
+        The Get-EsxiHostVsanMaintenanceModePrecheck cmdlet checks if there's any issues for the ESXi host entering a particular vSAN maintenance mode.
+        The cmdlet will halt the script if the pre check fails.
 
         .EXAMPLE
         Get-EsxiHostVsanMaintenanceModePrecheck -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMware1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode Full
@@ -1238,8 +1238,6 @@ Function Install-EsxiCertificate {
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
 
-        .PARAMETER NoConfirmation
-        The cmdlet will not ask for confirmation
     #>
 
     Param (
@@ -1253,7 +1251,6 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true)] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
-        [Parameter (Mandatory = $false)] [Switch] $NoConfirmation,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
@@ -1272,7 +1269,7 @@ Function Install-EsxiCertificate {
             if (!$esxiHosts) { Write-Error "No ESXi host $esxiFqdn found in workload domain $domain." -ErrorAction Stop }
         }
 
-        #Perform ESXi Host Vsan Data Migration Pre-check
+        # Perform ESXi host vSAN data migration pre-check.
         if ($PsBoundParameters.ContainsKey("cluster")) {
             Write-Output "Performing Data Migration Pre-check on the cluster $cluster"
             Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -cluster $cluster -vsanDataMigrationMode $vsanDataMigrationMode
@@ -1284,21 +1281,7 @@ Function Install-EsxiCertificate {
         # Certificate replacement starts here.
         $replacedHosts = New-Object Collections.Generic.List[String]
         $skippedHosts = New-Object Collections.Generic.List[String]
-        if (($NoConfirmation.IsPresent) -and ($vsanDataMigrationMode -eq "EnsureAccessibility")) {
-            $warningMessage = "Please ensure sufficient backups of the cluster exists.  Please ensure the ESXi`n"
-            $warningMessage += " hosts activities are minimumized during certificate replacement process. `n"
-            $warningMessage += "Please enter yes to confirm: "
-            $proceed = Read-Host $warningMessage
-            if (($proceed -match "no") -or ($proceed -match "yes")) {
-                if ($proceed -match "no") {
-                    Write-Output "Stopping script execution. (confirmation is $proceed)"
-                    Exit
-                }
-            } else {
-                Write-Output "None of the options is selected. Default is 'No', hence stopping script execution."
-                Exit
-            }
-        }
+        
         foreach ($esxiHost in $esxiHosts) {
             $esxiFqdn = $esxiHost.fqdn
             $crtPath = Join-Path -Path $certificateDirectory -childPath $esxiFqdn$certificateFileExt
@@ -2118,12 +2101,14 @@ Function Install-VCFCertificate {
         This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
 
         .EXAMPLE
-        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  The ESXi host 
+        will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .EXAMPLE
-        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The ESXi host 
+        will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2157,6 +2142,15 @@ Function Install-VCFCertificate {
 
         .PARAMETER sddcManager
         Switch to indicate that the certificate is to be installed for all components associated with the given workload domain, excluding ESXi hosts.
+
+        .PARAMETER migratePowerOffVMs
+        Option to decide if power off virtual machines and suspended virtual machines will be migrated to other ESXi hosts when the ESXi host goes into maintenance mode.
+
+        .PARAMETER vsanDataMigrationMode
+        The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
+
+        .PARAMETER NoConfirmation
+        The cmdlet will not ask for confirmation.
     #>
 
 
@@ -2169,28 +2163,57 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain, 
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
+        [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi") ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
+        [Parameter (Mandatory = $false)] [Switch] $NoConfirmation,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
     $pass = Get-Password -User $user -Password $pass
 
+    if (($NoConfirmation.IsPresent) -and ($vsanDataMigrationMode -eq "EnsureAccessibility")) {
+        $warningMessage = "Please ensure sufficient backups of the cluster exists.  Please ensure the ESXi`n"
+        $warningMessage += " hosts activities are minimumized during certificate replacement process. `n"
+        $warningMessage += "Please enter yes to confirm: "
+        $proceed = Read-Host $warningMessage
+        if (($proceed -match "no") -or ($proceed -match "yes")) {
+            if ($proceed -match "no") {
+                Write-Output "Stopping script execution. (confirmation is $proceed)"
+                Exit
+            }
+        } else {
+            Write-Output "None of the options is selected. Default is 'No', hence stopping script execution."
+            Exit
+        }
+    }
 
     if ($PSBoundParameters.ContainsKey("esxi")){
         if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Please provide either -cluster or -esxiFqdn paramater."
         } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
-        } elseif ($PSBoundParameters.ContainsKey("cluster")){
-            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+        } elseif ($PSBoundParameters.ContainsKey("cluster")) {
+            if ($migratePowerOffVMs.IsPresent) {
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+            } else {
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+            }
         } else {
-            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+            if ($migratePowerOffVMs.IsPresent) {
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+            } else {   
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+            }
         }
-    }else{
-        Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+    } else {
+        if ($migratePowerOffVMs.IsPresent) {
+            Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain -migratePowerOffVMs
+        } else {
+            Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+        }
     }
-
 }
 
 Function Install-SddcCertificate {

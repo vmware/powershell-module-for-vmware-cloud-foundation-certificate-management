@@ -2,17 +2,17 @@
 
 ## Synopsis
 
-Pre check for any issues when the ESXi Host enters a particular vSAN maintenance mode.
+Checks for any issues when the ESXi host enters a particular vSAN maintenance mode.
 
 ## Syntax
 
 ```powershell
-Get-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [[-esxiFqdn] <String>] [<CommonParameters>]
+Get-EsxiHostVsanMaintenanceModePrecheck [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [[-esxiFqdn] <String>] [-vsanDataMigrationMode] <String> [<CommonParameters>]
 ```
 
 ## Description
 
-The `Get-EsxiHostVsanMaintenanceModePrecheck` cmdlet cmdlet checks if there's any issue for the ESXi Host to enter a particular vSAN maintenance mode.  The cmdlet will halt the script if the pre check fails.
+The `Get-EsxiHostVsanMaintenanceModePrecheck` cmdlet checks if there's any issue for the ESXi host entering a particular vSAN maintenance mode. The cmdlet will halt the script if the pre-check fails.
 
 If `esxiFqdn` is provided, only the value for that host is returned.
 

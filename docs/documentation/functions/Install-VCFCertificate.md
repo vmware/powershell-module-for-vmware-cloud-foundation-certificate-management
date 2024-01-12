@@ -15,13 +15,13 @@ Install-VCFCertificate [-sddcManager] [-server] <String> [-user] <String> [-pass
 ### Installing Certificates ESXi Hosts in a Cluster
 
 ```powershell
-Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
+Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-vsanDataMigrationMode] <String> [-migratePowerOffVMs] [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [-NoConfirmation] [<CommonParameters>]
 ```
 
 ### Installing a Certificate for an ESXi Host
 
 ```powershell
-Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String> [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [<CommonParameters>]
+Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String> [-vsanDataMigrationMode] <String>[-migratePowerOffVMs] [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [-NoConfirmation] [<CommonParameters>]
 ```
 
 ## Description
@@ -49,18 +49,18 @@ This example will connect to SDDC Manager to install the signed certificates for
 ### Example 2
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
-This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
+This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path. The ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to `EnsureAccessibility`.
 
 ### Example 3
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user <administrator@vsphere.local> -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user <administrator@vsphere.local> -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
-This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
+This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path. The ESXi host will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to `EnsureAccessibility`.
 
 ## Parameters
 
@@ -238,6 +238,53 @@ Aliases:
 Required: False
 Position: Named
 Default value: 18000
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+### -vsanDataMigrationMode
+
+The vSan Data Migration mode validate value ("Full", "EnsureAccessibility").
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -migratePowerOffVMs
+
+Option to decide if power off virtual machines and suspended virtual machines will be migrated to other ESXi hosts when the ESXi host goes into maintenance mode.
+
+```yaml
+Type: Switch
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoConfirmation
+
+Option to skip Confirmation warning when performing the ESXi host certificate replacement.
+
+```yaml
+Type: Switch
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
