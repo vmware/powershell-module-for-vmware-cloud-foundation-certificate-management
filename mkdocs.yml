@@ -70,7 +70,6 @@ plugins:
     jinja_options:
       variable_start_string: "${{"
       variable_end_string: "}}"
-- git-authors
 - git-revision-date-localized:
     enabled: !ENV [CI, false]
     enable_creation_date: false
