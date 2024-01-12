@@ -734,6 +734,95 @@ Function Get-EsxiConnectionState {
     return $response.ConnectionState
 }
 
+Function Get-EsxiHostVsanMaintenanceModePrecheck {
+    <#
+        .SYNOPSIS
+        Checks for any issues when the ESXi H=host enters a particular vSAN maintenance mode.
+
+        .DESCRIPTION
+        The Get-EsxiHostVsanMaintenanceModePrecheck cmdlet checks if there's any issues for the ESXi host entering a particular vSAN maintenance mode.
+        The cmdlet will halt the script if the pre check fails.
+
+        .EXAMPLE
+        Get-EsxiHostVsanMaintenanceModePrecheck -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMware1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode Full
+        This example checks each ESXi host within a cluster within the workload domain for any issues when entering a particular vSAN maintenance mode
+
+        Get-EsxiHostVsanMaintenanceModePrecheck -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMware1! -domain sfo-m01 -host sfo01-m01-esx01.sfo.rainpole.io -vsanDataMigrationMode Full
+        This example checks each ESXi host within a cluster within the workload domain for any issues when entering a particular vSAN maintenance mode
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain in which the cluster is located.
+
+        .PARAMETER cluster
+        The name of the cluster containing the ESXi hosts.
+
+        .PARAMETER esxiFqdn
+        The name of the FQDN of an ESXi host.
+
+        .PARAMETER vsanDataMigrationMode
+        The type of vSAN maintenance mode.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
+        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
+        [Parameter (Mandatory = $true, ParameterSetName = "esxiFqdn")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $true)] [ValidateSet ("Full", "EnsureAccessibility", "NoDataMigration")] [String] $vsanDataMigrationMode
+    )
+
+    if ($vsanDataMigrationMode -eq "Full") {
+        $vsanMigrationMode = "evacuateAllData"
+    } elseif ($vsanDataMigrationMode -eq "EnsureAccessibility") {
+        $vsanMigrationMode = "ensureObjectAccessibility"
+    } elseif ($vsanDataMigrationMode -eq "NoDataMigration") {
+        $vsanMigrationMode = "noAction"
+    } else {
+		Write-Error "No validate vsan Data migration mode selected" -ErrorAction Stop
+	}
+
+    Try {
+        $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
+        if ($PsBoundParameters.ContainsKey("cluster")) {
+            $clusterDetails = Get-VCFCluster -Name $cluster
+            if ($clusterDetails) {
+                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
+                if (!$esxiHosts) { Write-Warning "No ESXi hosts found in cluster $cluster." }
+            } else {
+                Write-Error "Unable to locate cluster $cluster in $($vCenterServer.details.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
+            }
+        } else {
+            $esxiHosts = Get-VCFHost -fqdn $esxiFqdn
+            if (!$esxiHosts) { Write-Error "No ESXi host $esxiFqdn found in workload domain $domain." -ErrorAction Stop }
+        }
+
+        foreach ($esxiHost in $esxiHosts) {
+            $vsanReport = Get-VsanEnterMaintenanceModeReport -VMHost $esxiHost.fqdn -VsanDataMigrationMode $vsanMigrationMode
+
+            if($vsanReport.OverallStatus -ne "green") {
+                Write-Error "ESXi host($($esxiHost.fqdn)) vSAN Data Migration($vsanDataMigrationMode) Pre-check failed with error $($vsanReport.OverallStatus)" -ErrorAction Stop
+            } else {
+                Write-Output "ESXi host($($esxiHost.fqdn)) vSAN Data Migration($vsanDataMigrationMode) Pre-check: $($vsanReport.OverallStatus)"
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
+    }
+}
+
 Function Set-EsxiConnectionState {
     <#
         .SYNOPSIS
@@ -752,7 +841,12 @@ Function Set-EsxiConnectionState {
 
         .EXAMPLE
         Set-EsxiConnectionState -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -state Maintenance -vsanDataMigrationMode Full
-        This example sets an ESXi host's connection state to Maintenance with a Full data migration.
+        This example sets an ESXi host's connection state to Maintenance with a vSAN data migration mode set to Full data migration.
+
+        .EXAMPLE
+        Set-EsxiConnectionState -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -state Maintenance -vsanDataMigrationMode EnsureAccessibility -migratePowerOffVMs
+        This example sets an ESXi host's connection state to Maintenance and will migrate any Power Off or Suspend VMs to other ESXi hosts and 
+        will set vSAN data migration mode to Ensure Accessibility.   
 
         .PARAMETER esxiFqdn
         The fully qualified domain name of the ESXi host.
@@ -760,6 +854,9 @@ Function Set-EsxiConnectionState {
         .PARAMETER state
         The connection state to set the ESXi host to. One of "Connected", "Disconnected" or "Maintenance".
 
+        .PARAMETER migratePowerOffVMs
+        This optional switch argument will determined if power off and suspended VMs will be migrated off the ESXi host when setting the ESXi host to Maintenance.
+        
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full", "EnsureAccessibility", or "NoDataMigration".
 
@@ -773,6 +870,7 @@ Function Set-EsxiConnectionState {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true)] [ValidateSet ("Connected", "Disconnected", "Maintenance")] [String] $state,
+        [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility", "NoDataMigration")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pollInterval = 60
@@ -784,11 +882,27 @@ Function Set-EsxiConnectionState {
     }
     if ($state -ieq "maintenance") {
         if ($PSBoundParameters.ContainsKey("vsanDataMigrationMode")) {
-            Write-Output "Entering $state connection state for ESXi host $esxiFqdn with vSAN data migration mode set to $vsanDataMigrationMode."
-            Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -Evacuate -confirm:$false
+            if (($vsanDataMigrationMode -eq "EnsureAccessibility") -and !($migratePowerOffVMs.IsPresent)) {
+                Write-Output "Entering $state connection state for ESXi host $esxiFqdn with vSAN data migration mode set to $vsanDataMigrationMode."
+                Write-Output "Power off VMs and suspended VMs are left on the ESXi host $esxiFqdn."
+                Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -confirm:$false
+            } elseif (($vsanDataMigrationMode -eq "NoDataMigration") -and !($migratePowerOffVMs.IsPresent)) {
+                Write-Output "Entering $state connection state for ESXi host $esxiFqdn with vSAN data migration mode set to $vsanDataMigrationMode."
+                Write-Output "Power off VMs and suspended VMs are left on the ESXi host $esxiFqdn."
+                Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -confirm:$false
+            } else {
+                Write-Output "Entering $state connection state for ESXi host $esxiFqdn with vSAN data migration mode set to $vsanDataMigrationMode."
+                Write-Output "Power off VMs and suspended VMs will be migrated off to other ESXi hosts."
+                Set-VMHost -VMHost $esxiFqdn -State $state -VsanDataMigrationMode $vsanDataMigrationMode -Evacuate -confirm:$false
+            }
         } else {
-            Write-Output "Entering $state connection state for ESXi host $esxiFqdn."
-            Set-VMHost -VMHost $esxiFqdn -State $state -Evacuate -confirm:$false
+            if ($migratePowerOffVMs.IsPresent) {
+                Write-Output "Entering $state connection state for ESXi host $esxiFqdn. (Power off VMs and suspended VMs will be migrated off to other ESXi hosts)"
+                Set-VMHost -VMHost $esxiFqdn -State $state -Evacuate -confirm:$false
+            } else {
+                Write-Output "Entering $state connection state for ESXi host $esxiFqdn. (Power off VMs and suspended VMs are left on the ESXi host)"
+                Set-VMHost -VMHost $esxiFqdn -State $state -confirm:$false
+            }
         }
     } else {
         Write-Output "Changing the connection state for ESXi host $esxiFqdn to $state."
@@ -802,7 +916,7 @@ Function Set-EsxiConnectionState {
             Write-Output "Successfully changed the connection state for ESXi host $esxiFqdn to $state."
             break
         } else {
-            if ($state -ieq "Connected"){
+            if ($state -ieq "Connected") {
                 Set-VMHost -VMHost $esxiFqdn -State $state -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $errMsg -WarningAction SilentlyContinue
             }
             Write-Output "Polling the connection every $pollInterval seconds. Waiting for the connection state to change to $state."
@@ -1117,6 +1231,13 @@ Function Install-EsxiCertificate {
 
         .PARAMETER timeout
         The timeout in seconds for putting the ESXi host in maintenance mode. Default is 18000 seconds (5 hours).
+
+        .PARAMETER migratePowerOffVMs
+        This optional switch argument will determined if power off and suspended VMs will be migrated off the ESXi host when setting the ESXi host to Maintenance.
+        
+        .PARAMETER vsanDataMigrationMode
+        The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
+
     #>
 
     Param (
@@ -1127,6 +1248,8 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $true) ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
+        [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
+        [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true)] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
@@ -1146,9 +1269,19 @@ Function Install-EsxiCertificate {
             if (!$esxiHosts) { Write-Error "No ESXi host $esxiFqdn found in workload domain $domain." -ErrorAction Stop }
         }
 
+        # Perform ESXi host vSAN data migration pre-check.
+        if ($PsBoundParameters.ContainsKey("cluster")) {
+            Write-Output "Performing Data Migration Pre-check on the cluster $cluster"
+            Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -cluster $cluster -vsanDataMigrationMode $vsanDataMigrationMode
+        } else {
+            Write-Output "Performing Data Migration Pre-check on the ESXi host $esxiFqdn"
+            Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -vsanDataMigrationMode $vsanDataMigrationMode
+        }
+
         # Certificate replacement starts here.
         $replacedHosts = New-Object Collections.Generic.List[String]
         $skippedHosts = New-Object Collections.Generic.List[String]
+        
         foreach ($esxiHost in $esxiHosts) {
             $esxiFqdn = $esxiHost.fqdn
             $crtPath = Join-Path -Path $certificateDirectory -childPath $esxiFqdn$certificateFileExt
@@ -1165,8 +1298,14 @@ Function Install-EsxiCertificate {
             } else {
                 $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
                 if ($esxiCredential) {
-                    if ($clusterDetails.primaryDatastoreType -ieq "vsan") {
-                        Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -VsanDataMigrationMode "Full" -timeout $timeout
+                    if ($clusterDetails.primaryDatastoreType -ieq "vsan" -or $esxiHost.datastoreType -ieq "vsan" ) {
+                        if(($vsanDataMigrationMode -eq "EnsureAccessibility") -and !($migratePowerOffVMs.IsPresent)) {
+                            Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -vsanDataMigrationMode $vsanDataMigrationMode -timeout $timeout
+                        } elseif (($vsanDataMigrationMode -eq "EnsureAccessibility") -and ($migratePowerOffVMs.IsPresent)) {
+                            Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs -timeout $timeout
+                        } else {
+                            Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -vsanDataMigrationMode "Full" -migratePowerOffVMs -timeout $timeout
+                        }
                     } else {
                         Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -timeout $timeout
                     }
@@ -1962,12 +2101,14 @@ Function Install-VCFCertificate {
         This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
 
         .EXAMPLE
-        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  The ESXi host 
+        will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .EXAMPLE
-        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The ESXi host 
+        will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2001,6 +2142,15 @@ Function Install-VCFCertificate {
 
         .PARAMETER sddcManager
         Switch to indicate that the certificate is to be installed for all components associated with the given workload domain, excluding ESXi hosts.
+
+        .PARAMETER migratePowerOffVMs
+        Option to decide if power off virtual machines and suspended virtual machines will be migrated to other ESXi hosts when the ESXi host goes into maintenance mode.
+
+        .PARAMETER vsanDataMigrationMode
+        The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
+
+        .PARAMETER NoConfirmation
+        The cmdlet will not ask for confirmation.
     #>
 
 
@@ -2013,28 +2163,57 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain, 
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
+        [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
+        [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi") ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
+        [Parameter (Mandatory = $false)] [Switch] $NoConfirmation,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
     $pass = Get-Password -User $user -Password $pass
 
+    if (($NoConfirmation.IsPresent) -and ($vsanDataMigrationMode -eq "EnsureAccessibility")) {
+        $warningMessage = "Please ensure sufficient backups of the cluster exists.  Please ensure the ESXi`n"
+        $warningMessage += " hosts activities are minimumized during certificate replacement process. `n"
+        $warningMessage += "Please enter yes to confirm: "
+        $proceed = Read-Host $warningMessage
+        if (($proceed -match "no") -or ($proceed -match "yes")) {
+            if ($proceed -match "no") {
+                Write-Output "Stopping script execution. (confirmation is $proceed)"
+                Exit
+            }
+        } else {
+            Write-Output "None of the options is selected. Default is 'No', hence stopping script execution."
+            Exit
+        }
+    }
 
     if ($PSBoundParameters.ContainsKey("esxi")){
         if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Please provide either -cluster or -esxiFqdn paramater."
         } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
-        } elseif ($PSBoundParameters.ContainsKey("cluster")){
-            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+        } elseif ($PSBoundParameters.ContainsKey("cluster")) {
+            if ($migratePowerOffVMs.IsPresent) {
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+            } else {
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+            }
         } else {
-            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+            if ($migratePowerOffVMs.IsPresent) {
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+            } else {   
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+            }
         }
-    }else{
-        Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+    } else {
+        if ($migratePowerOffVMs.IsPresent) {
+            Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain -migratePowerOffVMs
+        } else {
+            Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+        }
     }
-
 }
 
 Function Install-SddcCertificate {

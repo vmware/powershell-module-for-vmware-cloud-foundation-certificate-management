@@ -11,7 +11,7 @@
     RootModule = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.5.0.1004'
+    ModuleVersion = '1.6.0.1000'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -77,7 +77,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = 'Install-VCFCertificate', 'Get-VCFCertificateThumbprint', 'Confirm-EsxiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-VCFCsr', 'Get-EsxiCertificateMode', 'Set-EsxiCertificateMode', 'Get-vSANHealthSummary', 'Get-EsxiLockdownMode', 'Set-EsxiLockdownMode', 'Restart-EsxiHost', 'Test-EsxiCertMgmtChecks', 'Set-VCFCertificateAuthority', 'Request-VCFSignedCertificate'
+    FunctionsToExport = 'Install-VCFCertificate', 'Get-VCFCertificateThumbprint', 'Confirm-EsxiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-VCFCsr', 'Get-EsxiCertificateMode', 'Set-EsxiCertificateMode', 'Get-vSANHealthSummary', 'Get-EsxiLockdownMode', 'Set-EsxiLockdownMode', 'Restart-EsxiHost', 'Test-EsxiCertMgmtChecks', 'Set-VCFCertificateAuthority', 'Request-VCFSignedCertificate', 'Get-EsxiHostVsanMaintenanceModePrecheck'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()
