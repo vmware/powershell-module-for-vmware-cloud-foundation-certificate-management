@@ -52,7 +52,6 @@ The following table lists the supported editions and versions of PowerShell for 
 
 Edition                                                                           | Version
 ----------------------------------------------------------------------------------|----------
-:material-powershell: &nbsp; [Microsoft Windows PowerShell][microsoft-powershell] | 5.1
 :material-powershell: &nbsp; [PowerShell Core][microsoft-powershell]              | >= 7.2.0
 
 ### Module Dependencies

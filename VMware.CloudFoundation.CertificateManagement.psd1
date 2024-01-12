@@ -11,7 +11,7 @@
     RootModule = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.5.0.1003'
+    ModuleVersion = '1.5.0.1004'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -32,7 +32,7 @@
     Description = 'PowerShell Module for VMware Cloud Foundation Certificate Management'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '5.1'
+    PowerShellVersion = '7.2.0'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
