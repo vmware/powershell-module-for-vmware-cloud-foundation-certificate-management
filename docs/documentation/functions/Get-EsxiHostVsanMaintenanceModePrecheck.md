@@ -70,7 +70,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The passwordto authenticate to the SDDC Manager instance.
+The password to authenticate to the SDDC Manager instance.
 
 ```yaml
 Type: String
