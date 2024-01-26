@@ -11,7 +11,7 @@
     RootModule = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.5.1.1000'
+    ModuleVersion = '1.5.1.1001'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -53,7 +53,7 @@
     RequiredModules = @(
         @{
             ModuleName    = 'PowerVCF';
-            ModuleVersion = '2.4.0'
+            ModuleVersion = '2.4.1'
         }
         @{
             ModuleName    = 'PowerValidatedSolutions';
