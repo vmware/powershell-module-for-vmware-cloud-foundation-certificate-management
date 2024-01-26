@@ -15,6 +15,7 @@ Enhancement:
 
 Chore:
 
+- Updated `PowerVCF` from v2.4.0 to v2.4.1.
 - Updated `PowerValidatedSolutions` from v2.6.0 to v2.8.0. [GH-104](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/104)
 
 ## v1.5.0

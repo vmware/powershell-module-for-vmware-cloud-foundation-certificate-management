@@ -6,7 +6,7 @@
 
 <img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.CertificateManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">
 
-`VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage certificates across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] such as:
+`VMware.CloudFoundation.CertificateManagement` is a PowerShell module that has been written to support the ability to manage certificates across your [VMware Cloud Foundation][docs-vmware-cloud-foundation] such as:
 
 - Configuring the Certificate Authority for SDDC Manager.
 - Generating certificate signing requests for a workload domain.
@@ -61,7 +61,7 @@ The following table lists the required PowerShell module dependencies for this m
 PowerShell Module                                    | Version   | Publisher    | Reference
 -----------------------------------------------------|-----------|--------------|---------------------------------------------------------------------------
 [VMware.PowerCLI][psgallery-module-powercli]         | >= 13.1.0 | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
-[PowerVCF][psgallery-module-powervcf]                | >= 2.4.0  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
+[PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
 [PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.8.0  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
