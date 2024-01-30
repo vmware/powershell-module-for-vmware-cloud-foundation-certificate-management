@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.6">
     
     
       
@@ -1074,6 +1074,33 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-vsandatamigrationmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      -vsanDataMigrationMode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-migratepoweroffvms" class="md-nav__link">
+    <span class="md-ellipsis">
+      -migratePowerOffVMs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-noconfirmation" class="md-nav__link">
+    <span class="md-ellipsis">
+      -NoConfirmation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#common-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       Common Parameters
@@ -1926,6 +1953,33 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-vsandatamigrationmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      -vsanDataMigrationMode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-migratepoweroffvms" class="md-nav__link">
+    <span class="md-ellipsis">
+      -migratePowerOffVMs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-noconfirmation" class="md-nav__link">
+    <span class="md-ellipsis">
+      -NoConfirmation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#common-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       Common Parameters
@@ -1978,10 +2032,10 @@
 <div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="p">[</span><span class="n">-sddcManager</span><span class="p">]</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-workloadDomain</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
 <h3 id="installing-certificates-esxi-hosts-in-a-cluster">Installing Certificates ESXi Hosts in a Cluster<a class="headerlink" href="#installing-certificates-esxi-hosts-in-a-cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="p">[</span><span class="n">-esxi</span><span class="p">]</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-domain</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-cluster</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-certificateDirectory</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-certificateFileExt</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[[</span><span class="n">-timeout</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="p">[</span><span class="n">-esxi</span><span class="p">]</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-domain</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-cluster</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-vsanDataMigrationMode</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-migratePowerOffVMs</span><span class="p">]</span> <span class="p">[</span><span class="n">-certificateDirectory</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-certificateFileExt</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[[</span><span class="n">-timeout</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[</span><span class="n">-NoConfirmation</span><span class="p">]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
 <h3 id="installing-a-certificate-for-an-esxi-host">Installing a Certificate for an ESXi Host<a class="headerlink" href="#installing-a-certificate-for-an-esxi-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="p">[</span><span class="n">-esxi</span><span class="p">]</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-domain</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-esxiFqdn</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-certificateDirectory</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-certificateFileExt</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[[</span><span class="n">-timeout</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="p">[</span><span class="n">-esxi</span><span class="p">]</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-domain</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-esxiFqdn</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-vsanDataMigrationMode</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;[</span><span class="n">-migratePowerOffVMs</span><span class="p">]</span> <span class="p">[</span><span class="n">-certificateDirectory</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-certificateFileExt</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[[</span><span class="n">-timeout</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[</span><span class="n">-NoConfirmation</span><span class="p">]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>The <code>Install-VCFCertificate</code> will install the signed certificates for all components associated with the given workload domain when used with the <code>-sddcManager</code> switch.</p>
@@ -1998,13 +2052,13 @@
 </code></pre></div>
 <p>This example will connect to SDDC Manager to install the signed certificates for a given workload domain.</p>
 <h3 id="example-2">Example 2<a class="headerlink" href="#example-2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-domain</span> <span class="n">sfo-m01</span> <span class="n">-esxiFqdn</span> <span class="n">sfo01-m01-esx01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-certificateDirectory</span> <span class="n">F</span><span class="p">:\</span><span class="n">certificates</span> <span class="n">-certificateFileExt</span> <span class="s2">&quot;.cer&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-domain</span> <span class="n">sfo-m01</span> <span class="n">-esxiFqdn</span> <span class="n">sfo01-m01-esx01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-migratePowerOffVMs</span> <span class="n">-vsanDataMigrationMode</span> <span class="n">EnsureAccessibility</span> <span class="n">-certificateDirectory</span> <span class="n">F</span><span class="p">:\</span><span class="n">certificates</span> <span class="n">-certificateFileExt</span> <span class="s2">&quot;.cer&quot;</span>
 </code></pre></div>
-<p>This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.</p>
+<p>This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path. The ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to <code>EnsureAccessibility</code>.</p>
 <h3 id="example-3">Example 3<a class="headerlink" href="#example-3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="p">&lt;</span><span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span><span class="p">&gt;</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-domain</span> <span class="n">sfo-m01</span> <span class="n">-cluster</span> <span class="n">sfo-m01-cl01</span> <span class="n">-certificateDirectory</span> <span class="n">F</span><span class="p">:\</span><span class="n">certificates</span> <span class="n">-certificateFileExt</span> <span class="s2">&quot;.cer&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Install-VCFCertificate</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="p">&lt;</span><span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span><span class="p">&gt;</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-domain</span> <span class="n">sfo-m01</span> <span class="n">-cluster</span> <span class="n">sfo-m01-cl01</span> <span class="n">-vsanDataMigrationMode</span> <span class="n">EnsureAccessibility</span> <span class="n">-certificateDirectory</span> <span class="n">F</span><span class="p">:\</span><span class="n">certificates</span> <span class="n">-certificateFileExt</span> <span class="s2">&quot;.cer&quot;</span>
 </code></pre></div>
-<p>This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.</p>
+<p>This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path. The ESXi host will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to <code>EnsureAccessibility</code>.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <h3 id="-esxi">-esxi<a class="headerlink" href="#-esxi" title="Permanent link">&para;</a></h3>
 <p>Switch to indicate that the certificate is to be installed on an ESXi host.</p>
@@ -2140,6 +2194,42 @@ Default is 18000 seconds (5 hours).</p>
 <span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 </code></pre></div>
+<h3 id="-vsandatamigrationmode">-vsanDataMigrationMode<a class="headerlink" href="#-vsandatamigrationmode" title="Permanent link">&para;</a></h3>
+<p>The vSan Data Migration mode validate value ("Full", "EnsureAccessibility").</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">String</span>
+<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span>
+<span class="nt">Aliases</span><span class="p">:</span>
+
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+</code></pre></div>
+<h3 id="-migratepoweroffvms">-migratePowerOffVMs<a class="headerlink" href="#-migratepoweroffvms" title="Permanent link">&para;</a></h3>
+<p>Option to decide if power off virtual machines and suspended virtual machines will be migrated to other ESXi hosts when the ESXi host goes into maintenance mode.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch</span>
+<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span>
+<span class="nt">Aliases</span><span class="p">:</span>
+
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+</code></pre></div>
+<h3 id="-noconfirmation">-NoConfirmation<a class="headerlink" href="#-noconfirmation" title="Permanent link">&para;</a></h3>
+<p>Option to skip Confirmation warning when performing the ESXi host certificate replacement.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch</span>
+<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span>
+<span class="nt">Aliases</span><span class="p">:</span>
+
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+</code></pre></div>
 <h3 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h3>
 <p>This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see <a href="http://go.microsoft.com/fwlink/?LinkID=113216">about_CommonParameters</a>.</p>
 
@@ -2162,26 +2252,11 @@ Default is 18000 seconds (5 hours).</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-09-18T21:31:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-09-18</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-01-12T23:43:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-01-12</span>
   </span>
 
     
     
-    
-      
-  
-  <span class="md-source-file__fact">
-    <span class="md-icon" title="Contributors">
-      
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4Z"/></svg>
-      
-    </span>
-    <nav>
-      
-        <a href="mailto:bnagar@vmware.com">bnagar</a>
-    </nav>
-  </span>
-
     
     
   </aside>
@@ -2278,10 +2353,10 @@ The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.e1c3ead8.min.js"></script>
       
         <script src="../../../js/timeago.min.js"></script>
       
