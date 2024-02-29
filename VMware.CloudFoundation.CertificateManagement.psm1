@@ -53,6 +53,96 @@ Function Get-Password {
     return $password
 }
 
+Function Get-VcenterService {
+    <#
+    .DESCRIPTION
+    The Get-VcenterService retrieves the service's current status and health from vCenter Server and returns with an
+    ordered hash object with the service name and health.
+
+    .EXAMPLE
+    Get-VcenterService -serviceName "certificateauthority"
+    This example retrieves the status and health of the vCenter Server service named "certificateauthority"
+
+    .PARAMETER serviceName
+    The name of the vCenter Server service.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $serviceName
+    )
+
+    $serviceExists = Invoke-GetService -Service $serviceName -ErrorAction SilentlyContinue
+    if ($serviceExists -eq $null) {
+        Write-Error "Service $serviceName does not exist." -ErrorAction Stop
+        Exit
+    } else {
+        return [ordered]@{
+            name = $serviceName
+            status = $serviceExists.state
+            health = $serviceExists.health
+        }
+    }
+}
+
+Function Restart-VcenterService {
+    <#
+    .DESCRIPTION
+    The Restart-VcenterService restart the vCenter Server service taken from parameter value and returns a hash object
+    with the service name, the service status, and the result from restart operation.
+
+    .EXAMPLE
+    Restart-VcenterService -serviceName "certificateauthority"
+    This example restart the vCenter server service named "certificateauthority"
+
+    .PARAMETER serviceName
+    The name of the vCenter Server service.
+    #>
+    param (
+        [string]$serviceName
+    )
+
+    Invoke-RestartService -Service $serviceName | Out-Null
+
+    for ($count = 0; $count -lt 16; $count++) {
+        $serviceStatus = Get-VcenterService -Service $serviceName
+        if ($serviceStatus.status -eq "STARTED" -and $serviceStatus.health -eq "HEALTHY") {
+            return [ordered]@{
+                name = $serviceName
+                status = "GREEN"
+                result = "Successfully restarted service."
+            }
+        } elseif ($serviceStatus.status -eq "STARTING" -or $serviceStatus.status -eq "STOPPING") {
+            # Service is still starting or stopped state; sleep for 20 seconds before retry.
+            Sleep-Time -Seconds 20
+        } elseif ($serviceStatus.status -eq "STARTED" -and $serviceStatus.health -eq "HEALTHY_WITH_WARNINGS") {
+            return [ordered]@{
+                name = $serviceName
+                status = "YELLOW"
+                result = "Issues restarting service: the health state is HEALTHY_WITH_WARNINGS."
+            }
+        } elseif (($serviceStatus.status -eq "STARTED") -and ($serviceStatus.health -eq "DEGRADED")) {
+            return [ordered]@{
+                name = $serviceName
+                status = "RED"
+                result = "Failed restarting service: the health state is DEGRADED."
+            }
+        } elseif ($serviceStatus.status -eq "STOPPED") {
+            return [ordered]@{
+                name = $serviceName
+                status = "RED"
+                result = "Failed restarting service: the service status is STOPPED."
+            }
+        } elseif ($count -gt 14) {
+            # Operation timed out
+            return [ordered]@{
+                name = $serviceName
+                status = "RED"
+                result = "Failed restarting service: unable to retrieve service status. Operation timed out."
+            }
+        }
+    }
+}
+
 #EndRegion  Non Exported Functions                                  ######
 ##########################################################################
 
@@ -146,7 +236,7 @@ Function Get-VCFCertificateThumbprint {
         .DESCRIPTION
         The Get-VCFCertificateThumbprint cmdlet retrieves certificate thumbprints for ESXi hosts or vCenter Server
         instances.
-        
+
         .EXAMPLE
         Get-VCFCertificateThumbprint -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
         This example retrieves the ESXi host's certificate thumbprint for an ESXi host with The fully qualified domain name of sfo01-m01-esx01.sfo.rainpole.io.
@@ -612,8 +702,27 @@ Function Set-EsxiCertificateMode {
         $certModeSetting = Get-AdvancedSetting "vpxd.certmgmt.mode" -Entity $vCenterServer.connection
         if ($certModeSetting.value -ne $mode) {
             Set-AdvancedSetting $certModeSetting -Value $mode -confirm:$false
-            Write-Output "Certificate Management Mode is set to $mode on the vCenter Server instance $($vCenterServer.details.fqdn)."
-            Write-Output "Please restart the vCenter Server services for the change to take effect. See the vCenter Server Configuration documentation for information about restarting services."
+            # Restart "VMware Certificate Authority" and "VMware Certificate Management" services.
+            Write-Output 'Restarting vCenter Server services ("VMware Certificate Authority" and "VMware Certificate Management") for the change to take effect.'
+            $services = @("certificateauthority", "certificatemanagement")
+            $failedServices = @()
+
+            foreach ($service in $services) {
+                $serviceStatus = Restart-VcenterService -serviceName $service
+                if ($serviceStatus.status -ne "GREEN") {
+                    $failedServices += $serviceStatus
+                }
+            }
+
+            if ($failedServices.Count -gt 0) {
+                $failedServicesErrorString = ""
+                foreach($failedItem in $failedServices) {
+                    $failedServicesErrorString += "$($failedItem.name): $($failedItem.result). `n"
+                }
+                Write-Error "The following services failed to restart successfully:`n$failedServicesErrorString`nSet-EsxiCertificateMode operation Failed." -ErrorAction Stop
+            } else {
+                Write-Output 'vCenter Server services ("VMware Certificate Authority" and "VMware Certificate Management") restarted successfully.'
+            }
         } else {
             Write-Warning "Certificate Management Mode already set to $mode on the vCenter Server instance $($vCenterServer.details.fqdn): SKIPPED"
         }
@@ -845,8 +954,8 @@ Function Set-EsxiConnectionState {
 
         .EXAMPLE
         Set-EsxiConnectionState -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -state Maintenance -vsanDataMigrationMode EnsureAccessibility -migratePowerOffVMs
-        This example sets an ESXi host's connection state to Maintenance and will migrate any Power Off or Suspend VMs to other ESXi hosts and 
-        will set vSAN data migration mode to Ensure Accessibility.   
+        This example sets an ESXi host's connection state to Maintenance and will migrate any Power Off or Suspend VMs to other ESXi hosts and
+        will set vSAN data migration mode to Ensure Accessibility.
 
         .PARAMETER esxiFqdn
         The fully qualified domain name of the ESXi host.
@@ -856,7 +965,7 @@ Function Set-EsxiConnectionState {
 
         .PARAMETER migratePowerOffVMs
         This optional switch argument will determined if power off and suspended VMs will be migrated off the ESXi host when setting the ESXi host to Maintenance.
-        
+
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full", "EnsureAccessibility", or "NoDataMigration".
 
@@ -1234,7 +1343,7 @@ Function Install-EsxiCertificate {
 
         .PARAMETER migratePowerOffVMs
         This optional switch argument will determined if power off and suspended VMs will be migrated off the ESXi host when setting the ESXi host to Maintenance.
-        
+
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
 
@@ -1281,7 +1390,7 @@ Function Install-EsxiCertificate {
         # Certificate replacement starts here.
         $replacedHosts = New-Object Collections.Generic.List[String]
         $skippedHosts = New-Object Collections.Generic.List[String]
-        
+
         foreach ($esxiHost in $esxiHosts) {
             $esxiFqdn = $esxiHost.fqdn
             $crtPath = Join-Path -Path $certificateDirectory -childPath $esxiFqdn$certificateFileExt
@@ -1424,10 +1533,10 @@ Function Set-VCFCertificateAuthority {
         [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityFqdn,
         [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityUser,
         [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityPass,
-        [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityTemplate, 
+        [Parameter (Mandatory = $true, ParameterSetName = "microsoft")] [ValidateNotNullOrEmpty()] [String] $certAuthorityTemplate,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $commonName,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organization,
-        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organizationUnit,            
+        [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $locality,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $state,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
@@ -1452,7 +1561,7 @@ Function Set-VCFCertificateAuthority {
                         Write-Output "Starting configuration of the OpenSSL Certificate Authority in SDDC Manager..."
                         Write-Output "Checking status of the OpenSSL Certificate Authority configuration..."
                         if ((Get-VCFCertificateAuthority).id -eq "OpenSSL") {
-                            $vcfCommonName = (Get-VCFCertificateAuthority -caType OpenSSL).commonName 
+                            $vcfCommonName = (Get-VCFCertificateAuthority -caType OpenSSL).commonName
                             Write-Output "OpenSSL Certificate Authority is currently configured on SDDC Manager using $($vcfCommonName)."
                         }
                         else {
@@ -1495,7 +1604,7 @@ Function Set-VCFCertificateAuthority {
                 } else {
                     Write-Error "Unable to connect to Microsoft Certificate Authority ($certAuthorityFqdn)."
                 }
-            } 
+            }
         } else {
             Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
         }
@@ -1514,7 +1623,7 @@ Function gatherSddcInventory {
     $sddcMgrVersion = $sddcMgr.version.split(".")[0]
 
     $resourcesObject = @()
-    
+
     # SDDC Manager
     if ($domainType -eq "Management") {
         $resourcesObject += [pscustomobject]@{
@@ -1604,8 +1713,8 @@ Function Request-VCFCsr {
         - Validates that network connectivity and authentication is possible to SDDC Manager.
         - Validates that the workload domain exists in the SDDC Manager inventory.
         - Validates that network connectivity and authentication is possible to vCenter Server.
-        When used with -esxi switch, this cmdlet 
-        - Gathers the ESXi hosts from the cluster  
+        When used with -esxi switch, this cmdlet
+        - Gathers the ESXi hosts from the cluster
         - Requests the ESXi host CSR and saves it in the output directory as <esxi-host-fqdn>.csr. e.g. sfo01-m01-esx01.sfo.rainpole.io.csr
         - Defines possible country codes. Reference: https://www.digicert.com/kb/ssl-certificate-country-codes.htm
 
@@ -1959,7 +2068,7 @@ Function Request-SddcCsr {
                 $response = Get-VCFTask $myTask.id
             } While ($response.status -eq "IN_PROGRESS")
             if ($response.status -eq "FAILED") {
-                Write-Output "Workflow completed with status: $($response.status)." 
+                Write-Output "Workflow completed with status: $($response.status)."
             } elseif ($response.status -eq "SUCCESSFUL") {
                 Write-Output "Workflow completed with status: $($response.status)."
             } else {
@@ -2050,7 +2159,7 @@ Function Request-VCFSignedCertificate {
                 caType = $certAuthority
                 resources = $resourcesObject
             }
-         
+
             $requestCertificateSpec | ConvertTo-Json -Depth 10 | Out-File $tempPath"$($workloadDomain)-requestCertificateSpec.json"
 
             Write-Output "Requesting certificates for components associated with workload domain $($workloadDomain)."
@@ -2061,7 +2170,7 @@ Function Request-VCFSignedCertificate {
                 $response = Get-VCFTask $myTask.id
             } While ($response.status -eq "IN_PROGRESS")
             if ($response.status -eq "FAILED") {
-                Write-Error "Workflow completed with status: $($response.status)." 
+                Write-Error "Workflow completed with status: $($response.status)."
             } elseif ($response.status -eq "SUCCESSFUL") {
                 Write-Output "Workflow completed with status: $($response.status)."
             } else {
@@ -2102,12 +2211,12 @@ Function Install-VCFCertificate {
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  The ESXi host 
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  The ESXi host
         will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The ESXi host 
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The ESXi host
         will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .PARAMETER server
@@ -2160,7 +2269,7 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain, 
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
@@ -2203,7 +2312,7 @@ Function Install-VCFCertificate {
         } else {
             if ($migratePowerOffVMs.IsPresent) {
                 Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
-            } else {   
+            } else {
                 Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
             }
         }
@@ -2303,7 +2412,7 @@ Function Install-SddcCertificate {
                     }
                 } While ($response.status -in "In Progress","IN_PROGRESS")
                 if ($response.status -eq "FAILED") {
-                    Write-Error "Workflow completed with status: $($response.status)." 
+                    Write-Error "Workflow completed with status: $($response.status)."
                 } elseif ($response.status -eq "SUCCESSFUL") {
                     Write-Output "Workflow completed with status: $($response.status)."
                 } else {

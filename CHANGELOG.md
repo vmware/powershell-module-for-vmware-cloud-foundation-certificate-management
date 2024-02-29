@@ -1,5 +1,13 @@
 # Release History
 
+## v1.5.2
+
+> Release Date: Unreleased
+
+Enhancement:
+
+- Added a restart for specific vCenter Server services to `Set-EsxiCertificateMode` function. [GH-110](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/110)
+
 ## v1.5.1
 
 > Release Date: 2024-01-30
