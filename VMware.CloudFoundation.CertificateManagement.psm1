@@ -2021,8 +2021,7 @@ Function Request-SddcCsr {
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
             # Create a temporary directory under current directory
-            $createPathCounter = 0
-			for ($createPathCounter -lt 4) {
+			for ($createPathCounter = 0;$createPathCounter -lt 4;$createPathCounter++) {
 				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
 				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
 				if (!(Test-Path -Path $tempPath)) {
@@ -2032,7 +2031,6 @@ Function Request-SddcCsr {
 						Write-Error "Unable to write to ($tempPath): PRE_VALIDATION_FAILED.."
                         Exit
 					}
-					$createPathCounter++
 				}
 			}
 			New-Item -Path $tempPath -ItemType Directory | Out-NULL
@@ -2061,7 +2059,7 @@ Function Request-SddcCsr {
             $requestCsrSpecJson = $csrGenerationSpecJson + $resouresJson
             $requestCsrSpecJson | Out-File $tempPath"$($workloadDomain)-requestCsrSpec.json"
             Write-Output "Requesting certificate signing requests for components associated with workload domain ($($workloadDomain))..."
-            $myTask = Request-VCFSignedCertificateCSR -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCsrSpec.json"
+            $myTask = Request-VCFCertificateCSR -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-requestCsrSpec.json"
             Do {
                 Write-Output "Checking status for the generation of certificate signing requests for components associated with workload domain ($($workloadDomain))..."
                 Start-Sleep 6
@@ -2137,8 +2135,7 @@ Function Request-VCFSignedCertificate {
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
             # Create a temporary directory under current directory
-            $createPathCounter = 0
-			for ($createPathCounter -lt 4) {
+			for ($createPathCounter = 0;$createPathCounter -lt 4;$createPathCounter++) {
 				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
 				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
 				if (!(Test-Path -Path $tempPath)) {
@@ -2148,7 +2145,6 @@ Function Request-VCFSignedCertificate {
 						Write-Error "Unable to write to $tempPath."
                         Exit
 					}
-					$createPathCounter++
 				}
 			}
 			New-Item -Path $tempPath -ItemType Directory | Out-NULL
@@ -2272,8 +2268,8 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
-        [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
-        [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $migratePowerOffVMs,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi") ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
         [Parameter (Mandatory = $false)] [Switch] $NoConfirmation,
@@ -2282,19 +2278,17 @@ Function Install-VCFCertificate {
 
     $pass = Get-Password -User $user -Password $pass
 
-    if (($NoConfirmation.IsPresent) -and ($vsanDataMigrationMode -eq "EnsureAccessibility")) {
+    if (!($NoConfirmation.IsPresent) -and ($vsanDataMigrationMode -eq "EnsureAccessibility")) {
         $warningMessage = "Please ensure sufficient backups of the cluster exists.  Please ensure the ESXi`n"
         $warningMessage += " hosts activities are minimumized during certificate replacement process. `n"
         $warningMessage += "Please enter yes to confirm: "
         $proceed = Read-Host $warningMessage
         if (($proceed -match "no") -or ($proceed -match "yes")) {
             if ($proceed -match "no") {
-                Write-Output "Stopping script execution. (confirmation is $proceed)"
-                Exit
+                return "Stopping script execution. (confirmation is $proceed)."
             }
         } else {
-            Write-Output "None of the options is selected. Default is 'No', hence stopping script execution."
-            Exit
+            return "None of the options is selected. Default is 'No', hence stopping script execution."
         }
     }
 
@@ -2304,24 +2298,28 @@ Function Install-VCFCertificate {
         } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
         } elseif ($PSBoundParameters.ContainsKey("cluster")) {
-            if ($migratePowerOffVMs.IsPresent) {
-                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+            if ($vsanDataMigrationMode.IsPresent) {
+                if ($migratePowerOffVMs.IsPresent) {
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+                } else {
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                }
             } else {
-                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
             }
         } else {
-            if ($migratePowerOffVMs.IsPresent) {
-                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+            if ($vsanDataMigrationMode.IsPresent) {
+                if ($migratePowerOffVMs.IsPresent) {
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+                } else {
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                }
             } else {
-                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
             }
         }
     } else {
-        if ($migratePowerOffVMs.IsPresent) {
-            Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain -migratePowerOffVMs
-        } else {
-            Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
-        }
+        Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
     }
 }
 
@@ -2363,8 +2361,7 @@ Function Install-SddcCertificate {
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
             # Create a temporary directory under current directory
-            $createPathCounter = 0
-			for ($createPathCounter -lt 4) {
+			for ($createPathCounter = 0;$createPathCounter -lt 4;$createPathCounter++) {
 				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
 				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
 				if (!(Test-Path -Path $tempPath)) {
@@ -2374,7 +2371,6 @@ Function Install-SddcCertificate {
 						Write-Error "Unable to write to $tempPath."
                         Exit
 					}
-					$createPathCounter++
 				}
 			}
 			New-Item -Path $tempPath -ItemType Directory | Out-NULL
