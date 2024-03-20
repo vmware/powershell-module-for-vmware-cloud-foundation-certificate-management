@@ -50,19 +50,19 @@ Operating System                                                       | Version
 
 The following table lists the supported editions and versions of PowerShell for this module.
 
-Edition                                                                           | Version
-----------------------------------------------------------------------------------|----------
-:material-powershell: &nbsp; [PowerShell Core][microsoft-powershell]              | >= 7.2.0
+Edition                                                              | Version
+---------------------------------------------------------------------|----------
+:material-powershell: &nbsp; [PowerShell Core][microsoft-powershell] | >= 7.2.0
 
 ### Module Dependencies
 
 The following table lists the required PowerShell module dependencies for this module.
 
-PowerShell Module                                    | Version   | Publisher    | Reference
------------------------------------------------------|-----------|--------------|---------------------------------------------------------------------------
-[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.1.0 | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
-[PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.8.0  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
+PowerShell Module                                    | Version   | Publisher | Reference
+-----------------------------------------------------|-----------|-----------|---------------------------------------------------------------------------
+[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.2.1 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
+[PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.9.0  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell

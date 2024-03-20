@@ -1,5 +1,14 @@
 # Release History
 
+## v1.5.3
+
+> Release Date: Unreleased
+
+Chore:
+
+- Updated `VMware.PowerCLI` module dependency from v13.1.0 to v13.2.1. [GH-113](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/113)
+- Updated `PowerValidatedSolutions` module dependency from v2.8.0 to v2.9.0. [GH-113](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/113)
+
 ## v1.5.2
 
 > Release Date: 2024-02-29
