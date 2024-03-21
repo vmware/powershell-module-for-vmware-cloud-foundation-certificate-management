@@ -4,10 +4,17 @@
 
 > Release Date: Unreleased
 
+Bugfix:
+
+- Fixed issue with `vsanDataMigrationMode` not set as optional parameter. [GH-112](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/112)
+- Fixed issue with for loop missing semicolons. [GH-112](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/112)
+- Fixed typo issue with `Request-VCFCertificateCSR` cmdlet name within `Request-SddcCsr` cmdlet. [GH-112](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/112)
+
 Chore:
 
 - Updated `VMware.PowerCLI` module dependency from v13.1.0 to v13.2.1. [GH-113](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/113)
 - Updated `PowerValidatedSolutions` module dependency from v2.8.0 to v2.9.0. [GH-113](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/113)
+- Validated for VMware Cloud Foundation 5.1.1. [GH-112](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/112)
 
 ## v1.5.2
 
@@ -39,7 +46,7 @@ Chore:
 
 > Release Date: 2023-12-05
 
-Bug Fix:
+Bugfix:
 
 - Fixes issue with the file path on Linux that is not present on Windows. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/97)
 
@@ -51,7 +58,7 @@ Enhancement:
 
 > Release Date: 2023-11-27
 
-Bug Fix:
+Bugfix:
 
 - Updated `Test-EsxiCertMgmtChecks` to pass the `server` parameter value for the Certificate Authority and vSAN status checks. [GH-90](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/90)
 

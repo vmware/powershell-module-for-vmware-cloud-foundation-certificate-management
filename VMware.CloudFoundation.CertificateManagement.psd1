@@ -11,25 +11,25 @@
     RootModule        = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.5.3.1000'
+    ModuleVersion     = '1.5.3.1001'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
-    GUID = 'ac903c83-c745-44f7-b6bd-1dff133fec92'
+    GUID              = 'ac903c83-c745-44f7-b6bd-1dff133fec92'
 
     # Author of this module
-    Author = 'Broadcom'
+    Author            = 'Broadcom'
 
     # Company or vendor of this module
-    CompanyName = 'Broadcom'
+    CompanyName       = 'Broadcom'
 
     # Copyright statement for this module
-    Copyright = 'Copyright 2023-2024 Broadcom. All Rights Reserved.'
+    Copyright         = 'Copyright 2023-2024 Broadcom. All Rights Reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'PowerShell Module for VMware Cloud Foundation Certificate Management'
+    Description       = 'PowerShell Module for VMware Cloud Foundation Certificate Management'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.2.0'
@@ -50,7 +50,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules = @(
+    RequiredModules   = @(
         @{
             ModuleName    = 'PowerVCF';
             ModuleVersion = '2.4.1'
@@ -80,13 +80,13 @@
     FunctionsToExport = 'Install-VCFCertificate', 'Get-VCFCertificateThumbprint', 'Confirm-EsxiCertificateInstalled', 'Confirm-CAInvCenterServer', 'Request-VCFCsr', 'Get-EsxiCertificateMode', 'Set-EsxiCertificateMode', 'Get-vSANHealthSummary', 'Get-EsxiLockdownMode', 'Set-EsxiLockdownMode', 'Restart-EsxiHost', 'Test-EsxiCertMgmtChecks', 'Set-VCFCertificateAuthority', 'Request-VCFSignedCertificate', 'Get-EsxiHostVsanMaintenanceModePrecheck'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport = @()
+    CmdletsToExport   = @()
 
     # Variables to export from this module
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = @()
+    AliasesToExport   = @()
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -98,7 +98,7 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData = @{
+    PrivateData       = @{
 
         PSData = @{
 
@@ -136,4 +136,4 @@
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
 
-    }
+}
