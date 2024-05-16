@@ -1,0 +1,45 @@
+{
+	"SDDC Manager": "sfo-vcf01.sfo.rainpole.io",
+	"SDDC Manager VM Name": "sfo-vcf01",
+	"User": "administrator@vsphere.local",
+	"Password": "VMw@re123!",
+    "certAuthorityFqdn": "rpl-dc01.rainpole.io",
+    "certAuthorityUser": "svc-vcf-ca",
+    "certAuthorityPass": "VMw@re123!",
+    "certAuthorityTemplate": "VMware",
+	"commonName": "sfo-vcf01.sfo.rainpole.io",
+	"organization": "Rainpole",
+	"organizationUnit": "Platform Engineering",
+	"locality": "San Francisco",
+	"state": "CA",
+	"country": "US",
+	"outputDirectory": "F:\\csr",
+	"email": "admin@rainpole.io",
+	"keysize": "3072",
+	"Domains": [
+		"sfo-m01",
+		"sfo-w01"
+	],
+	"sfo-m01": {
+		"ESXi Hosts": [
+			"sfo01-m01-esx01.sfo.rainpole.io",
+			"sfo01-m01-esx02.sfo.rainpole.io",
+			"sfo01-m01-esx03.sfo.rainpole.io",
+			"sfo01-m01-esx04.sfo.rainpole.io"
+		],
+		"Clusters": [
+			"sfo-m01-cl01"
+		]
+	},
+	"sfo-w01": {
+		"ESXi Hosts": [
+			"sfo01-w01-esx01.sfo.rainpole.io",
+			"sfo01-w01-esx02.sfo.rainpole.io",
+			"sfo01-w01-esx03.sfo.rainpole.io",
+			"sfo01-w01-esx04.sfo.rainpole.io"
+		],
+		"Clusters": [
+			"sfo-w01-cl01"
+		]
+	}
+}

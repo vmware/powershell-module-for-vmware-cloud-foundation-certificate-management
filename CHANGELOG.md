@@ -1,5 +1,13 @@
 # Release History
 
+## v1.5.4
+
+> Unreleased
+
+Enhancement:
+
+- Added Pester tests for certificate management.
+
 ## v1.5.3
 
 > Release Date: 2024-03-26
