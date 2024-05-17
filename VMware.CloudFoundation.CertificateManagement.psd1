@@ -11,7 +11,7 @@
     RootModule        = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.5.3.1001'
+    ModuleVersion     = '1.5.4.1001'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
