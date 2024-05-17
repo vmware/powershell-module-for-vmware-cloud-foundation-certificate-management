@@ -1,5 +1,13 @@
 # Release History
 
+## v1.5.4
+
+> Unreleased
+
+Enhancement:
+
+- Added Pester tests for certificate management. [GH-119](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/119)
+
 ## v1.5.3
 
 > Release Date: 2024-03-26
