@@ -7,12 +7,12 @@ Run the checks required for ESXi Certificate Management for a given cluster or a
 ## Syntax
 
 ```powershell
-Test-VCFCertMgmtChecks [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-signedCertificate] <String> [[-esxiFqdn] <String>] [[-issuer] <String>] [<CommonParameters>]
+Test-EsxiCertMgmtChecks [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-signedCertificate] <String> [[-esxiFqdn] <String>] [[-issuer] <String>] [<CommonParameters>]
 ```
 
 ## Description
 
-The `Test-VCFCertMgmtChecks` runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The `Test-EsxiCertMgmtChecks` runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
 
 The following checks are run:
 
@@ -26,7 +26,7 @@ The following checks are run:
 ### Example 1
 
 ```powershell
-Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
+Test-EsxiCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
 ```
 
 This example runs the checks required for ESXi Certificate Management for the cluster belonging to the domain sfo-m01.
@@ -34,7 +34,7 @@ This example runs the checks required for ESXi Certificate Management for the cl
 ### Example 2
 
 ```powershell
-Test-VCFCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
+Test-EsxiCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
 ```
 
 This example runs the checks required for ESXi Certificate Management for an ESXi host belonging to the domain sfo-m01.
