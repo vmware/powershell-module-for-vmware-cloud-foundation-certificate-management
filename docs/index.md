@@ -24,13 +24,13 @@
 
 The following table lists the supported platforms for this module.
 
-Platform                                                     | Support
--------------------------------------------------------------|------------------------------------
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.1 | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }
+| Platform                                                     | Support                             |
+| ------------------------------------------------------------ | ----------------------------------- |
+| :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.1 | :fontawesome-solid-check:{ .green } |
+| :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-check:{ .green } |
+| :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green } |
+| :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-x:{ .red }       |
+| :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }       |
 
 !!! note
 
@@ -40,29 +40,29 @@ Platform                                                     | Support
 
 The following table lists the supported operating systems for this module.
 
-Operating System                                                       | Version
------------------------------------------------------------------------|-----------
-:fontawesome-brands-windows: &nbsp; Microsoft Windows Server           | 2019, 2022
-:fontawesome-brands-windows: &nbsp; Microsoft Windows                  | 10, 11
-:fontawesome-brands-linux: &nbsp; [VMware Photon OS][github-photon-os] | 3.0, 4.0
+| Operating System                                                       | Version    |
+| ---------------------------------------------------------------------- | ---------- |
+| :fontawesome-brands-windows: &nbsp; Microsoft Windows Server           | 2019, 2022 |
+| :fontawesome-brands-windows: &nbsp; Microsoft Windows                  | 10, 11     |
+| :fontawesome-brands-linux: &nbsp; [VMware Photon OS][github-photon-os] | 3.0, 4.0   |
 
 ### PowerShell
 
 The following table lists the supported editions and versions of PowerShell for this module.
 
-Edition                                                              | Version
----------------------------------------------------------------------|----------
-:material-powershell: &nbsp; [PowerShell Core][microsoft-powershell] | >= 7.2.0
+| Edition                                                              | Version  |
+| -------------------------------------------------------------------- | -------- |
+| :material-powershell: &nbsp; [PowerShell Core][microsoft-powershell] | >= 7.2.0 |
 
 ### Module Dependencies
 
 The following table lists the required PowerShell module dependencies for this module.
 
-PowerShell Module                                    | Version   | Publisher | Reference
------------------------------------------------------|-----------|-----------|---------------------------------------------------------------------------
-[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.2.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
-[PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.11.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
+| PowerShell Module                               | Version   | Publisher | Reference                                                                  |
+| ----------------------------------------------- | --------- | --------- | -------------------------------------------------------------------------- |
+| [VMware.PowerCLI][psgallery-module-powercli]    | >= 13.3.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli] |
+| [PowerVCF][psgallery-module-powervcf]           | >= 2.4.1  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]      |
+| [PowerValidatedSolutions][psgallery-module-pvs] | >= 2.11.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]           |
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
@@ -73,4 +73,4 @@ PowerShell Module                                    | Version   | Publisher | R
 [developer-module-powercli]: https://developer.vmware.com/tool/vmware-powercli
 [docs-module-powervcf]: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation
 [docs-module-pvs]: https://vmware.github.io/power-validated-solutions-for-cloud-foundation
-[github-photon-os]:  https://github.com/vmware/photon
+[github-photon-os]: https://github.com/vmware/photon
