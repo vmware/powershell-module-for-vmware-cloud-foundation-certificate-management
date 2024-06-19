@@ -289,6 +289,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -uploadPrivateKey
+
+Option to upload a custom private key when performing the ESXi host certificate replacement (only valid for VCF 5.2 and later).
+
+```yaml
+Type: Switch
+Parameter Sets: (ALL)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### Common Parameters
 
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
