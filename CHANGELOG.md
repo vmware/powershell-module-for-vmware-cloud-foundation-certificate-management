@@ -1,5 +1,13 @@
 # Release History
 
+## v1.5.4
+
+> Release Date: Unrelease
+Enhancement:
+
+- Add support for new enhancement for Non-disruptive ESXi certificate replacement in VCF 5.2 to `Install-VCFCertificate` function.
+- Add new feature for uploading private key for Non-disruptive ESXi certificate replacement in VCF 5.2 to `Install-VCFCertificate` function.
+
 ## v1.5.3
 
 > Release Date: 2024-03-26
