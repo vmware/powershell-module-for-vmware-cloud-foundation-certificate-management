@@ -60,7 +60,7 @@ The following table lists the required PowerShell module dependencies for this m
 
 PowerShell Module                                    | Version   | Publisher | Reference
 -----------------------------------------------------|-----------|-----------|---------------------------------------------------------------------------
-[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.3.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
+[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.2.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
 [PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
 [PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.9.0  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 

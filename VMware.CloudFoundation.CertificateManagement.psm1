@@ -1347,6 +1347,8 @@ Function Install-EsxiCertificate {
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
 
+        .PARAMETER uploadPrivateKey
+        Option to upload of a custom Private Key for the ESXi host.
     #>
 
     Param (
@@ -1360,6 +1362,7 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true)] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
@@ -1378,13 +1381,27 @@ Function Install-EsxiCertificate {
             if (!$esxiHosts) { Write-Error "No ESXi host $esxiFqdn found in workload domain $domain." -ErrorAction Stop }
         }
 
-        # Perform ESXi host vSAN data migration pre-check.
-        if ($PsBoundParameters.ContainsKey("cluster")) {
-            Write-Output "Performing Data Migration Pre-check on the cluster $cluster"
-            Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -cluster $cluster -vsanDataMigrationMode $vsanDataMigrationMode
+        $version = Get-VCFManager -version
+        $vcfVersion = $version.Split('.')[0]+"."+$version.Split('.')[1]
+
+        if ($vcfVersion -eq "5.2") {
+            # get session ID
+            $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/SessionManager/SessionManager/Login"
+            $sessionId = (Invoke-WebRequest -Uri "$url" -Body ( @{'userName'="$($vCenterServer.details.ssoAdmin)"; 'password'="$($vCenterServer.details.ssoAdminPass)"} | ConvertTo-Json ) -Method:POST -ContentType:'application/json').Headers.'vmware-api-session-id'
+            if ($sessionId[0].length -eq 40) {
+                $sessionId = $sessionId[0]
+            } else {
+                Write-Error "Unable to retrieve session ID from $($vcenter.details.fqdn)'s API: PRE_VALIDATION_FAILED" -ErrorAction Stop
+            }
         } else {
-            Write-Output "Performing Data Migration Pre-check on the ESXi host $esxiFqdn"
-            Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -vsanDataMigrationMode $vsanDataMigrationMode
+            # Perform ESXi host vSAN data migration pre-check.
+            if ($PsBoundParameters.ContainsKey("cluster")) {
+                Write-Output "Performing Data Migration Pre-check on the cluster $cluster"
+                Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -cluster $cluster -vsanDataMigrationMode $vsanDataMigrationMode
+            } else {
+                Write-Output "Performing Data Migration Pre-check on the ESXi host $esxiFqdn"
+                Get-EsxiHostVsanMaintenanceModePrecheck -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -vsanDataMigrationMode $vsanDataMigrationMode
+            }
         }
 
         # Certificate replacement starts here.
@@ -1401,9 +1418,42 @@ Function Install-EsxiCertificate {
                 continue
             }
 
+            if ($vcfVersion -eq "5.2") {
+                $keyPath = Join-Path -Path $certificateDirectory -childPath ($esxiFqdn + ".key")
+                if (!(Test-Path $keyPath -PathType Leaf) -and ($PSBoundParameters.ContainsKey("uploadPrivateKey"))) {
+                    Write-Error "Private key not found at $keyPath. Skipping certificate replacement for ESXi host $esxiFqdn."
+                    $skippedHosts.Add($esxiFqdn)
+                    continue
+                }
+            }
+
             if (Confirm-EsxiCertificateInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn -signedCertificate $crtPath) {
                 $skippedHosts.Add($esxiFqdn)
                 continue
+            } elseif ($vcfVersion -eq "5.2") {
+                Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
+                $esxCertificatePem = Get-Content $crtPath -Raw
+                $esxiConfig = Get-View -ViewType HostSystem -Filter @{"Name"="$esxiFqdn"}
+                $esxiHostConfig = Get-View -Id $esxiConfig.ConfigManager.CertificateManager
+                $esxiHostConfigMoid = $esxiConfig.ConfigManager.CertificateManager.value
+
+                if ($PSBoundParameters.ContainsKey("uploadPrivateKey")) {
+                    $esxCertificateKey = Get-Content $keyPath -Raw
+                    $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/HostCertificateManager/$esxiHostConfigMoid/ProvisionServerPrivateKey"
+                    # Install ESXi Private Key
+                    $body = @{'key'="$esxCertificateKey"} | ConvertTo-Json
+                    $respond = Invoke-WebRequest -Headers @{'vmware-api-session-id'="$sessionId"} -Uri $url -Body $body -Method:POST -ContentType:'application/json'
+                    if(!($respond.StatusCode -eq 204)) {
+                        Write-Error "Upload private key to ESXi host $esxiFqdn failed. " -ErrorAction Stop
+                    }
+                }
+                # Install ESXi Certificate
+                $esxiHostConfig.InstallServerCertificate($esxCertificatePem)
+
+                # trigger refresh on affected services
+                $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/HostCertificateManager/$esxiHostConfigMoid/NotifyAffectedServices"
+                $respond = Invoke-WebRequest -Headers @{'vmware-api-session-id'="$sessionId"} -Uri $url -Method:POST -ContentType:'application/json'
+                $replacedHosts.Add($esxiFqdn)
             } else {
                 $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
                 if ($esxiCredential) {
@@ -1441,154 +1491,6 @@ Function Install-EsxiCertificate {
                 } else {
                     Write-Error "Unable to get credentials for ESXi host $esxiFqdn from SDDC Manager."
                     $skippedHosts.Add($esxiFqdn)
-                }
-            }
-        }
-        Write-Output "--------------------------------------------------------------------------------"
-		Write-Output "ESXi Host Certificate Replacement Summary:"
-		Write-Output "--------------------------------------------------------------------------------"
-        Write-Output "Succesfully completed certificate replacement for $($replacedHosts.Count) ESXi hosts:"
-        foreach ($replacedHost in $replacedHosts) {
-            Write-Output "$replacedHost"
-        }
-        Write-Warning "Skipped certificate replacement for $($skippedHosts.Count) ESXi hosts:"
-        foreach ($skippedHost in $skippedHosts) {
-            Write-Warning "$skippedHost : SKIPPED"
-        }
-		Write-Output "--------------------------------------------------------------------------------"
-    }
-    Catch {
-        Debug-ExceptionWriter -object $_
-    }
-    Finally {
-        if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
-    }
-}
-
-Function Install-EsxiCertificateV2 {
-    <#
-        .SYNOPSIS
-        Installs a certificate for an ESXi host or for each ESXi host in a cluster for vSphere version 5.2 and later.
-
-        .DESCRIPTION
-        The Install-EsxiCertificateV2 cmdlet will replace the certificate for an ESXi host or for each ESXi host
-        in a cluster. You must provide the directory containing the signed certificate files.
-        Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt.
-        The workflow will put the ESXi host in maintenance mode with full data migration,
-        disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host,
-        and the exit maintenance mode once the ESXi host is online.
-
-        .EXAMPLE
-        Install-EsxiCertificateV2 -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.
-
-        .EXAMPLE
-        Install-EsxiCertificateV2 -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.
-
-        .PARAMETER server
-        The fully qualified domain name of the SDDC Manager instance.
-
-        .PARAMETER user
-        The username to authenticate to the SDDC Manager instance.
-
-        .PARAMETER pass
-        The password to authenticate to the SDDC Manager instance.
-
-        .PARAMETER domain
-        The name of the workload domain in which the ESXi host is located.
-
-        .PARAMETER cluster
-        The name of the cluster in which the ESXi host is located.
-
-        .PARAMETER esxiFqdn
-        The fully qualified domain name of the ESXi host.
-
-        .PARAMETER certificateDirectory
-        The directory containing the signed certificate files.
-
-        .PARAMETER certificateFileExt
-        The file extension of the certificate files. One of ".crt", ".cer", ".pem", ".p7b", or ".p7c".
-
-        .PARAMETER uploadPrivateKey
-        Option to upload of a custom Private Key for the ESXi host.
-
-        .PARAMETER timeout
-        The timeout in seconds for putting the ESXi host in maintenance mode. Default is 18000 seconds (5 hours).
-
-    #>
-
-    Param (
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $server,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $domain,
-        [Parameter (Mandatory = $true, ParameterSetName = "cluster")] [ValidateNotNullOrEmpty()] [String] $cluster,
-        [Parameter (Mandatory = $true, ParameterSetName = "host")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
-        [Parameter (Mandatory = $true) ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
-        [Parameter (Mandatory = $true)] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
-        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
-    )
-
-    Try {
-        $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
-        if ($PsBoundParameters.ContainsKey("cluster")) {
-            $clusterDetails = Get-VCFCluster -Name $cluster
-            if ($clusterDetails) {
-                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
-                if (!$esxiHosts) { Write-Warning "No ESXi hosts found in cluster $cluster." }
-            } else {
-                Write-Error "Unable to locate cluster $cluster in $($vCenterServer.details.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
-            }
-        } else {
-            $esxiHosts = Get-VCFHost -fqdn $esxiFqdn
-            if (!$esxiHosts) { Write-Error "No ESXi host $esxiFqdn found in workload domain $domain." -ErrorAction Stop }
-        }
-
-        # Certificate replacement starts here.
-        $replacedHosts = New-Object Collections.Generic.List[String]
-        $skippedHosts = New-Object Collections.Generic.List[String]
-
-        foreach ($esxiHost in $esxiHosts) {
-            $esxiFqdn = $esxiHost.fqdn
-            $crtPath = Join-Path -Path $certificateDirectory -childPath $esxiFqdn$certificateFileExt
-            $keyPath = Join-Path -Path $certificateDirectory -childPath ($esxiFqdn + ".key")
-            if (!(Test-Path $crtPath -PathType Leaf )) {
-                Write-Error "Certificate not found at $crtPath. Skipping certificate replacement for ESXi host $esxiFqdn."
-                $skippedHosts.Add($esxiFqdn)
-                continue
-            }
-
-            if (!(Test-Path $keyPath -PathType Leaf) -and ($PSBoundParameters.ContainsKey("uploadPrivateKey"))) {
-                Write-Error "Private key not found at $keyPath. Skipping certificate replacement for ESXi host $esxiFqdn."
-                $skippedHosts.Add($esxiFqdn)
-                continue
-            }
-
-            if (Confirm-EsxiCertificateInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn -signedCertificate $crtPath) {
-                $skippedHosts.Add($esxiFqdn)
-                continue
-            } else {
-                Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
-                if ($PSBoundParameters.ContainsKey("uploadPrivateKey")) {
-                    $esxCertificatePem = Get-Content $crtPath -Raw
-                    $esxCertificateKey = Get-Content $keyPath -Raw
-                    $esxiConfig = Get-View -ViewType HostSystem -Filter @{"Name"="$esxiFqdn"}
-                    $esxiHostConfig = Get-View -Id $esxiConfig.ConfigManager.CertificateManager
-                    $esxiHostConfig.ProvisionServerPrivateKey($esxCertificateKey)
-                    $esxiHostConfig.InstallServerCertificate($esxCertificatePem)
-                    $notifyServices = New-Object String[] (0)
-                    $esxiHostConfig.NotifyAffectedServices($notifyServices)
-                    $replacedHosts.Add($esxiFqdn)
-                } else {
-                    $esxCertificatePem = Get-Content $crtPath -Raw
-                    $esxiConfig = Get-View -ViewType HostSystem -Filter @{"Name"="$esxiFqdn"}
-                    $esxiHostConfig = Get-View -Id $esxiConfig.ConfigManager.CertificateManager
-                    $esxiHostConfig.InstallServerCertificate($esxCertificatePem)
-                    $notifyServices = New-Object String[] (0)
-                    $esxiHostConfig.NotifyAffectedServices($notifyServices)
-                    $replacedHosts.Add($esxiFqdn)
                 }
             }
         }
@@ -2355,13 +2257,28 @@ Function Install-VCFCertificate {
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  The ESXi host
-        will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+        version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The ESXi host
-        will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to EnsureAccessibility.
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+        version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to EnsureAccessibility.
+
+        .EXAMPLE
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+        version is 5.2 or later, the vsanDataMigrationMode option no longer applied.  
+
+        .EXAMPLE
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
+        This example will install private keys and certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The uploadprivatekey 
+        parameter is only validate for VMware Cloud Foundation version is 5.2 or later.
+
+        .EXAMPLE
+        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+        version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2443,15 +2360,15 @@ Function Install-VCFCertificate {
                 Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
             } elseif ($PSBoundParameters.ContainsKey("cluster")) {
                 if ($PSBoundParameters.ContainsKey("uploadPrivateKey")) {
-                    Install-EsxiCertificateV2 -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -uploadPrivateKey
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -uploadPrivateKey
                 } else {
-                    Install-EsxiCertificateV2 -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
                 }
             } else {
                 if ($PSBoundParameters.ContainsKey("uploadPrivateKey")) {
-                    Install-EsxiCertificateV2 -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -uploadPrivateKey
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -uploadPrivateKey
                 } else {
-                    Install-EsxiCertificateV2 -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
                 }
             }
 
