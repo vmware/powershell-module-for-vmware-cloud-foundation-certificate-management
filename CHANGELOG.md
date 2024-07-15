@@ -2,11 +2,13 @@
 
 ## v1.5.4
 
-> Release Date: Unrelease
+> Release Date: Unreleased
+
 Enhancement:
 
-- Add support for new enhancement for Non-disruptive ESXi certificate replacement in VCF 5.2 to `Install-VCFCertificate` function.
-- Add new feature for uploading private key for Non-disruptive ESXi certificate replacement in VCF 5.2 to `Install-VCFCertificate` function.
+- Added Pester tests for certificate management. [GH-119](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/119)
+- Added support for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-121](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/121)
+- Added option to for upload the private key for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-121](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/121)
 
 ## v1.5.3
 
