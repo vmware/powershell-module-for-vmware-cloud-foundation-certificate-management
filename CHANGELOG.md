@@ -2,11 +2,15 @@
 
 ## v1.5.4
 
-> Unreleased
+> Release Date: Unreleased
 
 Enhancement:
 
 - Added Pester tests for certificate management. [GH-119](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/119)
+
+Chore:
+
+- Updated `PowerValidatedSolutions` from v2.9.0 to v2.11.0. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
 
 ## v1.5.3
 
