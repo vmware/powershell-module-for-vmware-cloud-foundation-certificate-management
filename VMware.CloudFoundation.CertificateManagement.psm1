@@ -1384,7 +1384,7 @@ Function Install-EsxiCertificate {
         $version = Get-VCFManager -version
         $vcfVersion = $version.Split('.')[0]+"."+$version.Split('.')[1]
 
-        if ($vcfVersion -eq "5.2") {
+        if ($vcfVersion -ge "5.2") {
             # get session ID
             $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/SessionManager/SessionManager/Login"
             $sessionId = (Invoke-WebRequest -Uri "$url" -Body ( @{'userName'="$($vCenterServer.details.ssoAdmin)"; 'password'="$($vCenterServer.details.ssoAdminPass)"} | ConvertTo-Json ) -Method:POST -ContentType:'application/json').Headers.'vmware-api-session-id'
@@ -1418,7 +1418,7 @@ Function Install-EsxiCertificate {
                 continue
             }
 
-            if ($vcfVersion -eq "5.2") {
+            if ($vcfVersion -ge "5.2") {
                 $keyPath = Join-Path -Path $certificateDirectory -childPath ($esxiFqdn + ".key")
                 if (!(Test-Path $keyPath -PathType Leaf) -and ($PSBoundParameters.ContainsKey("uploadPrivateKey"))) {
                     Write-Error "Private key not found at $keyPath. Skipping certificate replacement for ESXi host $esxiFqdn."
@@ -1430,7 +1430,7 @@ Function Install-EsxiCertificate {
             if (Confirm-EsxiCertificateInstalled -server $server -user $user -pass $pass -esxiFqdn $esxiFqdn -signedCertificate $crtPath) {
                 $skippedHosts.Add($esxiFqdn)
                 continue
-            } elseif ($vcfVersion -eq "5.2") {
+            } elseif ($vcfVersion -ge "5.2") {
                 Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
                 $esxCertificatePem = Get-Content $crtPath -Raw
                 $esxiConfig = Get-View -ViewType HostSystem -Filter @{"Name"="$esxiFqdn"}
@@ -2258,12 +2258,12 @@ Function Install-VCFCertificate {
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
+        version is earlier than 5.2, the ESXi host will enter maintenance mode with migrate Powered off VMs option enabled and vSAN data migration mode set to EnsureAccessibility.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to EnsureAccessibility.
+        version is earlier than 5.2, the ESXi host will enter maintenance mode with migrate Powered off VMs option disabled and vSAN data migration mode set to EnsureAccessibility.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
@@ -2278,7 +2278,7 @@ Function Install-VCFCertificate {
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
         This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
+        version is earlier than 5.2, the ESXi host will enter maintenance mode with migrate Powered off VMs option enabled and vSAN data migration mode set to EnsureAccessibility.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2360,7 +2360,7 @@ Function Install-VCFCertificate {
         $version = Get-VCFManager -version
         $vcfVersion = $version.Split('.')[0]+"."+$version.Split('.')[1]
 
-        if ($vcfVersion -eq "5.2") {
+        if ($vcfVersion -ge "5.2") {
             # VCF version = 5.2
             if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
                 Write-Error "Please provide either -cluster or -esxiFqdn paramater."

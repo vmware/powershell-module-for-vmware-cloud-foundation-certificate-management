@@ -55,7 +55,7 @@ Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrat
 This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path. When VMware Cloud Foundation 
 version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to `EnsureAccessibility`.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
@@ -64,16 +64,16 @@ Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrat
 This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
 version is 5.2 or later, the vsanDataMigrationMode option no longer applied.  
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
 ```
 
 This example will install private keys and certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The uploadprivatekey 
-parameter is only validate for VMware Cloud Foundation version is 5.2 or later.
+parameter is only available for VMware Cloud Foundation version is 5.2 or later.
 
-### EXAMPLE 5
+### Example 5
 
 ```powershell
 Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
@@ -312,7 +312,7 @@ Accept wildcard characters: False
 
 ### -uploadPrivateKey
 
-Option to upload a custom private key when performing the ESXi host certificate replacement (only valid for VCF 5.2 and later).
+Option to upload an external private key when performing the ESXi host certificate replacement.  Supported on Vmware Cloud Foundation 5.2 or later
 
 ```yaml
 Type: Switch
