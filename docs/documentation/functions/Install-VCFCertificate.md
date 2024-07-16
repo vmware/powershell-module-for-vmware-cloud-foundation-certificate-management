@@ -52,15 +52,54 @@ This example will connect to SDDC Manager to install the signed certificates for
 Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
-This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path. The ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to `EnsureAccessibility`.
+This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path. When VMware Cloud Foundation 
+version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to `EnsureAccessibility`.
 
-### Example 3
+### EXAMPLE 3
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user <administrator@vsphere.local> -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
-This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path. The ESXi host will enter maintenance mode with Migrate Power off VMs option disabled and vSAN data migration Mode set to `EnsureAccessibility`.
+This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+version is 5.2 or later, the vsanDataMigrationMode option no longer applied.  
+
+### EXAMPLE 4
+
+```powershell
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
+```
+
+This example will install private keys and certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The uploadprivatekey 
+parameter is only validate for VMware Cloud Foundation version is 5.2 or later.
+
+### EXAMPLE 5
+
+```powershell
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
+```
+
+This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+version is 5.2 or later, the vsanDataMigrationMode option no longer applied.  
+
+### Example 4
+
+```powershell
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
+```
+
+This example will install private keys and certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The uploadprivatekey 
+parameter is only available for VMware Cloud Foundation version is 5.2 or later.
+
+### Example 5
+
+```powershell
+Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+```
+
+This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
+version is earlier than 5.2, the ESXi host will enter maintenance mode with Migrate Power off VMs option enabled and vSAN data migration Mode set to EnsureAccessibility.
+
 
 ## Parameters
 
@@ -280,6 +319,22 @@ Option to skip Confirmation warning when performing the ESXi host certificate re
 ```yaml
 Type: Switch
 Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -uploadPrivateKey
+
+Option to upload an external private key when performing the ESXi host certificate replacement.  Supported on Vmware Cloud Foundation 5.2 or later
+
+```yaml
+Type: Switch
+Parameter Sets: (ALL)
 Aliases:
 
 Required: False
