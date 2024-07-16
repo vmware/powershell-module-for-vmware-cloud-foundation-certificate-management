@@ -77,7 +77,7 @@ Function Get-VcenterService {
         Exit
     } else {
         return [ordered]@{
-            name = $serviceName
+            name   = $serviceName
             status = $serviceExists.state
             health = $serviceExists.health
         }
@@ -107,7 +107,7 @@ Function Restart-VcenterService {
         $serviceStatus = Get-VcenterService -Service $serviceName
         if ($serviceStatus.status -eq "STARTED" -and $serviceStatus.health -eq "HEALTHY") {
             return [ordered]@{
-                name = $serviceName
+                name   = $serviceName
                 status = "GREEN"
                 result = "Successfully restarted service."
             }
@@ -116,26 +116,26 @@ Function Restart-VcenterService {
             Sleep-Time -Seconds 20
         } elseif ($serviceStatus.status -eq "STARTED" -and $serviceStatus.health -eq "HEALTHY_WITH_WARNINGS") {
             return [ordered]@{
-                name = $serviceName
+                name   = $serviceName
                 status = "YELLOW"
                 result = "Issues restarting service: the health state is HEALTHY_WITH_WARNINGS."
             }
         } elseif (($serviceStatus.status -eq "STARTED") -and ($serviceStatus.health -eq "DEGRADED")) {
             return [ordered]@{
-                name = $serviceName
+                name   = $serviceName
                 status = "RED"
                 result = "Failed restarting service: the health state is DEGRADED."
             }
         } elseif ($serviceStatus.status -eq "STOPPED") {
             return [ordered]@{
-                name = $serviceName
+                name   = $serviceName
                 status = "RED"
                 result = "Failed restarting service: the service status is STOPPED."
             }
         } elseif ($count -gt 14) {
             # Operation timed out
             return [ordered]@{
-                name = $serviceName
+                name   = $serviceName
                 status = "RED"
                 result = "Failed restarting service: unable to retrieve service status. Operation timed out."
             }
@@ -299,8 +299,7 @@ Function Get-VCFCertificateThumbprint {
                 Write-Error "Unable to retrieve certificates from vCenter Server instance $($vCenterServer.details.fqdn)." -ErrorAction Stop
             }
         }
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
@@ -373,46 +372,46 @@ Function Test-EsxiCertMgmtChecks {
     $statusMessage = @()
 
     Try {
-		Write-Output "############## Running Prechecks for ESXi Certificate Management ###############"
+        Write-Output "############## Running Prechecks for ESXi Certificate Management ###############"
 
-		$status = "FAILED"
+        $status = "FAILED"
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
         $mode = Get-EsxiCertificateMode -server $server -user $user -pass $pass -domain $domain
-        if ($mode -ne "custom"){
+        if ($mode -ne "custom") {
             $msg = "Certificate Management Mode is not set to $mode on the vCenter Server instance $($vCenterServer.details.fqdn)."
             $errorMessage += $msg
         } else {
             $msg = "Certificate Management Mode is set to $mode on the vCenter Server instance $($vCenterServer.details.fqdn)."
             $statusMessage += $statusMessage
-			$status = "PASSED"
+            $status = "PASSED"
         }
 
         Write-Output "Check ESXi Certificate Mode: $status"
 
-		$status = "FAILED"
-        if ($PsBoundParameters.ContainsKey("esxiFqdn")){
+        $status = "FAILED"
+        if ($PsBoundParameters.ContainsKey("esxiFqdn")) {
             $lockdownModes = Get-EsxiLockdownMode -server $server -user $user -pass $pass -domain $domain -cluster $cluster -esxiFqdn $esxiFqdn
         } else {
             $lockdownModes = Get-EsxiLockdownMode -server $server -user $user -pass $pass -domain $domain -cluster $cluster
         }
 
         foreach ($lockdownMode in $lockdownModes) {
-            if ($lockdownMode -like "*lockdownDisabled*"){
+            if ($lockdownMode -like "*lockdownDisabled*") {
                 $statusMessage += $lockdownMode
-				$status = "PASSED"
+                $status = "PASSED"
             } else {
                 $errorMessage += $lockdownMode
             }
         }
 
-		Write-Output "Check ESXi Lockdown Mode: $status"
+        Write-Output "Check ESXi Lockdown Mode: $status"
 
-		$status = "FAILED"
+        $status = "FAILED"
         $caStatus = Confirm-CAInvCenterServer -server $server -user $user -pass $pass -domain $domain -issuer $issuer -signedCertificate $signedCertificate
         if ($caStatus -eq $true) {
             $msg = "Signed certificate thumbprint matches with the vCenter Server certificate authority thumbprint."
             $statusMessage += $msg
-			$status = "PASSED"
+            $status = "PASSED"
         } elseif ($caStatus -eq $false) {
             $msg = "Signed certificate thumbprint does not match any of the vCenter Server certificate authority thumbprints."
             $errorMessage += $msg
@@ -422,45 +421,45 @@ Function Test-EsxiCertMgmtChecks {
             $errorMessage += $msg
         }
 
-		Write-Output "Confirm CA In vCenter Server: $status"
+        Write-Output "Confirm CA In vCenter Server: $status"
 
-		$status = "FAILED"
+        $status = "FAILED"
         $vsanStatus = Get-vSANHealthSummary -server $server -user $user -pass $pass -domain $domain -cluster $cluster -errorAction SilentlyContinue -ErrorVariable errorMsg -WarningAction SilentlyContinue -WarningVariable warnMsg
-        if ($warnMsg){
+        if ($warnMsg) {
             $warningMessage += $warnMsg
             $status = "WARNING"
         }
-        if ($errorMsg){
+        if ($errorMsg) {
             $errorMessage += $errorMsg
         }
-        if ($vsanStatus -eq 0){
+        if ($vsanStatus -eq 0) {
             $status = "PASSED"
             $statusMessage += $vsanStatus
         }
 
         Write-Output "Check vSAN Health Status: $status"
 
-		Write-Output "############## Finished Running Prechecks for ESXi Certificate Management ###############"
+        Write-Output "############## Finished Running Prechecks for ESXi Certificate Management ###############"
 
-        if ($statusMessage){
+        if ($statusMessage) {
             Write-Debug "############## Status of ESXi Certificate Management Prechecks : ###############"
-			foreach ($msg in $statusMessage) {
-				Write-Debug $msg
-			}
+            foreach ($msg in $statusMessage) {
+                Write-Debug $msg
+            }
         }
 
-        if ($warningMessage){
-			Write-Output "############## Warnings Raised While Running Prechecks for ESXi Certificate Management : ###############"
-			foreach ($msg in $warningMessage) {
-				Write-Warning $msg
-			}
-		}
+        if ($warningMessage) {
+            Write-Output "############## Warnings Raised While Running Prechecks for ESXi Certificate Management : ###############"
+            foreach ($msg in $warningMessage) {
+                Write-Warning $msg
+            }
+        }
 
-		if ($errorMessage){
-			Write-Output "############## Issues Found While Running Prechecks for ESXi Certificate Management : ###############"
-			foreach ($msg in $errorMessage) {
-				Write-Error $msg
-			}
+        if ($errorMessage) {
+            Write-Output "############## Issues Found While Running Prechecks for ESXi Certificate Management : ###############"
+            foreach ($msg in $errorMessage) {
+                Write-Error $msg
+            }
         }
     } Catch {
         Debug-ExceptionWriter -object $_
@@ -527,8 +526,7 @@ Function Confirm-EsxiCertificateInstalled {
             Write-Debug "Provided certificate is not installed on ESXi host $esxiFqdn."
             return $false
         }
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -605,8 +603,7 @@ Function Confirm-CAInvCenterServer {
             Write-Error "Signed certificate thumbprint does not match any of the vCenter Server certificate authority thumbprints."
         }
         return $match
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -716,7 +713,7 @@ Function Set-EsxiCertificateMode {
 
             if ($failedServices.Count -gt 0) {
                 $failedServicesErrorString = ""
-                foreach($failedItem in $failedServices) {
+                foreach ($failedItem in $failedServices) {
                     $failedServicesErrorString += "$($failedItem.name): $($failedItem.result). `n"
                 }
                 Write-Error "The following services failed to restart successfully:`n$failedServicesErrorString`nSet-EsxiCertificateMode operation Failed." -ErrorAction Stop
@@ -804,15 +801,13 @@ Function Get-vSANHealthSummary {
             }
         }
 
-        if ($overallStatus -eq 0){
+        if ($overallStatus -eq 0) {
             Write-Output "The vSAN health status for $cluster is GREEN."
         }
         return $overallStatus
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
-    }
-    Finally {
+    } Finally {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
@@ -898,15 +893,15 @@ Function Get-EsxiHostVsanMaintenanceModePrecheck {
     } elseif ($vsanDataMigrationMode -eq "NoDataMigration") {
         $vsanMigrationMode = "noAction"
     } else {
-		Write-Error "No validate vsan Data migration mode selected" -ErrorAction Stop
-	}
+        Write-Error "No validate vsan Data migration mode selected" -ErrorAction Stop
+    }
 
     Try {
         $vCenterServer = Get-vCenterServer -server $server -user $user -pass $pass -domain $domain
         if ($PsBoundParameters.ContainsKey("cluster")) {
             $clusterDetails = Get-VCFCluster -Name $cluster
             if ($clusterDetails) {
-                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
+                $esxiHosts = Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
                 if (!$esxiHosts) { Write-Warning "No ESXi hosts found in cluster $cluster." }
             } else {
                 Write-Error "Unable to locate cluster $cluster in $($vCenterServer.details.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
@@ -919,7 +914,7 @@ Function Get-EsxiHostVsanMaintenanceModePrecheck {
         foreach ($esxiHost in $esxiHosts) {
             $vsanReport = Get-VsanEnterMaintenanceModeReport -VMHost $esxiHost.fqdn -VsanDataMigrationMode $vsanMigrationMode
 
-            if($vsanReport.OverallStatus -ne "green") {
+            if ($vsanReport.OverallStatus -ne "green") {
                 Write-Error "ESXi host($($esxiHost.fqdn)) vSAN Data Migration($vsanDataMigrationMode) Pre-check failed with error $($vsanReport.OverallStatus)" -ErrorAction Stop
             } else {
                 Write-Output "ESXi host($($esxiHost.fqdn)) vSAN Data Migration($vsanDataMigrationMode) Pre-check: $($vsanReport.OverallStatus)"
@@ -1101,8 +1096,7 @@ Function Get-EsxiLockdownMode {
         if ($PsBoundParameters.ContainsKey("esxiFqdn")) {
             return $lockdownMode
         }
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -1176,7 +1170,8 @@ Function Set-EsxiLockdownMode {
                     Write-Output "Changing lockdown mode for ESXi host $esxiHost from $currentLockdownMode to lockdownNormal."
                     $newLockdownMode = (Get-VMHost -name $esxiHost).ExtensionData.Config.LockdownMode
                     if ($lockdownMode -eq $newLockdownMode) {
-                        Write-Error "Unable to change lockdown mode for ESXi host $esxiHost from $currentLockdownMode to lockdownNormal. Lockdown mode is set to $newLockdownMode." -ErrorAction Stop}
+                        Write-Error "Unable to change lockdown mode for ESXi host $esxiHost from $currentLockdownMode to lockdownNormal. Lockdown mode is set to $newLockdownMode." -ErrorAction Stop
+                    }
                 } else {
                     Write-Warning "Lockdown mode for ESXi host $esxiHost is already set to lockdownNormal: SKIPPED"
                 }
@@ -1199,8 +1194,7 @@ Function Set-EsxiLockdownMode {
                 }
             }
         }
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -1349,6 +1343,8 @@ Function Install-EsxiCertificate {
 
         .PARAMETER uploadPrivateKey
         Option to upload of a custom Private Key for the ESXi host.
+        .PARAMETER uploadPrivateKey
+        Option to upload of a custom Private Key for the ESXi host.
     #>
 
     Param (
@@ -1363,6 +1359,7 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true)] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
 
@@ -1371,7 +1368,7 @@ Function Install-EsxiCertificate {
         if ($PsBoundParameters.ContainsKey("cluster")) {
             $clusterDetails = Get-VCFCluster -Name $cluster
             if ($clusterDetails) {
-                $esxiHosts =  Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
+                $esxiHosts = Get-VCFHost | Where-Object { $_.cluster.id -eq $clusterDetails.id } | Sort-Object -Property fqdn
                 if (!$esxiHosts) { Write-Warning "No ESXi hosts found in cluster $cluster." }
             } else {
                 Write-Error "Unable to locate cluster $cluster in $($vCenterServer.details.fqdn) vCenter Server: PRE_VALIDATION_FAILED" -ErrorAction Stop
@@ -1458,7 +1455,7 @@ Function Install-EsxiCertificate {
                 $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
                 if ($esxiCredential) {
                     if ($clusterDetails.primaryDatastoreType -ieq "vsan" -or $esxiHost.datastoreType -ieq "vsan" ) {
-                        if(($vsanDataMigrationMode -eq "EnsureAccessibility") -and !($migratePowerOffVMs.IsPresent)) {
+                        if (($vsanDataMigrationMode -eq "EnsureAccessibility") -and !($migratePowerOffVMs.IsPresent)) {
                             Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -vsanDataMigrationMode $vsanDataMigrationMode -timeout $timeout
                         } elseif (($vsanDataMigrationMode -eq "EnsureAccessibility") -and ($migratePowerOffVMs.IsPresent)) {
                             Set-EsxiConnectionState -esxiFqdn $esxiFqdn -state "Maintenance" -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs -timeout $timeout
@@ -1495,8 +1492,8 @@ Function Install-EsxiCertificate {
             }
         }
         Write-Output "--------------------------------------------------------------------------------"
-		Write-Output "ESXi Host Certificate Replacement Summary:"
-		Write-Output "--------------------------------------------------------------------------------"
+        Write-Output "ESXi Host Certificate Replacement Summary:"
+        Write-Output "--------------------------------------------------------------------------------"
         Write-Output "Succesfully completed certificate replacement for $($replacedHosts.Count) ESXi hosts:"
         foreach ($replacedHost in $replacedHosts) {
             Write-Output "$replacedHost"
@@ -1505,12 +1502,10 @@ Function Install-EsxiCertificate {
         foreach ($skippedHost in $skippedHosts) {
             Write-Warning "$skippedHost : SKIPPED"
         }
-		Write-Output "--------------------------------------------------------------------------------"
-    }
-    Catch {
+        Write-Output "--------------------------------------------------------------------------------"
+    } Catch {
         Debug-ExceptionWriter -object $_
-    }
-    Finally {
+    } Finally {
         if ($vCenterServer) { Disconnect-VIServer -server $vCenterServer.details.fqdn -Confirm:$false -WarningAction SilentlyContinue }
     }
 }
@@ -1590,22 +1585,22 @@ Function Set-VCFCertificateAuthority {
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $locality,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $state,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
-        "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
-        "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
-        "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
-        "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
-        "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
-        "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
-        "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
-        "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
-        "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country
+                "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BZ", "CA", "CC", "CF", "CH", "CI", "CK", `
+                "CL", "CM", "CN", "CO", "CR", "CS", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", `
+                "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", `
+                "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ", "LA", `
+                "LC", "LI", "LK", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", `
+                "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NT", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", `
+                "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SR", "ST", `
+                "SU", "SV", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TM", "TN", "TO", "TP", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", `
+                "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "COM", "EDU", "GOV", "INT", "MIL", "NET", "ORG", "ARPA")] [String] $country
     )
 
     $pass = Get-Password -User $user -Password $pass
 
     if (Test-VCFConnection -server $server) {
         if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-            if ($certAuthority -eq "OpenSSL"){
+            if ($certAuthority -eq "OpenSSL") {
                 if (Test-EndpointConnection -server $commonName -port 443) {
                     Try {
                         Write-Output "Starting configuration of the OpenSSL Certificate Authority in SDDC Manager..."
@@ -1613,8 +1608,7 @@ Function Set-VCFCertificateAuthority {
                         if ((Get-VCFCertificateAuthority).id -eq "OpenSSL") {
                             $vcfCommonName = (Get-VCFCertificateAuthority -caType OpenSSL).commonName
                             Write-Output "OpenSSL Certificate Authority is currently configured on SDDC Manager using $($vcfCommonName)."
-                        }
-                        else {
+                        } else {
                             Write-Output "OpenSSL Certificate Authority is currently not configured on SDDC Manager."
                         }
                         if ($vcfCommonName -ne $commonName) {
@@ -1851,22 +1845,22 @@ Function Request-VCFCsr {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organization,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String] $stateOrProvince,
-        [Parameter (Mandatory = $true,  ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [String] $email
+        [Parameter (Mandatory = $true, ParameterSetName = "sddc")] [ValidateNotNullOrEmpty()] [String] $email
     )
 
     $pass = Get-Password -User $user -Password $pass
 
-    if ($PSBoundParameters.ContainsKey("esxi")){
+    if ($PSBoundParameters.ContainsKey("esxi")) {
         if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Please provide either -cluster or -esxiFqdn paramater."
         } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
             Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
-        } elseif ($PSBoundParameters.ContainsKey("cluster")){
+        } elseif ($PSBoundParameters.ContainsKey("cluster")) {
             Request-EsxiCsr -server $server -user $user -pass $pass -domain $domain -cluster $cluster -country $country -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $stateOrProvince -outputDirectory $outputDirectory
         } else {
             Request-EsxiCsr -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -country $country -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $stateOrProvince -outputDirectory $outputDirectory
         }
-    } else{
+    } else {
         Request-SddcCsr -server $server -user $user -pass $pass -keysize $keySize -workloadDomain $domain -country $country -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $stateOrProvince -email $email
     }
 }
@@ -2071,19 +2065,19 @@ Function Request-SddcCsr {
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
             # Create a temporary directory under current directory
-			for ($createPathCounter = 0;$createPathCounter -lt 4;$createPathCounter++) {
-				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
-				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
-				if (!(Test-Path -Path $tempPath)) {
-					Break
-				} else {
-					if ($createPathCounter -eq 3) {
-						Write-Error "Unable to write to ($tempPath): PRE_VALIDATION_FAILED.."
+            for ($createPathCounter = 0; $createPathCounter -lt 4; $createPathCounter++) {
+                $randomOutput = -join (((48..57) + (65..90) + (97..122)) * 80 | Get-Random -Count 6 | % { [char]$_ })
+                $tempPath = Join-Path -Path $pwd -childPath $randomOutput
+                if (!(Test-Path -Path $tempPath)) {
+                    Break
+                } else {
+                    if ($createPathCounter -eq 3) {
+                        Write-Error "Unable to write to ($tempPath): PRE_VALIDATION_FAILED.."
                         Exit
-					}
-				}
-			}
-			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+                    }
+                }
+            }
+            New-Item -Path $tempPath -ItemType Directory | Out-NULL
             $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
@@ -2125,7 +2119,7 @@ Function Request-SddcCsr {
             Write-Output "Generate certificate signing requests for components associated with workload domain $($workloadDomain)."
 
             # Remove the temporary directory.
-			Remove-Item -Recurse -Force $tempPath | Out-NULL
+            Remove-Item -Recurse -Force $tempPath | Out-NULL
         } else {
             Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
         }
@@ -2185,24 +2179,24 @@ Function Request-VCFSignedCertificate {
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
             # Create a temporary directory under current directory
-			for ($createPathCounter = 0;$createPathCounter -lt 4;$createPathCounter++) {
-				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
-				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
-				if (!(Test-Path -Path $tempPath)) {
-					Break
-				} else {
-					if ($createPathCounter -eq 3) {
-						Write-Error "Unable to write to $tempPath."
+            for ($createPathCounter = 0; $createPathCounter -lt 4; $createPathCounter++) {
+                $randomOutput = -join (((48..57) + (65..90) + (97..122)) * 80 | Get-Random -Count 6 | % { [char]$_ })
+                $tempPath = Join-Path -Path $pwd -childPath $randomOutput
+                if (!(Test-Path -Path $tempPath)) {
+                    Break
+                } else {
+                    if ($createPathCounter -eq 3) {
+                        Write-Error "Unable to write to $tempPath."
                         Exit
-					}
-				}
-			}
-			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+                    }
+                }
+            }
+            New-Item -Path $tempPath -ItemType Directory | Out-NULL
             $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
             $requestCertificateSpec = [pscustomobject]@{
-                caType = $certAuthority
+                caType    = $certAuthority
                 resources = $resourcesObject
             }
 
@@ -2225,7 +2219,7 @@ Function Request-VCFSignedCertificate {
             Write-Output "Request signed certficates for the components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
 
             # Remove the temporary directory.
-            Remove-Item -Recurse -Force $tempPath  | Out-NULL
+            Remove-Item -Recurse -Force $tempPath | Out-NULL
         } else {
             Write-Error "Unable to authenticate to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
         }
@@ -2319,6 +2313,9 @@ Function Install-VCFCertificate {
         .PARAMETER uploadPrivateKey
         Option to upload of a custom Private Key for the ESXi host.
 
+        .PARAMETER uploadPrivateKey
+        Option to upload of a custom Private Key for the ESXi host.
+
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
 
@@ -2337,6 +2334,7 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $cluster,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $migratePowerOffVMs,
+        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi") ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
@@ -2495,36 +2493,36 @@ Function Install-SddcCertificate {
             $resourcesObject = gatherSddcInventory -domainType $domainType.type -workloadDomain $workloadDomain
 
             # Create a temporary directory under current directory
-			for ($createPathCounter = 0;$createPathCounter -lt 4;$createPathCounter++) {
-				$randomOutput = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
-				$tempPath = Join-Path -Path $pwd -childPath $randomOutput
-				if (!(Test-Path -Path $tempPath)) {
-					Break
-				} else {
-					if ($createPathCounter -eq 3) {
-						Write-Error "Unable to write to $tempPath."
+            for ($createPathCounter = 0; $createPathCounter -lt 4; $createPathCounter++) {
+                $randomOutput = -join (((48..57) + (65..90) + (97..122)) * 80 | Get-Random -Count 6 | % { [char]$_ })
+                $tempPath = Join-Path -Path $pwd -childPath $randomOutput
+                if (!(Test-Path -Path $tempPath)) {
+                    Break
+                } else {
+                    if ($createPathCounter -eq 3) {
+                        Write-Error "Unable to write to $tempPath."
                         Exit
-					}
-				}
-			}
-			New-Item -Path $tempPath -ItemType Directory | Out-NULL
+                    }
+                }
+            }
+            New-Item -Path $tempPath -ItemType Directory | Out-NULL
             $tempPath = Join-Path $tempPath ""
 
             # Generate a temporay JSON configuration file
             $operationTypeJson = '{
                 "operationType": "INSTALL",
                 '
-              $resourcesBodyObject += [pscustomobject]@{
-                  resources = $resourcesObject
-              }
-              $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempPath"temp.json"
-              Get-Content $tempPath"temp.json" | Select-Object -Skip 1 | Set-Content $tempPath"temp1.json"
-              $resouresJson = Get-Content $tempPath"temp1.json" -Raw
-              $requestCertificateSpecJson = $operationTypeJson + $resouresJson
-              $requestCertificateSpecJson | Out-File $tempPath"$($workloadDomain)-updateCertificateSpec.json"
+            $resourcesBodyObject += [pscustomobject]@{
+                resources = $resourcesObject
+            }
+            $resourcesBodyObject | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempPath"temp.json"
+            Get-Content $tempPath"temp.json" | Select-Object -Skip 1 | Set-Content $tempPath"temp1.json"
+            $resouresJson = Get-Content $tempPath"temp1.json" -Raw
+            $requestCertificateSpecJson = $operationTypeJson + $resouresJson
+            $requestCertificateSpecJson | Out-File $tempPath"$($workloadDomain)-updateCertificateSpec.json"
 
-              # Install Certificates
-              Try {
+            # Install Certificates
+            Try {
                 Write-Output "Installing signed certificates for components associated with workload domain $($workloadDomain). This process may take some time to complete (60 minutes or greater)..."
                 $myTaskId = Set-VCFCertificate -domainName $($workloadDomain) -json $tempPath"$($workloadDomain)-updateCertificateSpec.json"
                 $pollLoopCounter = 0
@@ -2533,14 +2531,14 @@ Function Install-SddcCertificate {
                         Write-Output "Checking status for the Installation of signed certificates for components associated with workload domain ($($workloadDomain))..."
                     }
                     $response = Get-VCFTask $myTaskId.id
-                    if ($response.status -in "In Progress","IN_PROGRESS") {
+                    if ($response.status -in "In Progress", "IN_PROGRESS") {
                         if (($pollLoopCounter % 10 -eq 0) -AND ($pollLoopCounter -gt 9)) {
                             Write-Output "Installation of signed certificates is still in progress for workload domain ($($workloadDomain))..."
                         }
                         Start-Sleep 60
                         $pollLoopCounter ++
                     }
-                } While ($response.status -in "In Progress","IN_PROGRESS")
+                } While ($response.status -in "In Progress", "IN_PROGRESS")
                 if ($response.status -eq "FAILED") {
                     Write-Error "Workflow completed with status: $($response.status)."
                 } elseif ($response.status -eq "SUCCESSFUL") {
@@ -2551,7 +2549,7 @@ Function Install-SddcCertificate {
                 Write-Output "Installation of signed certificates for components associated with workload domain $($workloadDomain) completed with status: $($response.status)."
 
                 # Remove the temporary directory.
-			    Remove-Item -Recurse -Force $tempPath  | Out-NULL
+                Remove-Item -Recurse -Force $tempPath | Out-NULL
             } Catch {
                 $ErrorMessage = $_.Exception.Message
                 Write-Error "Error was: $ErrorMessage"

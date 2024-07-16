@@ -7,8 +7,12 @@
 Enhancement:
 
 - Added Pester tests for certificate management. [GH-119](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/119)
-- Added support for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-121](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/121)
-- Added option to for upload the private key for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-121](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/121)
+- Add support for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
+- Add support for uploading the private key for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
+
+Chore:
+
+- Updated `PowerValidatedSolutions` from v2.9.0 to v2.11.0. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
 
 ## v1.5.3
 
