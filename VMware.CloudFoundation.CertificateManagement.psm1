@@ -2251,29 +2251,22 @@ Function Install-VCFCertificate {
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is earlier than 5.2, the ESXi host will enter maintenance mode with migrate Powered off VMs option enabled and vSAN data migration mode set to EnsureAccessibility.
-
-        .EXAMPLE
-        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is earlier than 5.2, the ESXi host will enter maintenance mode with migrate Powered off VMs option disabled and vSAN data migration mode set to EnsureAccessibility.
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path. For VMware Cloud Foundation 
+        version earlier than 5.2, the ESXi hosts will enter maintenance mode with vSAN data migration Mode set to `EnsureAccessibility`.  Any powered-off virtual machines will be
+        migrated off the ESXi hosts prior to entering maintenance mode.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is 5.2 or later, the vsanDataMigrationMode option no longer applied.  
+        This example will install certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.  Starting from VMware Cloud
+        Foundation version is 5.2 or later, the vsanDataMigrationMode option is no longer applicable. For VMware Cloud Foundation version earlier than 5.2, by default the ESXi hosts will
+        enter maintenance mode with vSAN data migration Mode set to `Full data migration`.  Any powered-off virtual machines will not be migrated off the ESXi hosts prior to 
+        entering maintenance mode.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
-        This example will install private keys and certificates for each ESXi host in cluster sfo-m01-cl01 in workload domain sfo-m01 from the provided path.  The uploadprivatekey 
-        parameter is only validate for VMware Cloud Foundation version is 5.2 or later.
-
-        .EXAMPLE
-        Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in domain sfo-m01 from the provided path.  When VMware Cloud Foundation 
-        version is earlier than 5.2, the ESXi host will enter maintenance mode with migrate Powered off VMs option enabled and vSAN data migration mode set to EnsureAccessibility.
-
+        This example will install private keys and certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
+        The `uploadprivatekey` parameter is only validated for VMware Cloud Foundation version is 5.2 or later.
+        
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
 
