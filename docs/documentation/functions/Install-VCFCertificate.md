@@ -52,9 +52,9 @@ This example will connect to SDDC Manager to install the signed certificates for
 Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
-This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path. For VMware Cloud Foundation 
-version earlier than 5.2, the ESXi host will enter maintenance mode with vSAN data migration Mode set to `EnsureAccessibility`.  Any powered-off virtual machines will be
-migrated off the ESXi host prior to entering maintenance mode.
+This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path.
+
+For VMware Cloud Foundation 5.1 or earlier, the ESXi host will enter maintenance mode with vSAN data migration Mode set to `EnsureAccessibility`. Any powered off virtual machines will be migrated off the ESXi host prior to entering maintenance mode.
 
 ### EXAMPLE 3
 
@@ -62,10 +62,11 @@ migrated off the ESXi host prior to entering maintenance mode.
 Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
 ```
 
-This example will install certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.  Starting from VMware Cloud
-Foundation version is 5.2 or later, the vsanDataMigrationMode option is no longer applicable. For VMware Cloud Foundation version earlier than 5.2, by default the ESXi hosts will
-enter maintenance mode with vSAN data migration Mode set to `Full data migration`.  Any powered-off virtual machines will not be migrated off the ESXi hosts prior to 
-entering maintenance mode.
+This example will install certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
+
+For VMware Cloud Foundation 5.2 or later, the `vsanDataMigrationMode` option is no longer applicable.
+
+For VMware Cloud Foundation 5.1 or earlier, by default the ESXi hosts will enter maintenance mode with vSAN data migration Mode set to `Full data migration`. Any powered off virtual machines will not be migrated off the ESXi hosts prior to entering maintenance mode.
 
 ### EXAMPLE 4
 
@@ -74,7 +75,8 @@ Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrat
 ```
 
 This example will install private keys and certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
-The `uploadprivatekey` parameter is only validated for VMware Cloud Foundation version is 5.2 or later.
+
+The `uploadPrivateKey` parameter is only validated for VMware Cloud Foundation version is 5.2 or later.
 
 ## Parameters
 
@@ -255,9 +257,10 @@ Default value: 18000
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+
 ### -vsanDataMigrationMode
 
-The vSan Data Migration mode validate value ("Full", "EnsureAccessibility").
+The vSAN Data Migration mode validate value ("Full", "EnsureAccessibility").
 
 ```yaml
 Type: String
@@ -305,7 +308,7 @@ Accept wildcard characters: False
 
 ### -uploadPrivateKey
 
-Option to upload an external private key when performing the ESXi host certificate replacement.  Supported on Vmware Cloud Foundation 5.2 or later
+Option to upload an external private key when performing the ESXi host certificate replacement. Supported on VMware Cloud Foundation 5.2 or later
 
 ```yaml
 Type: Switch
