@@ -227,7 +227,6 @@ Function Get-vCenterServer {
     }
 }
 
-
 Function Get-VCFCertificateThumbprint {
     <#
         .SYNOPSIS
@@ -306,9 +305,7 @@ Function Get-VCFCertificateThumbprint {
     }
 }
 
-
 Function Test-EsxiCertMgmtChecks {
-
     <#
         .SYNOPSIS
         Run the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
@@ -607,7 +604,6 @@ Function Confirm-CAInvCenterServer {
         Debug-ExceptionWriter -object $_
     }
 }
-
 
 Function Get-EsxiCertificateMode {
     <#
@@ -1343,8 +1339,6 @@ Function Install-EsxiCertificate {
 
         .PARAMETER uploadPrivateKey
         Option to upload of a custom Private Key for the ESXi host.
-        .PARAMETER uploadPrivateKey
-        Option to upload of a custom Private Key for the ESXi host.
     #>
 
     Param (
@@ -1358,7 +1352,6 @@ Function Install-EsxiCertificate {
         [Parameter (Mandatory = $false)] [Switch] $migratePowerOffVMs,
         [Parameter (Mandatory = $false)] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true)] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
-        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String] $timeout = 18000
     )
@@ -1379,12 +1372,12 @@ Function Install-EsxiCertificate {
         }
 
         $version = Get-VCFManager -version
-        $vcfVersion = $version.Split('.')[0]+"."+$version.Split('.')[1]
+        $vcfVersion = $version.Split('.')[0] + "." + $version.Split('.')[1]
 
         if ($vcfVersion -ge "5.2") {
             # get session ID
             $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/SessionManager/SessionManager/Login"
-            $sessionId = (Invoke-WebRequest -Uri "$url" -Body ( @{'userName'="$($vCenterServer.details.ssoAdmin)"; 'password'="$($vCenterServer.details.ssoAdminPass)"} | ConvertTo-Json ) -Method:POST -ContentType:'application/json').Headers.'vmware-api-session-id'
+            $sessionId = (Invoke-WebRequest -Uri "$url" -Body ( @{'userName' = "$($vCenterServer.details.ssoAdmin)"; 'password' = "$($vCenterServer.details.ssoAdminPass)" } | ConvertTo-Json ) -Method:POST -ContentType:'application/json').Headers.'vmware-api-session-id'
             if ($sessionId[0].length -eq 40) {
                 $sessionId = $sessionId[0]
             } else {
@@ -1430,7 +1423,7 @@ Function Install-EsxiCertificate {
             } elseif ($vcfVersion -ge "5.2") {
                 Write-Output "Starting certificate replacement for ESXi host $esxiFqdn."
                 $esxCertificatePem = Get-Content $crtPath -Raw
-                $esxiConfig = Get-View -ViewType HostSystem -Filter @{"Name"="$esxiFqdn"}
+                $esxiConfig = Get-View -ViewType HostSystem -Filter @{"Name" = "$esxiFqdn" }
                 $esxiHostConfig = Get-View -Id $esxiConfig.ConfigManager.CertificateManager
                 $esxiHostConfigMoid = $esxiConfig.ConfigManager.CertificateManager.value
 
@@ -1438,9 +1431,9 @@ Function Install-EsxiCertificate {
                     $esxCertificateKey = Get-Content $keyPath -Raw
                     $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/HostCertificateManager/$esxiHostConfigMoid/ProvisionServerPrivateKey"
                     # Install ESXi Private Key
-                    $body = @{'key'="$esxCertificateKey"} | ConvertTo-Json
-                    $respond = Invoke-WebRequest -Headers @{'vmware-api-session-id'="$sessionId"} -Uri $url -Body $body -Method:POST -ContentType:'application/json'
-                    if(!($respond.StatusCode -eq 204)) {
+                    $body = @{'key' = "$esxCertificateKey" } | ConvertTo-Json
+                    $respond = Invoke-WebRequest -Headers @{'vmware-api-session-id' = "$sessionId" } -Uri $url -Body $body -Method:POST -ContentType:'application/json'
+                    if (!($respond.StatusCode -eq 204)) {
                         Write-Error "Upload private key to ESXi host $esxiFqdn failed. " -ErrorAction Stop
                     }
                 }
@@ -1449,7 +1442,7 @@ Function Install-EsxiCertificate {
 
                 # trigger refresh on affected services
                 $url = "https://$($vCenterServer.details.fqdn)/sdk/vim25/8.0.3.0/HostCertificateManager/$esxiHostConfigMoid/NotifyAffectedServices"
-                $respond = Invoke-WebRequest -Headers @{'vmware-api-session-id'="$sessionId"} -Uri $url -Method:POST -ContentType:'application/json'
+                $respond = Invoke-WebRequest -Headers @{'vmware-api-session-id' = "$sessionId" } -Uri $url -Method:POST -ContentType:'application/json'
                 $replacedHosts.Add($esxiFqdn)
             } else {
                 $esxiCredential = (Get-VCFCredential -resourcename $esxiFqdn | Where-Object { $_.username -eq "root" })
@@ -1582,6 +1575,7 @@ Function Set-VCFCertificateAuthority {
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $commonName,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organization,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
+        
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $locality,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $state,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
@@ -1656,6 +1650,7 @@ Function Set-VCFCertificateAuthority {
         Write-Error "Unable to connect to SDDC Manager ($($server)): PRE_VALIDATION_FAILED."
     }
 }
+
 Function gatherSddcInventory {
     Param (
         [Parameter (Mandatory = $true)] $domainType,
@@ -2242,8 +2237,8 @@ Function Install-VCFCertificate {
             - You must provide the directory containing the signed certificate files.
             - Certificate names should be in format <FQDN>.crt e.g. sfo01-m01-esx01.sfo.rainpole.io.crt.
             - The workflow will put the ESXi host in maintenance mode with full data migration,
-                disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host,
-                and the exit maintenance mode once the ESXi host is online.
+            disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host,
+            and the exit maintenance mode once the ESXi host is online.
 
         .EXAMPLE
         Install-VCFCertificate -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-w01
@@ -2251,22 +2246,22 @@ Function Install-VCFCertificate {
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path. For VMware Cloud Foundation 
-        version earlier than 5.2, the ESXi hosts will enter maintenance mode with vSAN data migration Mode set to `EnsureAccessibility`.  Any powered-off virtual machines will be
-        migrated off the ESXi hosts prior to entering maintenance mode.
+        This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path.
+        For VMware Cloud Foundation version 5.1 and earlier, the ESXi hosts will enter maintenance mode with vSAN data migration Mode set to 'EnsureAccessibility'.
+        Any powered off virtual machines will be migrated off the ESXi hosts prior to entering maintenance mode.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
-        This example will install certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.  Starting from VMware Cloud
-        Foundation version is 5.2 or later, the vsanDataMigrationMode option is no longer applicable. For VMware Cloud Foundation version earlier than 5.2, by default the ESXi hosts will
-        enter maintenance mode with vSAN data migration Mode set to `Full data migration`.  Any powered-off virtual machines will not be migrated off the ESXi hosts prior to 
-        entering maintenance mode.
+        This example will install certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
+        For VMware Cloud Foundation 5.2 or later, the vsanDataMigrationMode option is no longer applicable.
+        For VMware Cloud Foundation 5.1 and earlier, by default the ESXi hosts will enter maintenance mode with vSAN data migration Mode set to 'Full data migration'.
+        Any powered off virtual machines will not be migrated off the ESXi hosts prior to entering maintenance mode.
 
         .EXAMPLE
         Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
         This example will install private keys and certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
-        The `uploadprivatekey` parameter is only validated for VMware Cloud Foundation version is 5.2 or later.
-        
+        The 'uploadprivatekey' parameter is only validated for VMware Cloud Foundation version is 5.2 or later.
+
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
 
@@ -2306,16 +2301,12 @@ Function Install-VCFCertificate {
         .PARAMETER uploadPrivateKey
         Option to upload of a custom Private Key for the ESXi host.
 
-        .PARAMETER uploadPrivateKey
-        Option to upload of a custom Private Key for the ESXi host.
-
         .PARAMETER vsanDataMigrationMode
         The vSAN data migration mode to use when setting the ESXi host to Maintenance. One of "Full" or "EnsureAccessibility".
 
         .PARAMETER NoConfirmation
         The cmdlet will not ask for confirmation.
     #>
-
 
     Param (
         [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [Switch] $esxi,
@@ -2328,7 +2319,6 @@ Function Install-VCFCertificate {
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateNotNullOrEmpty()] [String] $esxiFqdn,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $migratePowerOffVMs,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
-        [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [Switch] $uploadPrivateKey,
         [Parameter (Mandatory = $false, ParameterSetName = "esxi")] [ValidateSet ("Full", "EnsureAccessibility")] [String] $vsanDataMigrationMode,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi") ] [ValidateNotNullOrEmpty()] [String] $certificateDirectory,
         [Parameter (Mandatory = $true, ParameterSetName = "esxi")] [ValidateSet(".crt", ".cer", ".pem", ".p7b", ".p7c")] [String] $certificateFileExt,
@@ -2338,21 +2328,22 @@ Function Install-VCFCertificate {
 
     $pass = Get-Password -User $user -Password $pass
 
-    if ($PSBoundParameters.ContainsKey("esxi")){
+    if ($PSBoundParameters.ContainsKey("esxi")) {
         # VCF version checks
         if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
             } else {
                 Throw "Unable to return vCenter Server details: PRE_VALIDATION_FAILED"
             }
         } else {
             Throw "Unable to obtain access token from SDDC Manager ($server), check credentials: PRE_VALIDATION_FAILED"
         }
+
         $version = Get-VCFManager -version
-        $vcfVersion = $version.Split('.')[0]+"."+$version.Split('.')[1]
+        $vcfVersion = $version.Split('.')[0] + "." + $version.Split('.')[1]
 
         if ($vcfVersion -ge "5.2") {
-            # VCF version = 5.2
+            # VCF version >= 5.2
             if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
                 Write-Error "Please provide either -cluster or -esxiFqdn paramater."
             } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
@@ -2370,10 +2361,8 @@ Function Install-VCFCertificate {
                     Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
                 }
             }
-
         } else {
             # VCF version < 5.2
-
             if ($PSBoundParameters.ContainsKey("uploadPrivateKey")) {
                 Write-Error "upload Private key is only supported for VCF version 5.2 and later.  Please remove this parameter and try again." -ErrorAction Stop
             }
@@ -2401,51 +2390,52 @@ Function Install-VCFCertificate {
                 if ($vsanDataMigrationMode.IsPresent) {
                     if ($migratePowerOffVMs.IsPresent) {
                         Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
-                   } else {
+                    } else {
                         Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
                     }
                 } else {
                     Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
                 }
             } else {
-                if ($vsanDataMigrationMode.IsPresent) {
-                   if ($migratePowerOffVMs.IsPresent) {
-                        Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
-                    } else {
-                       Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
-                   }
-               } else {
-                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
-                }
-            if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
-                Write-Error "Please provide either -cluster or -esxiFqdn paramater."
-            } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
-                Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
-            } elseif ($PSBoundParameters.ContainsKey("cluster")) {
                 if ($vsanDataMigrationMode.IsPresent) {
                     if ($migratePowerOffVMs.IsPresent) {
-                        Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
-                   } else {
-                        Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
-                    }
-                } else {
-                    Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
-                }
-            } else {
-                if ($vsanDataMigrationMode.IsPresent) {
-                   if ($migratePowerOffVMs.IsPresent) {
                         Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
                     } else {
-                       Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
-                   }
-               } else {
+                        Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                    }
+                } else {
                     Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
+                }
+                if (!$PSBoundParameters.ContainsKey("cluster") -and !$PSBoundParameters.ContainsKey("esxiFqdn")) {
+                    Write-Error "Please provide either -cluster or -esxiFqdn paramater."
+                } elseif ($PSBoundParameters.ContainsKey("cluster") -and $PSBoundParameters.ContainsKey("esxiFqdn")) {
+                    Write-Error "Only one of -esxiFqdn or -cluster parameter can be provided at a time."
+                } elseif ($PSBoundParameters.ContainsKey("cluster")) {
+                    if ($vsanDataMigrationMode.IsPresent) {
+                        if ($migratePowerOffVMs.IsPresent) {
+                            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+                        } else {
+                            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                        }
+                    } else {
+                        Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
+                    }
+                } else {
+                    if ($vsanDataMigrationMode.IsPresent) {
+                        if ($migratePowerOffVMs.IsPresent) {
+                            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode -migratePowerOffVMs
+                        } else {
+                            Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode $vsanDataMigrationMode
+                        }
+                    } else {
+                        Install-EsxiCertificate -server $server -user $user -pass $pass -domain $domain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt -vsanDataMigrationMode Full -migratePowerOffVMs
+                    }
                 }
             }
         }
     } else {
-        Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
-    }
+		Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+	}
 }
 
 Function Install-SddcCertificate {
