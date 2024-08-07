@@ -1575,7 +1575,7 @@ Function Set-VCFCertificateAuthority {
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $commonName,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organization,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $organizationUnit,
-        
+
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $locality,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateNotNullOrEmpty()] [String] $state,
         [Parameter (Mandatory = $true, ParameterSetName = "openssl")] [ValidateSet ("US", "CA", "AX", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN", "AO", "AQ", "AR", "AS", "AT", "AU", `
@@ -2434,8 +2434,8 @@ Function Install-VCFCertificate {
             }
         }
     } else {
-		Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
-	}
+        Install-SddcCertificate -server $server -user $user -pass $pass -workloadDomain $domain
+    }
 }
 
 Function Install-SddcCertificate {

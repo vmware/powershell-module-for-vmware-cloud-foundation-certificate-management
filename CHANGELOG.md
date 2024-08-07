@@ -2,7 +2,7 @@
 
 ## v1.5.4
 
-> Release Date: 2024-07-25
+> Release Date: 2024-08-07
 
 Enhancement:
 
