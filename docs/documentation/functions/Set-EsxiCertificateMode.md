@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+Sets the certificate management mode in vCenter for the ESX hosts in a workload domain.
 
 ## Syntax
 
@@ -12,17 +12,17 @@ Set-EsxiCertificateMode [-server] <String> [-user] <String> [-pass] <String> [-d
 
 ## Description
 
-The `Set-EsxiCertificateMode` cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+The `Set-EsxiCertificateMode` cmdlet sets the certificate management mode in vCenter for the ESX hosts in a workload domain.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Set-EsxiCertificateMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -mode custom
+Set-EsxiCertificateMode -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -mode custom
 ```
 
-This example sets the certificate management mode to custom in vCenter Server for the ESXi hosts in workload domain sfo-m01.
+This example sets the certificate management mode to custom in vCenter for the ESX hosts in workload domain.
 
 ## Parameters
 
@@ -76,7 +76,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain to set the vCenter Server instance certificate management mode setting for.
+The name of the workload domain to set the vCenter instance certificate management mode setting for.
 
 ```yaml
 Type: String
@@ -92,7 +92,7 @@ Accept wildcard characters: False
 
 ### -mode
 
-The certificate management mode to set in vCenter Server.
+The certificate management mode to set in vCenter.
 One of "custom" or "vmca".
 
 ```yaml

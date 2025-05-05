@@ -1,60 +1,60 @@
-# Request-VCFCsr
+# Request-VcfCsr
 
 ## Synopsis
 
-Requests SDDC Manager to generate and store certificate signing request (CSR) files or requests a certificate signing request for either an ESXi host or a for each ESXi host in a cluster and saves it to file(s) in a directory.
+Requests SDDC Manager to generate and store certificate signing request (CSR) files or requests a certificate signing request for either an ESX host or a for each ESX host in a cluster and saves it to file(s) in a directory.
 
 ## Syntax
 
 ### Certificate Signing Requests for a Workload Domain
 
 ```powershell
-Request-VCFCsr [-sddcManager] [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [-country] <String> [-keySize] <String> [-locality] <String> [-organization] <String> [-organizationUnit] <String> [-stateOrProvince] <String> [-email] <String> [<CommonParameters>]
+Request-VcfCsr [-sddcManager] [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [-country] <String> [-keySize] <String> [-locality] <String> [-organization] <String> [-organizationUnit] <String> [-stateOrProvince] <String> [-email] <String> [<CommonParameters>]
 ```
 
-### Certificate Signing Request for all ESXi Hosts in a Cluster
+### Certificate Signing Request for all ESX Hosts in a Cluster
 
 ```powershell
-Request-VCFCsr [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-outputDirectory] <String> [-country] <String> [-locality] <String> [-organization] <String> [-organizationUnit] <String> [-stateOrProvince] <String> [<CommonParameters>]
+Request-VcfCsr [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-outputDirectory] <String> [-country] <String> [-locality] <String> [-organization] <String> [-organizationUnit] <String> [-stateOrProvince] <String> [<CommonParameters>]
 ```
 
-### Certificate Signing Request for an ESXi Host
+### Certificate Signing Request for an ESX Host
 
 ```powershell
-Request-VCFCsr [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] [-esxiFqdn] <String> [-outputDirectory] <String> [-country] <String> [-locality] <String> [-organization] <String> [-organizationUnit] <String> [-stateOrProvince] <String> [<CommonParameters>]
+Request-VcfCsr [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] [-esxiFqdn] <String> [-outputDirectory] <String> [-country] <String> [-locality] <String> [-organization] <String> [-organizationUnit] <String> [-stateOrProvince] <String> [<CommonParameters>]
 ```
 
 ## Description
 
- The `Request-VCFCsr` will request SDDC Manager to generate certificate signing request files for all components associated with the given domain when used with `-sddcManager` switch.
- The `Request-VCFCsr` will generate the certificate signing request for ESXi host(s) and saves it to file(s) in an output directory when used with `-esxi` switch.
+ The `Request-VcfCsr` will request SDDC Manager to generate certificate signing request files for all components associated with the given domain when used with `-sddcManager` switch.
+ The `Request-VcfCsr` will generate the certificate signing request for ESX host(s) and saves it to file(s) in an output directory when used with `-esxi` switch.
 
 The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-password` values.
 
 - Validates that network connectivity and authentication is possible to SDDC Manager.
 - Validates that the workload domain exists in the SDDC Manager inventory.
-- Validates that network connectivity and authentication is possible to vCenter Server.
+- Validates that network connectivity and authentication is possible to vCenter.
 - Defines possible country codes. [Reference](https://www.digicert.com/kb/ssl-certificate-country-codes.htm)
 
 When used with the `-esxi` switch, this cmdlet:
 
-- Gathers the ESXi hosts from the cluster.
-- Requests the ESXi host CSR and saves it in the output directory as `<esxi-host-fqdn>.csr` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.csr`.)
+- Gathers the ESX hosts from the cluster.
+- Requests the ESX host CSR and saves it in the output directory as `<esxi-host-fqdn>.csr` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.csr`.)
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Request-VCFCsr -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -country US -locality "Palo Alto" -organization "Rainpole" -organizationUnit "Engineering" -stateOrProvince "California" -outputDirectory F:\csr
+Request-VcfCsr -esxi -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -country [country] -locality [locality] -organization [organization] -organizationUnit [organization_unit] -stateOrProvince [state_or_province] -outputDirectory [output_path]
 ```
 
-This example generates CSRs and stores them in the provided output directory for all ESXi hosts in the cluster sfo-m01-cl01 with the specified fields.
+This example generates CSRs and stores them in the provided output directory for all ESX hosts in the cluster with the specified fields.
 
 ### Example 2
 
 ```powershell
-Request-VCFCsr -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-w01 -country US -keysize "3072" -locality "San Francisco" -organization "Rainpole" -organizationUnit "IT" -stateOrProvince "California" -email "admin@rainpole.io"
+Request-VcfCsr -sddcManager -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -country [country] -keysize [keysize] -locality [locality] -organization [organization] -organizationUnit [organization_unit] -stateOrProvince [state_or_province] -email [email_address]
 ```
 
 This example will request SDDC Manager to generate certificate signing request files for all components associated with the given workload domain.
@@ -63,7 +63,7 @@ This example will request SDDC Manager to generate certificate signing request f
 
 ### -esxi
 
-Switch to request and save certificate signing request files for ESXi hosts
+Switch to request and save certificate signing request files for ESX hosts
 
 ```yaml
 Type: SwitchParameter
@@ -159,7 +159,7 @@ Accept wildcard characters: False
 
 ### -cluster
 
-The name of the cluster in which the ESXi host is located.
+The name of the cluster in which the ESX host is located.
 
 ```yaml
 Type: String
@@ -175,7 +175,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host to request certificate signing request (CSR) for.
+The fully qualified domain name of the ESX host to request certificate signing request (CSR) for.
 
 ```yaml
 Type: String

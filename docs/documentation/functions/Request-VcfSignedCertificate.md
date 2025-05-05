@@ -1,4 +1,4 @@
-# Request-VCFSignedCertificate
+# Request-VcfSignedCertificate
 
 ## Synopsis
 
@@ -7,30 +7,30 @@ Requests SDDC Manager to connect to certificate authority to sign the certificat
 ## Syntax
 
 ```powershell
-Request-VCFSignedCertificate [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [-certAuthority] <String>[<CommonParameters>]
+Request-VcfSignedCertificate [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [-certAuthority] <String>[<CommonParameters>]
 ```
 
 ## Description
 
-The `Request-VCFSignedCertificate` will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
+The `Request-VcfSignedCertificate` will request SDDC Manager to connect to the certificate authority to sign the generated certificate signing request files for all components associated with the given workload domain
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority Microsoft
+Request-VcfSignedCertificate -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -certAuthority Microsoft
 ```
 
-This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by Microsft CA
+This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by Microsft CA.
 
 ### Example 2
 
 ```powershell
-Request-VCFSignedCertificate -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01 -certAuthority OpenSSL
+Request-VcfSignedCertificate -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -certAuthority OpenSSL
 ```
 
-This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by OpenSSL CA
+This example will connect to SDDC Manager to request to have the certificate signing request files for a given workload domain to be signed by OpenSSL CA.
 
 ## Parameters
 

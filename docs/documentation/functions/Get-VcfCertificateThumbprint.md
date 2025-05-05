@@ -1,58 +1,58 @@
-# Get-VCFCertificateThumbprint
+# Get-VcfCertificateThumbprint
 
 ## Synopsis
 
-Retrieves certificate thumbprints for ESXi hosts or vCenter Server instances.
+Retrieves certificate thumbprints for ESX hosts or vCenter instances.
 
 ## Syntax
 
-### Certificate Thumbprint from an ESXi Host
+### Certificate Thumbprint from an ESX Host
 
 ```powershell
-Get-VCFCertificateThumbprint [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String> [<CommonParameters>]
+Get-VcfCertificateThumbprint [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-esxiFqdn] <String> [<CommonParameters>]
 ```
 
-### Certificate Thumbprint from a vCenter Server Instance
+### Certificate Thumbprint from a vCenter Instance
 
 ```powershell
-Get-VCFCertificateThumbprint [-vcenter] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [[-issuer] <String>] [<CommonParameters>]
+Get-VcfCertificateThumbprint [-vcenter] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [[-issuer] <String>] [<CommonParameters>]
 ```
 
 ## Description
 
-The `Get-VCFCertificateThumbprint` cmdlet retrieves certificate thumbprints for ESXi hosts or vCenter Server instances.
+The `Get-VcfCertificateThumbprint` cmdlet retrieves certificate thumbprints for ESX hosts or vCenter instances.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Get-VCFCertificateThumbprint -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+Get-VcfCertificateThumbprint -esxi -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -esxiFqdn [esx_host_fqdn]
 ```
 
-This example retrieves the ESXi host's certificate thumbprint for an ESXi host with The fully qualified domain name of sfo01-m01-esx01.sfo.rainpole.io.
+This example retrieves the ESX host's certificate thumbprint for an ESX host.
 
 ### Example 2
 
 ```powershell
-Get-VCFCertificateThumbprint -vcenter -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Get-VcfCertificateThumbprint -vcenter -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
 ```
 
-This example retrieves the certificate thumbprints for the vCenter Server instance belonging to the domain sfo-m01.
+This example retrieves the certificate thumbprints for the vCenter instance belonging to the domain.
 
 ### Example 3
 
 ```powershell
-Get-VCFCertificateThumbprint -vcenter -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole
+Get-VcfCertificateThumbprint -vcenter -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -issuer [issuer_name]
 ```
 
-This example retrieves the vCenter Server instance's certificate thumbprints for the vCenter Server instance belonging to domain sfo-m01 and a matching issuer "rainpole".
+This example retrieves the vCenter instance's certificate thumbprints for the vCenter instance belonging to domain and a matching issuer.
 
 ## Parameters
 
 ### -esxi
 
-Switch to retrieve the certificate thumbprint for an ESXi host.
+Switch to retrieve the certificate thumbprint for an ESX host.
 
 ```yaml
 Type: SwitchParameter
@@ -68,7 +68,7 @@ Accept wildcard characters: False
 
 ### -vcenter
 
-Switch to retrieve the certificate thumbprints for a vCenter Server instance.
+Switch to retrieve the certificate thumbprints for a vCenter instance.
 
 ```yaml
 Type: SwitchParameter
@@ -132,7 +132,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host to retrieve the certificate thumbprint.
+The fully qualified domain name of the ESX host to retrieve the certificate thumbprint.
 
 ```yaml
 Type: String
@@ -148,7 +148,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
+The name of the workload domain to retrieve the vCenter instance's certificate thumbprints from.
 
 ```yaml
 Type: String
@@ -164,7 +164,7 @@ Accept wildcard characters: False
 
 ### -issuer
 
-The name of the issuer to match with the vCenter Server instance's certificate thumbprints.
+The name of the issuer to match with the vCenter instance's certificate thumbprints.
 
 ```yaml
 Type: String

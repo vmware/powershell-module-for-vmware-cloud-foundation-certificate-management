@@ -7,8 +7,8 @@
 Enhancement:
 
 - Added Pester tests for certificate management. [GH-119](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/119)
-- Add support for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
-- Add support for uploading the private key for non-disruptive ESXi certificate replacement in VMware Cloud Foundation 5.2 to `Install-VCFCertificate` function. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
+- Add support for non-disruptive ESX certificate replacement in VMware Cloud Foundation 5.2 to `Install-VcfCertificate` function. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
+- Add support for uploading the private key for non-disruptive ESX certificate replacement in VMware Cloud Foundation 5.2 to `Install-VcfCertificate` function. [GH-123](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/123)
 
 Chore:
 
@@ -36,7 +36,7 @@ Chore:
 
 Enhancement:
 
-- Added a restart for specific vCenter Server services to `Set-EsxiCertificateMode` function. [GH-110](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/110)
+- Added a restart for specific vCenter services to `Set-EsxiCertificateMode` function. [GH-110](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/110)
 
 ## v1.5.1
 
@@ -82,10 +82,10 @@ Bugfix:
 
 Enhancement:
 
-- **Breaking Change**: Renamed `Set-SddcCertificateAuthority` to `Set-VCFCertificateAuthority`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
-- **Breaking Change**: Renamed `Request-SddcCertificate` to `Request-VCFSignedCertificate`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
+- **Breaking Change**: Renamed `Set-SddcCertificateAuthority` to `Set-VcfCertificateAuthority`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
+- **Breaking Change**: Renamed `Request-SddcCertificate` to `Request-VcfSignedCertificate`. [GH-74](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/74)
 - **Breaking Change**: Refactored `Set-SddcCertificateAuthority` to support OpenSSL Certificate Authority configuration. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
-- **Breaking Change**: Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to a single function `Get-VCFCertificateThumbprint`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
+- **Breaking Change**: Refactored `Get-EsxiCertificateThumbprint` and `Get-vCenterCertificateThumbprint` to a single function `Get-VcfCertificateThumbprint`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - Added `Request-VcfCsr`as a wrapper for `Request-EsxiCsr` and `Request-SddcCsr`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 - Added `Install-VcfCertificate` as a wrapper for `Install-EsxiCertificate` and `Install-SddcCertificate`. [GH-68](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/68)
 
@@ -139,14 +139,14 @@ Chore:
 
 Enhancement:
 
-- Added support for an ESXi certificate management pre-check with `Test-EsxiCertMgmtChecks` cmdlet. [GH-37](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37)
+- Added support for an ESX certificate management pre-check with `Test-EsxiCertMgmtChecks` cmdlet. [GH-37](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37)
 - Added support for PowerShell Core. [GH-37](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37)
 - Added support for VMware PhotonOS. [GH-37](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37)
 - Enhanced `Get-vSANHealthSummary` cmdlet improving log messages and adding a check for vSAN services. [GH-37](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/37)
 
 Bugfix:
 
-- Added a disconnect from vCenter Server prior to an ESXi host reboot. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/36)
+- Added a disconnect from vCenter prior to an ESX host reboot. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-certificate-management/pull/36)
 
 ## v1.0.0
 

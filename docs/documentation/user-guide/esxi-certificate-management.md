@@ -1,10 +1,10 @@
-# ESXi Certificate Management
+# ESX Certificate Management
 
-This section provides information on how to use the PowerShell module for VMware Cloud Foundation Certificate Management to manage ESXi host certificates across your VMware Cloud Foundation instance.
+This section provides information on how to use the PowerShell module for VMware Cloud Foundation Certificate Management to manage ESX host certificates across your VMware Cloud Foundation instance.
 
-## Set the ESXi Certificate Mode in vCenter Server
+## Set the ESX Certificate Mode in vCenter
 
-The [`Set-EsxiCertificateMode`](../functions/Set-EsxiCertificateMode.md) cmdlet sets the certificate management mode in vCenter Server for the ESXi hosts in a workload domain.
+The [`Set-EsxiCertificateMode`](../functions/Set-EsxiCertificateMode.md) cmdlet sets the certificate management mode in vCenter for the ESX hosts in a workload domain.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -18,7 +18,7 @@ The [`Set-EsxiCertificateMode`](../functions/Set-EsxiCertificateMode.md) cmdlet 
     --8<-- "./docs/snippets/vars-esxi-cer-mode.ps1"
     ```
 
-3. Set the ESXi certificate management mode in vCenter Server by running the command in the PowerShell console.
+3. Set the ESX certificate management mode in vCenter by running the command in the PowerShell console.
 
     ```powershell
     Set-EsxiCertificateMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -mode $mode
@@ -26,9 +26,9 @@ The [`Set-EsxiCertificateMode`](../functions/Set-EsxiCertificateMode.md) cmdlet 
 
 ## Request a Certificate Signing Request
 
-The [`Request-VCFCsr`](../functions/Request-VCFCsr.md) cmdlet will generate the Certificate Signing Request for ESXi host(s) and saves it to file(s) in an output directory.
+The [`Request-VcfCsr`](../functions/Request-VcfCsr.md) cmdlet will generate the Certificate Signing Request for ESX host(s) and saves it to file(s) in an output directory.
 
-## Request Certificate Signing Request for each ESXi Host in a Cluster
+## Request Certificate Signing Request for each ESX Host in a Cluster
 
 1. Start PowerShell (Run as Administrator).
 
@@ -47,10 +47,10 @@ The [`Request-VCFCsr`](../functions/Request-VCFCsr.md) cmdlet will generate the 
 3. Request Certificate Signing Request files by running the command in the PowerShell console.
 
     ```powershell
-    Request-VCFCsr -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -Country $country -Locality $location -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
+    Request-VcfCsr -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -Country $country -Locality $location -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
     ```
 
-## Request a Certificate Signing Request for an ESXi Host
+## Request a Certificate Signing Request for an ESX Host
 
 1. Start PowerShell (Run as Administrator).
 
@@ -69,12 +69,12 @@ The [`Request-VCFCsr`](../functions/Request-VCFCsr.md) cmdlet will generate the 
 3. Request a Certificate Signing Request file by running the command in the PowerShell console.
 
     ```powershell
-    Request-VCFCsr -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -esxiFqdn $esxiFqdn -Country $country -Locality $locality -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
+    Request-VcfCsr -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -esxiFqdn $esxiFqdn -Country $country -Locality $locality -Organization $organization -OrganizationUnit $organizationUnit -StateOrProvince $stateOrProvince -outputDirectory $outputDirectory
     ```
 
-## Verify the Certificate Authority is Trusted in vCenter Server
+## Verify the Certificate Authority is Trusted in vCenter
 
-The [`Confirm-CAInvCenterServer`](../functions/Confirm-CAInvCenterServer.md) cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance. You need to pass in the complete path for the certificate file. Returns true if thumbprint matches, else returns false.
+The [`Confirm-CAInvCenterServer`](../functions/Confirm-CAInvCenterServer.md) cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter instance. You need to pass in the complete path for the certificate file. Returns true if thumbprint matches, else returns false.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -89,17 +89,17 @@ The [`Confirm-CAInvCenterServer`](../functions/Confirm-CAInvCenterServer.md) cmd
     --8<-- "./docs/snippets/vars-signedcer-windows.ps1"
     ```
 
-3. Verify the Certificate Authority is trusted in vCenter server by running the command in the PowerShell console.
+3. Verify the Certificate Authority is trusted in vCenter by running the command in the PowerShell console.
 
     ```powershell
     Confirm-CAInvCenterServer -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -issuer $issuer -signedCertificate $signedCertificate
     ```
 
-## Set the Lockdown Mode for ESXi Hosts
+## Set the Lockdown Mode for ESX Hosts
 
-The [`Set-EsxiLockdownMode`](../functions/Set-EsxiLockdownMode.md) cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The [`Set-EsxiLockdownMode`](../functions/Set-EsxiLockdownMode.md) cmdlet sets the lockdown mode for all ESX hosts in a given cluster.
 
-### Disable Lockdown Mode for Each ESXi Host in a Cluster
+### Disable Lockdown Mode for Each ESX Host in a Cluster
 
 1. Start PowerShell (Run as Administrator).
 
@@ -119,7 +119,7 @@ The [`Set-EsxiLockdownMode`](../functions/Set-EsxiLockdownMode.md) cmdlet sets t
     Set-EsxiLockdownMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -disable
     ```
 
-### Enable Lockdown Mode for Each ESXi Host in a Cluster
+### Enable Lockdown Mode for Each ESX Host in a Cluster
 
 1. Start PowerShell (Run as Administrator).
 
@@ -139,9 +139,9 @@ The [`Set-EsxiLockdownMode`](../functions/Set-EsxiLockdownMode.md) cmdlet sets t
     Set-EsxiLockdownMode -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -enable
     ```
 
-## Get the vSAN Health Summary from vCenter Server for a Cluster
+## Get the vSAN Health Summary from vCenter for a Cluster
 
-The [`Get-vSANHealthSummary`](../functions/Get-vSANHealthSummary.md) cmdlet gets the vSAN health summary from vCenter Server for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
+The [`Get-vSANHealthSummary`](../functions/Get-vSANHealthSummary.md) cmdlet gets the vSAN health summary from vCenter for a cluster. If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 
 1. Start PowerShell (Run as Administrator).
 
@@ -155,20 +155,20 @@ The [`Get-vSANHealthSummary`](../functions/Get-vSANHealthSummary.md) cmdlet gets
     --8<-- "./docs/snippets/vars-cluster.ps1"
     ```
 
-3. Get the vSAN health summary from vCenter server for a cluster by running the command in the PowerShell console.
+3. Get the vSAN health summary from vCenter for a cluster by running the command in the PowerShell console.
 
     ```powershell
     Get-vSANHealthSummary -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster
     ```
 
-## Run the checks required for ESXi Certificate Management for a Cluster
+## Run the checks required for ESX Certificate Management for a Cluster
 
-The [`Test-EsxiCertMgmtChecks`](../functions/Test-EsxiCertMgmtChecks.md) cmdlet runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The [`Test-EsxiCertMgmtChecks`](../functions/Test-EsxiCertMgmtChecks.md) cmdlet runs the checks required for ESX Certificate Management for a given cluster or an ESX host.
 The following checks are run:
 
-- Check ESXi Certificate Mode
-- Check ESXi Lockdown Mode
-- Confirm CA In vCenter Server
+- Check ESX Certificate Mode
+- Check ESX Lockdown Mode
+- Confirm CA In vCenter
 - Check vSAN Health Status
 
 1. Start PowerShell (Run as Administrator).
@@ -185,7 +185,7 @@ The following checks are run:
     --8<-- "./docs/snippets/vars-signedcer-windows.ps1"
     ```
 
-3. Run the checks required for ESXi Certificate management for a cluster by running the command in the PowerShell console.
+3. Run the checks required for ESX Certificate management for a cluster by running the command in the PowerShell console.
 
     ```powershell
     Test-EsxiCertMgmtChecks -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -signedCertificate $signedCertificate -issuer $issuer
@@ -193,9 +193,9 @@ The following checks are run:
 
 ## Install a Certificate
 
-The [`Install-VCFCertificate`](../functions/Install-VCFCertificate.md) cmdlet will replace the certificate for an ESXi host or for each ESXi host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (_e.g._, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESXi host in maintenance mode (with full data migration for vSAN only), disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+The [`Install-VcfCertificate`](../functions/Install-VcfCertificate.md) cmdlet will replace the certificate for an ESX host or for each ESX host in a cluster. You must provide the directory containing the signed certificate files. Certificate names should be in format <FQDN>.cer (_e.g._, sfo01-m01-esx01.sfo.rainpole.io.cer.) The workflow will put the ESX host in maintenance mode (with full data migration for vSAN only), disconnect the ESX host from the vCenter, replace the certificate, restart the ESX host, and the exit maintenance mode once the ESX host is online.
 
-### Install a Certificate to Each ESXi Host in a Cluster
+### Install a Certificate to Each ESX Host in a Cluster
 
 1. Start PowerShell (Run as Administrator).
 
@@ -211,13 +211,13 @@ The [`Install-VCFCertificate`](../functions/Install-VCFCertificate.md) cmdlet wi
     --8<-- "./docs/snippets/vars-cer-ext.ps1"
     ```
 
-3. Install a Certificate for each ESXi host in cluster by running the command in the PowerShell console.
+3. Install a Certificate for each ESX host in cluster by running the command in the PowerShell console.
 
     ```powershell
-    Install-VCFCertificate -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+    Install-VcfCertificate -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -cluster $cluster -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
     ```
 
-### Install a Certificate to an ESXi Host
+### Install a Certificate to an ESX Host
 
 1. Start PowerShell (Run as Administrator).
 
@@ -233,8 +233,8 @@ The [`Install-VCFCertificate`](../functions/Install-VCFCertificate.md) cmdlet wi
     --8<-- "./docs/snippets/vars-cer-ext.ps1"
     ```
 
-3. Install a certificate to an ESXi host by running the command in the PowerShell console.
+3. Install a certificate to an ESX host by running the command in the PowerShell console.
 
     ```powershell
-    Install-VCFCertificate -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
+    Install-VcfCertificate -esxi -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain -esxiFqdn $esxiFqdn -certificateDirectory $certificateDirectory -certificateFileExt $certificateFileExt
     ```

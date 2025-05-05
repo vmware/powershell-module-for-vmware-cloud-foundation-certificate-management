@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Run the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+Run the checks required for ESX Certificate Management for a given cluster or an ESX host.
 
 ## Syntax
 
@@ -12,13 +12,13 @@ Test-EsxiCertMgmtChecks [-server] <String> [-user] <String> [-pass] <String> [-d
 
 ## Description
 
-The `Test-EsxiCertMgmtChecks` runs the checks required for ESXi Certificate Management for a given cluster or an ESXi host.
+The `Test-EsxiCertMgmtChecks` runs the checks required for ESX Certificate Management for a given cluster or an ESX host.
 
 The following checks are run:
 
-- Check ESXi Certificate Mode
-- Check ESXi Lockdown Mode
-- Confirm Certificate Authority in vCenter Server
+- Check ESX Certificate Mode
+- Check ESX Lockdown Mode
+- Confirm Certificate Authority in vCenter
 - Check vSAN Health Status
 
 ## Examples
@@ -26,18 +26,18 @@ The following checks are run:
 ### Example 1
 
 ```powershell
-Test-EsxiCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
+Test-EsxiCertMgmtChecks -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -issuer [issuer_name] -signedCertificate [full_certificate_file_path]
 ```
 
-This example runs the checks required for ESXi Certificate Management for the cluster belonging to the domain sfo-m01.
+This example runs the checks required for ESX Certificate Management for the cluster belonging to the domain.
 
 ### Example 2
 
 ```powershell
-Test-EsxiCertMgmtChecks -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -issuer rainpole -signedCertificate F:\Certificates\Root64.cer
+Test-EsxiCertMgmtChecks -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -esxiFqdn [esx_host_fqdn] -issuer [issuer_name] -signedCertificate [full_certificate_file_path]
 ```
 
-This example runs the checks required for ESXi Certificate Management for an ESXi host belonging to the domain sfo-m01.
+This example runs the checks required for ESX Certificate Management for an ESX host belonging to the domain.
 
 ## Parameters
 
@@ -91,7 +91,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
+The name of the workload domain to retrieve the vCenter instance's certificate thumbprints from.
 
 ```yaml
 Type: String
@@ -107,7 +107,7 @@ Accept wildcard characters: False
 
 ### -cluster
 
-The name of the cluster in which the ESXi host is located.
+The name of the cluster in which the ESX host is located.
 
 ```yaml
 Type: String
@@ -155,7 +155,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host.
+The fully qualified domain name of the ESX host.
 
 ```yaml
 Type: String

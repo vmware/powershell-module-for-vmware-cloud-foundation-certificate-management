@@ -1,47 +1,47 @@
-# Install-VCFCertificate
+# Install-VcfCertificate
 
 ## Synopsis
 
-Installs the signed certificates for all components associated with the given workload domain, or an ESXi Host or for each ESXi host in a given cluster.
+Installs the signed certificates for all components associated with the given workload domain, or an ESX Host or for each ESX host in a given cluster.
 
 ## Syntax
 
 ### Installing Certificates for a Workload Domain
 
 ```powershell
-Install-VCFCertificate [-sddcManager] [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [<CommonParameters>]
+Install-VcfCertificate [-sddcManager] [-server] <String> [-user] <String> [-pass] <String> [-workloadDomain] <String> [<CommonParameters>]
 ```
 
-### Installing Certificates ESXi Hosts in a Cluster
+### Installing Certificates ESX Hosts in a Cluster
 
 ```powershell
-Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-vsanDataMigrationMode] <String> [-migratePowerOffVMs] [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [-NoConfirmation] [<CommonParameters>]
+Install-VcfCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-vsanDataMigrationMode] <String> [-migratePowerOffVMs] [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [-NoConfirmation] [<CommonParameters>]
 ```
 
-### Installing a Certificate for an ESXi Host
+### Installing a Certificate for an ESX Host
 
 ```powershell
-Install-VCFCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String> [-vsanDataMigrationMode] <String>[-migratePowerOffVMs] [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [-NoConfirmation] [<CommonParameters>]
+Install-VcfCertificate [-esxi] [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-esxiFqdn] <String> [-vsanDataMigrationMode] <String>[-migratePowerOffVMs] [-certificateDirectory] <String> [-certificateFileExt] <String> [[-timeout] <String>] [-NoConfirmation] [<CommonParameters>]
 ```
 
 ## Description
 
-The `Install-VCFCertificate` will install the signed certificates for all components associated with the given workload domain when used with the `-sddcManager` switch.
+The `Install-VcfCertificate` will install the signed certificates for all components associated with the given workload domain when used with the `-sddcManager` switch.
 
-The `Install-VCFCertificate` will replace the certificate for an ESXi host or for each ESXi host in a cluster when used with the `-esxi` switch.
+The `Install-VcfCertificate` will replace the certificate for an ESX host or for each ESX host in a cluster when used with the `-esxi` switch.
 
 When used with the `-esxi` switch, this cmdlet:
 
 - You must provide the directory containing the signed certificate files.
-- Certificate names should be in format `<FQDN>.crt` (_e.g._, `sfo01-m01-esx01.sfo.rainpole.io.crt`.)
-- The workflow will put the ESXi host in maintenance mode with full data migration, disconnect the ESXi host from the vCenter Server, replace the certificate, restart the ESXi host, and the exit maintenance mode once the ESXi host is online.
+- Certificate names should be in format`<esx_host_fqdn>.crt`.
+- The workflow will put the ESX host in maintenance mode with full data migration, disconnect the ESX host from the vCenter, replace the certificate, restart the ESX host, and the exit maintenance mode once the ESX host is online.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Install-VCFCertificate -sddcManager -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-w01
+Install-VcfCertificate -sddcManager -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
 ```
 
 This example will connect to SDDC Manager to install the signed certificates for a given workload domain.
@@ -49,32 +49,32 @@ This example will connect to SDDC Manager to install the signed certificates for
 ### Example 2
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory F:\certificates -certificateFileExt ".cer"
+Install-VcfCertificate -esxi -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -esxiFqdn [esx_host_fqdn] -migratePowerOffVMs -vsanDataMigrationMode EnsureAccessibility -certificateDirectory [certificate_directory_path] -certificateFileExt ".cer"
 ```
 
-This example will install the certificate to the ESXi host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path.
+This example will install the certificate to the ESX host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path.
 
-For VMware Cloud Foundation 5.1 or earlier, the ESXi host will enter maintenance mode with vSAN data migration Mode set to `EnsureAccessibility`. Any powered off virtual machines will be migrated off the ESXi host prior to entering maintenance mode.
+For VMware Cloud Foundation 5.1 or earlier, the ESX host will enter maintenance mode with vSAN data migration Mode set to `EnsureAccessibility`. Any powered off virtual machines will be migrated off the ESX host prior to entering maintenance mode.
 
 ### EXAMPLE 3
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer"
+Install-VcfCertificate -esxi -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -certificateDirectory [certificate_directory_path] -certificateFileExt ".cer"
 ```
 
-This example will install certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
+This example will install certificates for each ESX host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
 
 For VMware Cloud Foundation 5.2 or later, the `vsanDataMigrationMode` option is no longer applicable.
 
-For VMware Cloud Foundation 5.1 or earlier, by default the ESXi hosts will enter maintenance mode with vSAN data migration Mode set to `Full data migration`. Any powered off virtual machines will not be migrated off the ESXi hosts prior to entering maintenance mode.
+For VMware Cloud Foundation 5.1 or earlier, by default the ESX hosts will enter maintenance mode with vSAN data migration Mode set to `Full data migration`. Any powered off virtual machines will not be migrated off the ESX hosts prior to entering maintenance mode.
 
 ### EXAMPLE 4
 
 ```powershell
-Install-VCFCertificate -esxi -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -certificateDirectory F:\certificates -certificateFileExt ".cer" -uploadPrivateKey
+Install-VcfCertificate -esxi -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -certificateDirectory [certificate_directory_path] -certificateFileExt ".cer" -uploadPrivateKey
 ```
 
-This example will install private keys and certificates for each ESXi host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
+This example will install private keys and certificates for each ESX host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.
 
 The `uploadPrivateKey` parameter is only validated for VMware Cloud Foundation version is 5.2 or later.
 
@@ -82,7 +82,7 @@ The `uploadPrivateKey` parameter is only validated for VMware Cloud Foundation v
 
 ### -esxi
 
-Switch to indicate that the certificate is to be installed on an ESXi host.
+Switch to indicate that the certificate is to be installed on an ESX host.
 
 ```yaml
 Type: SwitchParameter
@@ -98,7 +98,7 @@ Accept wildcard characters: False
 
 ### -sddcManager
 
-Switch to indicate that the certificate is to be installed for all components associated with the given workload domain, excluding ESXi hosts.
+Switch to indicate that the certificate is to be installed for all components associated with the given workload domain, excluding ESX hosts.
 
 ```yaml
 Type: SwitchParameter
@@ -162,7 +162,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain in which the certificate is requested to be installed or where the ESXi host is located.
+The name of the workload domain in which the certificate is requested to be installed or where the ESX host is located.
 
 ```yaml
 Type: String
@@ -178,7 +178,7 @@ Accept wildcard characters: False
 
 ### -cluster
 
-The name of the cluster in which the ESXi host is located.
+The name of the cluster in which the ESX host is located.
 
 ```yaml
 Type: String
@@ -194,7 +194,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host.
+The fully qualified domain name of the ESX host.
 
 ```yaml
 Type: String
@@ -243,7 +243,7 @@ Accept wildcard characters: False
 
 ### -timeout
 
-The timeout in seconds for putting the ESXi host in maintenance mode.
+The timeout in seconds for putting the ESX host in maintenance mode.
 Default is 18000 seconds (5 hours).
 
 ```yaml
@@ -276,7 +276,7 @@ Accept wildcard characters: False
 
 ### -migratePowerOffVMs
 
-Option to decide if power off virtual machines and suspended virtual machines will be migrated to other ESXi hosts when the ESXi host goes into maintenance mode.
+Option to decide if power off virtual machines and suspended virtual machines will be migrated to other ESX hosts when the ESX host goes into maintenance mode.
 
 ```yaml
 Type: Switch
@@ -292,7 +292,7 @@ Accept wildcard characters: False
 
 ### -NoConfirmation
 
-Option to skip Confirmation warning when performing the ESXi host certificate replacement.
+Option to skip Confirmation warning when performing the ESX host certificate replacement.
 
 ```yaml
 Type: Switch
@@ -308,7 +308,7 @@ Accept wildcard characters: False
 
 ### -uploadPrivateKey
 
-Option to upload an external private key when performing the ESXi host certificate replacement. Supported on VMware Cloud Foundation 5.2 or later
+Option to upload an external private key when performing the ESX host certificate replacement. Supported on VMware Cloud Foundation 5.2 or later
 
 ```yaml
 Type: Switch

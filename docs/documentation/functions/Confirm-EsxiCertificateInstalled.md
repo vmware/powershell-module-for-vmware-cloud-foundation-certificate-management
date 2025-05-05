@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Verifies if the provided certificate is already on the ESXi host.
+Verifies if the provided certificate is already on the ESX host.
 
 ## Syntax
 
@@ -12,7 +12,7 @@ Confirm-EsxiCertificateInstalled [-server] <String> [-user] <String> [-pass] <St
 
 ## Description
 
-The `Confirm-EsxiCertificateInstalled` cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESXi host.
+The `Confirm-EsxiCertificateInstalled` cmdlet will get the thumbprint from the provided signed certificate and matches it with the certificate thumbprint from ESX host.
 
 You need to pass in the complete path for the certificate file.
 
@@ -23,10 +23,10 @@ Returns `true` if certificate is already installed, else returns `false`.
 ### Example 1
 
 ```powershell
-Confirm-EsxiCertificateInstalled -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -esxiFqdn sfo01-w01-esx01.sfo.rainpole.io -signedCertificate F:\certificates\sfo01-w01-esx01.sfo.rainpole.io.cer
+Confirm-EsxiCertificateInstalled -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -esxiFqdn [esx_host_fqdn] -signedCertificate [full_certificate_file_path]
 ```
 
-This example checks the thumbprint of the provided signed certificate with the thumbprint on ESXi host.
+This example checks the thumbprint of the provided signed certificate with the thumbprint on ESX host.
 
 ## Parameters
 
@@ -80,7 +80,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host to verify the certificate thumbprint against.
+The fully qualified domain name of the ESX host to verify the certificate thumbprint against.
 
 ```yaml
 Type: String

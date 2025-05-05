@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Retrieves the ESXi host lockdown mode state from a vCenter Server instance.
+Retrieves the ESX host lockdown mode state from a vCenter instance.
 
 ## Syntax
 
@@ -12,7 +12,7 @@ Get-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-doma
 
 ## Description
 
-The `Get-EsxiLockdownMode` cmdlet gets the lockdown mode value for all ESXi hosts in a given cluster or for a given ESXi host within the cluster.
+The `Get-EsxiLockdownMode` cmdlet gets the lockdown mode value for all ESX hosts in a given cluster or for a given ESX host within the cluster.
 
 If `esxiFqdn` is provided, only the value for that host is returned.
 
@@ -21,18 +21,18 @@ If `esxiFqdn` is provided, only the value for that host is returned.
 ### Example 1
 
 ```powershell
-Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+Get-EsxiLockdownMode -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name]
 ```
 
-This example retrieves the lockdown mode for each ESXi host in a cluster.
+This example retrieves the lockdown mode for each ESX host in a cluster.
 
 ### Example 2
 
 ```powershell
-Get-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io
+Get-EsxiLockdownMode -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -esxiFqdn [esx_host_fqdn]
 ```
 
-This example retrieves the lockdown mode state for an ESXi host in a given cluster.
+This example retrieves the lockdown mode state for an ESX host in a given cluster.
 
 ## Parameters
 
@@ -102,7 +102,7 @@ Accept wildcard characters: False
 
 ### -cluster
 
-The name of the cluster in which the ESXi host is located.
+The name of the cluster in which the ESX host is located.
 
 ```yaml
 Type: String
@@ -118,7 +118,7 @@ Accept wildcard characters: False
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host to retrieve the lockdown mode state for.
+The fully qualified domain name of the ESX host to retrieve the lockdown mode state for.
 
 ```yaml
 Type: String
