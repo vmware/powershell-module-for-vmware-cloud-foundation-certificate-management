@@ -1,4 +1,4 @@
-# Set-VCFCertificateAuthority
+# Set-VcfCertificateAuthority
 
 ## Synopsis
 
@@ -9,33 +9,33 @@ Sets the certificate authority in SDDC Manager to use a Microsoft Certificate Au
 ### Microsoft Certificate Authority
 
 ```powershell
-Set-VCFCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
+Set-VcfCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-certAuthorityFqdn] <String> [-certAuthorityUser] <String> [-certAuthorityPass] <String> [-certAuthorityTemplate] <String> [<CommonParameters>]
 ```
 
 ### OpenSSL Certificate Authority
 
 ```powershell
-Set-VCFCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
+Set-VcfCertificateAuthority [-certAuthority] <String> [-server] <String> [-user] <String> [-pass] <String> [-commonName] <String> [-organization] <String> [-organizationUnit] <String> [-locality] <String> [-state] <String> [-country] <String> [<CommonParameters>]
 ```
 
 ## Description
 
-The `Set-VCFCertificateAuthority` will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
+The `Set-VcfCertificateAuthority` will configure Microsoft Certificate Authority or OpenSSL Certificate Authority as SDDC Manager's Certificate Authority.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Set-VCFCertificateAuthority -certAuthority Microsoft -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -certAuthorityFqdn rpl-ad01.rainpole.io -certAuthorityUser svc-vcf-ca -certAuthorityPass VMw@re1! -certAuthorityTemplate VMware
+Set-VcfCertificateAuthority -certAuthority Microsoft -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -certAuthorityFqdn [certificate_authority_fqdn] -certAuthorityUser [certificate_authority_username] -certAuthorityPass [certificate_authority_password] -certAuthorityTemplate [certificate_authority_template_name]
 ```
 
-This example will configure Microsoft Certificate Authority `rpl-ad01.rainpole.io` in SDDC Manager.
+This example will configure Microsoft Certificate Authority in SDDC Manager.
 
 ### Example 2
 
 ```powershell
-Set-VCFCertificateAuthority -certAuthority OpenSSL -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -commonName "sfo-vcf01.sfo.rainpole.io" -organization "Rainpole" -organizationUnit "Platform Engineering" -locality "San Francisco" -state CA -country US
+Set-VcfCertificateAuthority -certAuthority OpenSSL -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -commonName [common_name] -organization [organization] -organizationUnit [organization_unit] -locality [locality] -state [state] -country [country]
 ```
 
 This example will configure an OpenSSL Certificate Authority in SDDC Manager.
@@ -268,4 +268,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

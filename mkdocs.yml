@@ -13,7 +13,7 @@ edit_uri: blob/main/docs/
 
 # Copyright
 copyright: |
-  Copyright &copy; 2005-2024 Broadcom. All Rights Reserved.<br/>
+  Copyright &copy; 2005-2025 Broadcom. All Rights Reserved.<br/>
   The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br/>
 
 # Configuration
@@ -130,16 +130,16 @@ nav:
 - Reference:
   - User Guide:
     - VMware Cloud Foundation Certificate Management: documentation/user-guide/vcf-certificate-management.md
-    - ESXi Certificate Management: documentation/user-guide/esxi-certificate-management.md
+    - ESX Certificate Management: documentation/user-guide/esxi-certificate-management.md
   - Functions:
     - Common: 
-      - Get-VCFCertificateThumbprint: documentation/functions/Get-VCFCertificateThumbprint.md
-      - Install-VCFCertificate: documentation/functions/Install-VCFCertificate.md
-      - Request-VCFCsr: documentation/functions/Request-VCFCsr.md
+      - Get-VcfCertificateThumbprint: documentation/functions/Get-VcfCertificateThumbprint.md
+      - Install-VcfCertificate: documentation/functions/Install-VcfCertificate.md
+      - Request-VcfCsr: documentation/functions/Request-VcfCsr.md
     - VMware Cloud Foundation Certificate Management:
-      - Request-VCFSignedCertificate: documentation/functions/Request-VCFSignedCertificate.md
-      - Set-VCFCertificateAuthority: documentation/functions/Set-VCFCertificateAuthority.md
-    - ESXi Certificate Management:
+      - Request-VcfSignedCertificate: documentation/functions/Request-VcfSignedCertificate.md
+      - Set-VcfCertificateAuthority: documentation/functions/Set-VcfCertificateAuthority.md
+    - ESX Certificate Management:
       - Confirm-CAInvCenterServer: documentation/functions/Confirm-CAInvCenterServer.md
       - Confirm-EsxiCertificateInstalled: documentation/functions/Confirm-EsxiCertificateInstalled.md
       - Get-EsxiCertificateMode: documentation/functions/Get-EsxiCertificateMode.md

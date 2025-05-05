@@ -130,7 +130,7 @@ Describe 'Test Suite' {
                         Write-LogToFile -message "Start of 'Configuring of Certificate Authority' Positive Testcase"
 
                         # Configure the Certificate Authority for SDDC Manager.
-                        $config = Set-VCFCertificateAuthority -certAuthority 'Microsoft' -server $server -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn $certAuthorityFqdn -certAuthorityUser $certAuthorityUser -certAuthorityPass $certAuthorityPass -certAuthorityTemplate $certAuthorityTemplate
+                        $config = Set-VcfCertificateAuthority -certAuthority 'Microsoft' -server $server -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn $certAuthorityFqdn -certAuthorityUser $certAuthorityUser -certAuthorityPass $certAuthorityPass -certAuthorityTemplate $certAuthorityTemplate
                         Write-LogToFile -message "Update Result: $config"
 
                         $config -match "Configuration a Microsoft Certificate Authority in SDDC Manager completed."
@@ -151,7 +151,7 @@ Describe 'Test Suite' {
                         $certAuthorityFqdn = 'rpl-ad01.rainpole.io'
 
                         # Configure the Certificate Authority for SDDC Manager.
-                        $config = Set-VCFCertificateAuthority -certAuthority 'Microsoft' -server $server -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn $certAuthorityFqdn -certAuthorityUser $certAuthorityUser -certAuthorityPass $certAuthorityPass -certAuthorityTemplate $certAuthorityTemplate
+                        $config = Set-VcfCertificateAuthority -certAuthority 'Microsoft' -server $server -user $sddcManagerUser -pass $sddcManagerPass -certAuthorityFqdn $certAuthorityFqdn -certAuthorityUser $certAuthorityUser -certAuthorityPass $certAuthorityPass -certAuthorityTemplate $certAuthorityTemplate
                         $null | Should -Be $config
                     } Catch {
                         # Output the caught exception.
@@ -166,13 +166,13 @@ Describe 'Test Suite' {
                 }
             }
 
-            Describe 'Request-VCFCsr for SDDC Manager' -Tag "RequestVCFCsrSDDCMicrosoft" {
+            Describe 'Request-VcfCsr for SDDC Manager' -Tag "RequestVCFCsrSDDCMicrosoft" {
                 # Expect a success.
                 It 'Expect Success' -Tag "Positive" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFCsr for SDDC Positive Testcase"
+                        Write-LogToFile -message "Start of Request-VcfCsr for SDDC Positive Testcase"
 
-                        $config = Request-VCFCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
+                        $config = Request-VcfCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
                         Write-LogToFile -message "Update Result: $config"
 
                         $config -match "Workflow completed with status: Successful." | Should -Not -BeNullorEmpty
@@ -180,39 +180,39 @@ Describe 'Test Suite' {
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $false | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFCsr for SDDC Positive Testcase"
+                        Write-LogToFile -message "End of Request-VcfCsr for SDDC Positive Testcase"
                     }
                 }
 
                 # Expect a failure.
                 It 'Expect Failure' -Tag "Negative" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFCsr for SDDC Negative Testcase"
+                        Write-LogToFile -message "Start of Request-VcfCsr for SDDC Negative Testcase"
 
                         # Set $sddcManagerPass to an invalid value.
                         $sddcManagerPass = "VMw@re"
 
                         # Request certificate.
-                        $config = Request-VCFCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
+                        $config = Request-VcfCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
                     } Catch {
                         # Output the caught error.
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $true | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFCsr for SDDC Negative Testcase"
+                        Write-LogToFile -message "End of Request-VcfCsr for SDDC Negative Testcase"
                         $sddcManagerPass = $inputData.'Password'
                     }
                 }
             }
 
-            Describe 'Request-VCFSignedCertificate for SDDC' -Tag "RequestVCFSignedCsrSDDCMicrosoft" {
+            Describe 'Request-VcfSignedCertificate for SDDC' -Tag "RequestVCFSignedCsrSDDCMicrosoft" {
                 # Expect a success.
                 It 'Expect Success' -Tag "Positive" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFSignedCertificate for SDDC Positive Testcase"
+                        Write-LogToFile -message "Start of Request-VcfSignedCertificate for SDDC Positive Testcase"
 
                         # Request certificate.
-                        $config = Request-VCFSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority Microsoft
+                        $config = Request-VcfSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority Microsoft
                         Write-LogToFile -message "Update Result: $config"
 
                         $config -match "Workflow completed with status: Successful." | Should -Not -BeNullorEmpty
@@ -220,26 +220,26 @@ Describe 'Test Suite' {
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $false | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFSignedCertificate for SDDC Positive Testcase"
+                        Write-LogToFile -message "End of Request-VcfSignedCertificate for SDDC Positive Testcase"
                     }
                 }
 
                 # Expect a failure.
                 It 'Expect Failure' -Tag "Negative" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFSignedCertificate for SDDC Negative Testcase"
+                        Write-LogToFile -message "Start of Request-VcfSignedCertificate for SDDC Negative Testcase"
 
                         # Set $sddcManagerPass to an invalid value.
                         $sddcManagerPass = "VMw@re"
 
                         # Request certificate.
-                        $config = Request-VCFSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority Microsoft
+                        $config = Request-VcfSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority Microsoft
                     } Catch {
                         # Output the caught error.
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $true | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFSignedCertificate for SDDC Negative Testcase"
+                        Write-LogToFile -message "End of Request-VcfSignedCertificate for SDDC Negative Testcase"
                         $sddcManagerPass = $inputData.'Password'
                     }
                 }
@@ -253,7 +253,7 @@ Describe 'Test Suite' {
                         Write-LogToFile -message "Installing VCFCertificate for SDDC Positive Testcase"
 
                         # Install certificate.
-                        $config = Install-VCFCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
+                        $config = Install-VcfCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
                         Start-Sleep -Seconds 1500
                         Write-LogToFile -message "Update Result: $config"
 
@@ -275,7 +275,7 @@ Describe 'Test Suite' {
                         $sddcManagerPass = "VMw@re1!"
 
                         # Configure the Certificate Authority for SDDC Manager.
-                        $config = Install-VCFCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
+                        $config = Install-VcfCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
                     } Catch {
                         # Output the caught error.
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
@@ -298,7 +298,7 @@ Describe 'Test Suite' {
                         Write-LogToFile -message "Start of 'Configuring OpenSSL Certificate Authority' Positive Testcase"
 
                         # Configure the Certificate Authority for SDDC Manager.
-                        $config = Set-VCFCertificateAuthority -certAuthority OpenSSL -server $server -user $sddcManagerUser -pass $sddcManagerPass -commonName $commonName -organization $organization -organizationUnit $organizationUnit -locality $locality -state $state -country $country
+                        $config = Set-VcfCertificateAuthority -certAuthority OpenSSL -server $server -user $sddcManagerUser -pass $sddcManagerPass -commonName $commonName -organization $organization -organizationUnit $organizationUnit -locality $locality -state $state -country $country
                         Write-LogToFile -message "Update Result: $config"
 
                         $config -match "Configuration the OpenSSL Certificate Authority in SDDC Manager completed." | Should -Not -BeNullorEmpty
@@ -319,7 +319,7 @@ Describe 'Test Suite' {
                         $commonName = "sfo-vc01.sfo.rainpole.io"
 
                         # Configure the Certificate Authority for SDDC Manager.
-                        $config = Set-VCFCertificateAuthority -certAuthority OpenSSL -server $server -user $sddcManagerUser -pass $sddcManagerPass -commonName $commonName -organization $organization -organizationUnit $organizationUnit -locality $locality -state $state -country $country
+                        $config = Set-VcfCertificateAuthority -certAuthority OpenSSL -server $server -user $sddcManagerUser -pass $sddcManagerPass -commonName $commonName -organization $organization -organizationUnit $organizationUnit -locality $locality -state $state -country $country
                         $null | Should -Be $config
                     } Catch {
                         # Output the caught exception.
@@ -333,14 +333,14 @@ Describe 'Test Suite' {
                 }
             }
 
-            Describe 'Request-VCFCsr for SDDC' -Tag "RequestVCFCsrSDDCOpenssl" {
+            Describe 'Request-VcfCsr for SDDC' -Tag "RequestVCFCsrSDDCOpenssl" {
                 # Expect a success.
                 It 'Expect Success' -Tag "Positive" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFCsr for SDDC Positive Testcase"
+                        Write-LogToFile -message "Start of Request-VcfCsr for SDDC Positive Testcase"
 
                         # Request-VCF certificate
-                        $config = Request-VCFCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
+                        $config = Request-VcfCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
                         Write-LogToFile -message "Update Result: $config"
 
                         $config -match "Workflow completed with status: Successful." | Should -Not -BeNullorEmpty
@@ -348,40 +348,40 @@ Describe 'Test Suite' {
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $false | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFCsr for SDDC Positive Testcase"
+                        Write-LogToFile -message "End of Request-VcfCsr for SDDC Positive Testcase"
                     }
                 }
 
                 # Expect a failure.
                 It 'Expect Failure' -Tag "Negative" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFCsr for SDDC Negative Testcase"
+                        Write-LogToFile -message "Start of Request-VcfCsr for SDDC Negative Testcase"
 
                         # Set $$sddcManagerPass to an invalid value.
                         $sddcManagerPass = "VMw@re"
 
                         # Request-VCF certificate
-                        $config = Request-VCFCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
+                        $config = Request-VcfCsr -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1] -country $country -keysize $keysize -locality $locality -organization $organization -organizationUnit $organizationUnit -stateOrProvince $state -email $email
                         $null | Should -Be $config
                     } Catch {
                         # Output the caught error.
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $true | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFCsr for SDDC Negative Testcase"
+                        Write-LogToFile -message "End of Request-VcfCsr for SDDC Negative Testcase"
                         $sddcManagerPass = $inputData.'Password'
                     }
                 }
             }
 
-            Describe 'Request-VCFSignedCertificate for SDDC' -Tag "RequestVCFSignedCsrSDDCOpenssl" {
+            Describe 'Request-VcfSignedCertificate for SDDC' -Tag "RequestVCFSignedCsrSDDCOpenssl" {
                 # Expect a success.
                 It 'Expect Success' -Tag "Positive" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFSignedCertificate for SDDC Positive Testcase"
+                        Write-LogToFile -message "Start of Request-VcfSignedCertificate for SDDC Positive Testcase"
 
                         # Request certificate.
-                        $config = Request-VCFSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority OpenSSL
+                        $config = Request-VcfSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority OpenSSL
                         Write-LogToFile -message "Update Result: $config"
 
                         $config -match "Workflow completed with status: Successful." | Should -Not -BeNullorEmpty
@@ -389,40 +389,40 @@ Describe 'Test Suite' {
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $false | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFSignedCertificate for SDDC Positive Testcase"
+                        Write-LogToFile -message "End of Request-VcfSignedCertificate for SDDC Positive Testcase"
                     }
                 }
 
                 # Expect a failure.
                 It 'Expect Failure' -Tag "Negative" {
                     Try {
-                        Write-LogToFile -message "Start of Request-VCFSignedCertificate for SDDC Negative Testcase"
+                        Write-LogToFile -message "Start of Request-VcfSignedCertificate for SDDC Negative Testcase"
 
                         # Set $sddcManagerPass to an invalid value.
                         $sddcManagerPass = "VMw@re"
 
                         # Request certificate.
-                        $config = Request-VCFSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority OpenSSL
+                        $config = Request-VcfSignedCertificate -server $server -user $sddcManagerUser -pass $sddcManagerPass -workloadDomain $inputData.'Domains'[1] -certAuthority OpenSSL
                     } Catch {
                         # Output the caught error.
                         Write-LogToFile -Type ERROR -message "An error occurred: $_"
                         $true | Should -Be $true
                     } Finally {
-                        Write-LogToFile -message "End of Request-VCFSignedCertificate for SDDC Negative Testcase"
+                        Write-LogToFile -message "End of Request-VcfSignedCertificate for SDDC Negative Testcase"
                         $sddcManagerPass = $inputData.'Password'
                     }
                 }
             }
 
 
-            Describe 'Install-VCFCertificate for SDDC' -Tag "InstallVCFCertificateSDDCOpenssl" {
+            Describe 'Install-VcfCertificate for SDDC' -Tag "InstallVCFCertificateSDDCOpenssl" {
                 # Expect a success.
                 It 'Expect Success' -Tag "Positive" {
                     Try {
                         Write-LogToFile -message "Installing VCFCertificate for SDDC Positive Testcase"
 
                         # Instal vcf certificate
-                        $config = Install-VCFCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
+                        $config = Install-VcfCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
                         Start-Sleep -Seconds 1500
                         Write-LogToFile -message "Update Result: $config"
 
@@ -444,7 +444,7 @@ Describe 'Test Suite' {
                         $sddcManagerPass = "VMw@re1!"
 
                         # Install certificate.
-                        $config = Install-VCFCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
+                        $config = Install-VcfCertificate -sddcManager -server $server -user $sddcManagerUser -pass $sddcManagerPass -domain $inputData.'Domains'[1]
                         $null | Should -Be $config
                     } Catch {
                             # Output the caught error.

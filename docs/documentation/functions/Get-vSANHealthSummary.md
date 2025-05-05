@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Retrieves the vSAN health summary from vCenter Server for a cluster.
+Retrieves the vSAN health summary from vCenter for a cluster.
 
 ## Syntax
 
@@ -12,7 +12,7 @@ Get-vSANHealthSummary [-server] <String> [-user] <String> [-pass] <String> [-dom
 
 ## Description
 
-The `Get-vSANHealthSummary` cmdlet gets the vSAN health summary from vCenter Server for a cluster.
+The `Get-vSANHealthSummary` cmdlet gets the vSAN health summary from vCenter for a cluster.
 
 If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 
@@ -21,10 +21,10 @@ If any status is YELLOW or RED, a WARNING or ERROR will be raised.
 ### Example 1
 
 ```powershell
-Get-vSANHealthSummary -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+Get-vSANHealthSummary -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name]
 ```
 
-This example gets the vSAN health summary for cluster sfo-m01-cl01.
+This example gets the vSAN health summary for cluster.
 
 ## Parameters
 
@@ -110,4 +110,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

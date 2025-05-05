@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Restarts an ESXi host and poll for connection availability.
+Restarts an ESX host and poll for connection availability.
 
 ## Syntax
 
@@ -12,7 +12,7 @@ Restart-EsxiHost [-esxiFqdn] <String> [-user] <String> [-pass] <String> [[-poll]
 
 ## Description
 
-The `Restart-EsxiHost` cmdlet restarts an ESXi host and polls for connection availability.
+The `Restart-EsxiHost` cmdlet restarts an ESX host and polls for connection availability.
 
 Timeout value is in seconds.
 
@@ -21,16 +21,16 @@ Timeout value is in seconds.
 ### Example 1
 
 ```powershell
-Restart-EsxiHost -esxiFqdn sfo01-m01-esx01.sfo.rainpole.io -user root -pass VMw@re1! -poll $true -timeout 1800 -pollInterval 30
+Restart-EsxiHost -esxiFqdn [esx_host_fqdn] -user [admin_username] -pass [admin_password] -poll $true -timeout 1800 -pollInterval 30
 ```
 
-This example restarts an ESXi host and polls the connection availability every 30 seconds. It will timeout after 1800 seconds.
+This example restarts an ESX host and polls the connection availability every 30 seconds. It will timeout after 1800 seconds.
 
 ## Parameters
 
 ### -esxiFqdn
 
-The fully qualified domain name of the ESXi host.
+The fully qualified domain name of the ESX host.
 
 ```yaml
 Type: String
@@ -46,7 +46,7 @@ Accept wildcard characters: False
 
 ### -user
 
-The username to authenticate to the ESXi host.
+The username to authenticate to the ESX host.
 
 ```yaml
 Type: String
@@ -62,7 +62,7 @@ Accept wildcard characters: False
 
 ### -pass
 
-The password to authenticate to the ESXi host.
+The password to authenticate to the ESX host.
 
 ```yaml
 Type: String
@@ -78,7 +78,7 @@ Accept wildcard characters: False
 
 ### -poll
 
-Poll for connection availability after restarting the ESXi host.
+Poll for connection availability after restarting the ESX host.
 Default is true.
 
 ```yaml
@@ -129,4 +129,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

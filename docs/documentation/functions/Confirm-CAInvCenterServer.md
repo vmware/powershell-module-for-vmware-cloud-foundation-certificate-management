@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Verifies the root certificate thumbprint matches with one of the CA thumbprints from vCenter Server instance.
+Verifies the root certificate thumbprint matches with one of the CA thumbprints from vCenter instance.
 
 ## Syntax
 
@@ -12,7 +12,7 @@ Confirm-CAInvCenterServer [-server] <String> [-user] <String> [-pass] <String> [
 
 ## Description
 
-The `Confirm-CAInvCenterServer` cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter Server instance.
+The `Confirm-CAInvCenterServer` cmdlet gets the thumbprint from the root certificate and matches it with the CA thumbprint from the vCenter instance.
 
 You need to pass in the complete path for the certificate file.
 
@@ -23,10 +23,10 @@ Returns `true` if thumbprint matches, else returns `false`.
 ### Example 1
 
 ```powershell
-Confirm-CAInvCenterServer -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -issuer rainpole -signedCertificate F:\certificates\Root64.cer
+Confirm-CAInvCenterServer -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -issuer [issuer_name] -signedCertificate [full_certificate_file_path]
 ```
 
-This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter Server instance matching the issuer "rainpole".
+This example matches the thumbprint of provided root certificate file with the thumbprints on the vCenter instance matching the issuer.
 
 ## Parameters
 
@@ -80,7 +80,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain to retrieve the vCenter Server instance's certificate thumbprints from.
+The name of the workload domain to retrieve the vCenter instance's certificate thumbprints from.
 
 ```yaml
 Type: String
@@ -128,4 +128,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

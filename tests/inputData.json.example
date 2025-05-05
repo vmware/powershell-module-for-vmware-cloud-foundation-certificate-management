@@ -23,7 +23,7 @@
     "sfo-m01": {
         "Clusters": {
             "Name": "sfo-m01-cl01",
-            "ESXi Hosts": [
+            "ESX Hosts": [
                 "sfo01-m01-esx01.sfo.rainpole.io",
                 "sfo01-m01-esx02.sfo.rainpole.io",
                 "sfo01-m01-esx03.sfo.rainpole.io",
@@ -34,7 +34,7 @@
     "sfo-w01": {
         "Clusters": {
             "Name": "sfo-w01-cl01",
-            "ESXi Hosts": [
+            "ESX Hosts": [
                 "sfo01-w01-esx01.sfo.rainpole.io",
                 "sfo01-w01-esx02.sfo.rainpole.io",
                 "sfo01-w01-esx03.sfo.rainpole.io",

@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Sets the lockdown mode for all ESXi hosts in a given cluster.
+Sets the lockdown mode for all ESX hosts in a given cluster.
 
 ## Syntax
 
@@ -21,25 +21,25 @@ Set-EsxiLockdownMode [-server] <String> [-user] <String> [-pass] <String> [-doma
 
 ## Description
 
-The `Set-EsxiLockdownMode` cmdlet sets the lockdown mode for all ESXi hosts in a given cluster.
+The `Set-EsxiLockdownMode` cmdlet sets the lockdown mode for all ESX hosts in a given cluster.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -enable
+Set-EsxiLockdownMode -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -enable
 ```
 
-This example will enable the lockdown mode for all ESXi hosts in a cluster.
+This example will enable the lockdown mode for all ESX hosts in a cluster.
 
 ### Example 2
 
 ```powershell
-Set-EsxiLockdownMode -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -disable
+Set-EsxiLockdownMode -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -disable
 ```
 
-This example will disable the lockdown mode for all ESXi hosts in a cluster.
+This example will disable the lockdown mode for all ESX hosts in a cluster.
 
 ## Parameters
 
@@ -109,7 +109,7 @@ Accept wildcard characters: False
 
 ### -cluster
 
-The name of the cluster in which the ESXi host is located.
+The name of the cluster in which the ESX host is located.
 
 ```yaml
 Type: String
@@ -125,7 +125,7 @@ Accept wildcard characters: False
 
 ### -enable
 
-Enable lockdown mode for the ESXi host(s).
+Enable lockdown mode for the ESX host(s).
 
 ```yaml
 Type: SwitchParameter
@@ -141,7 +141,7 @@ Accept wildcard characters: False
 
 ### -disable
 
-Disable lockdown mode for the ESXi host(s).
+Disable lockdown mode for the ESX host(s).
 
 ```yaml
 Type: SwitchParameter
@@ -157,4 +157,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
