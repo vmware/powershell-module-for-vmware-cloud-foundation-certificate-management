@@ -1,4 +1,5 @@
-# Copyright 2023-2024 Broadcom. All Rights Reserved.
+# © Broadcom. All Rights Reserved.
+# The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-2
 
 # Module manifest for module 'VMware.CloudFoundation.CertificateManagement'
@@ -11,7 +12,7 @@
     RootModule        = '.\VMware.CloudFoundation.CertificateManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.5.4.1003'
+    ModuleVersion     = '1.5.5.1000'
 
     # ID used to uniquely identify this module
     GUID              = 'ac903c83-c745-44f7-b6bd-1dff133fec92'
@@ -23,7 +24,7 @@
     CompanyName       = 'Broadcom'
 
     # Copyright statement for this module
-    Copyright         = 'Copyright 2023-2024 Broadcom. All Rights Reserved.'
+    Copyright         = 'Copyright 2023-2025 Broadcom. All Rights Reserved.'
 
     # Description of the functionality provided by this module
     Description       = 'PowerShell Module for VMware Cloud Foundation Certificate Management'
@@ -54,7 +55,7 @@
         }
         @{
             ModuleName    = 'PowerValidatedSolutions';
-            ModuleVersion = '2.11.0'
+            ModuleVersion = '2.12.0'
         }
     )
 

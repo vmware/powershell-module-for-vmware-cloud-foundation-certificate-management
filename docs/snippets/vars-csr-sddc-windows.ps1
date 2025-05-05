@@ -1,2 +1,2 @@
-$keySize = "3072"
+$keySize = "4096"
 $email = "admin@rainpole.io"
