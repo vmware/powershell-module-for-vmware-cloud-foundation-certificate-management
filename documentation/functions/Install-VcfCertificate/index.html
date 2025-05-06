@@ -1011,7 +1011,7 @@
           <li class="md-nav__item">
   <a href="#example-3" class="md-nav__link">
     <span class="md-ellipsis">
-      EXAMPLE 3
+      Example 3
     </span>
   </a>
   
@@ -1020,7 +1020,7 @@
           <li class="md-nav__item">
   <a href="#example-4" class="md-nav__link">
     <span class="md-ellipsis">
-      EXAMPLE 4
+      Example 4
     </span>
   </a>
   
@@ -1958,7 +1958,7 @@
           <li class="md-nav__item">
   <a href="#example-3" class="md-nav__link">
     <span class="md-ellipsis">
-      EXAMPLE 3
+      Example 3
     </span>
   </a>
   
@@ -1967,7 +1967,7 @@
           <li class="md-nav__item">
   <a href="#example-4" class="md-nav__link">
     <span class="md-ellipsis">
-      EXAMPLE 4
+      Example 4
     </span>
   </a>
   
@@ -2201,13 +2201,13 @@
 </code></pre></div>
 <p>This example will install the certificate to the ESX host sfo01-m01-esx01.sfo.rainpole.io in sfo-m01 workload domain using the provided path.</p>
 <p>For VMware Cloud Foundation 5.1 or earlier, the ESX host will enter maintenance mode with vSAN data migration Mode set to <code>EnsureAccessibility</code>. Any powered off virtual machines will be migrated off the ESX host prior to entering maintenance mode.</p>
-<h3 id="example-3">EXAMPLE 3<a class="headerlink" href="#example-3" title="Permanent link">&para;</a></h3>
+<h3 id="example-3">Example 3<a class="headerlink" href="#example-3" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">Install-VcfCertificate</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="no">[sddc_manager_fqdn]</span> <span class="n">-user</span> <span class="no">[admin_username]</span> <span class="n">-pass</span> <span class="no">[admin_password]</span> <span class="n">-domain</span> <span class="no">[workload_domain_name]</span> <span class="n">-cluster</span> <span class="no">[cluster_name]</span> <span class="n">-certificateDirectory</span> <span class="no">[certificate_directory_path]</span> <span class="n">-certificateFileExt</span> <span class="s2">&quot;.cer&quot;</span>
 </code></pre></div>
 <p>This example will install certificates for each ESX host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.</p>
 <p>For VMware Cloud Foundation 5.2 or later, the <code>vsanDataMigrationMode</code> option is no longer applicable.</p>
 <p>For VMware Cloud Foundation 5.1 or earlier, by default the ESX hosts will enter maintenance mode with vSAN data migration Mode set to <code>Full data migration</code>. Any powered off virtual machines will not be migrated off the ESX hosts prior to entering maintenance mode.</p>
-<h3 id="example-4">EXAMPLE 4<a class="headerlink" href="#example-4" title="Permanent link">&para;</a></h3>
+<h3 id="example-4">Example 4<a class="headerlink" href="#example-4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">Install-VcfCertificate</span> <span class="n">-esxi</span> <span class="n">-server</span> <span class="no">[sddc_manager_fqdn]</span> <span class="n">-user</span> <span class="no">[admin_username]</span> <span class="n">-pass</span> <span class="no">[admin_password]</span> <span class="n">-domain</span> <span class="no">[workload_domain_name]</span> <span class="n">-cluster</span> <span class="no">[cluster_name]</span> <span class="n">-certificateDirectory</span> <span class="no">[certificate_directory_path]</span> <span class="n">-certificateFileExt</span> <span class="s2">&quot;.cer&quot;</span> <span class="n">-uploadPrivateKey</span>
 </code></pre></div>
 <p>This example will install private keys and certificates for each ESX host in the sfo-m01-cl01 cluster within the sfo-m01 workload domain, using the provided path.</p>
@@ -2396,7 +2396,7 @@ Default is 18000 seconds (5 hours).</p>
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 </code></pre></div>
 <h3 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h3>
-<p>This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see <a href="http://go.microsoft.com/fwlink/?LinkID=113216">about_CommonParameters</a>.</p>
+<p>This cmdlet supports the common parameters: <code>-Debug</code>, <code>-ErrorAction</code>, <code>-ErrorVariable</code>, <code>-InformationAction</code>, <code>-InformationVariable</code>, <code>-OutVariable</code>, <code>-OutBuffer</code>, <code>-PipelineVariable</code>, <code>-Verbose</code>, <code>-WarningAction</code>, and <code>-WarningVariable</code>. For more information, see <a href="http://go.microsoft.com/fwlink/?LinkID=113216">about_CommonParameters</a>.</p>
 
 
 
