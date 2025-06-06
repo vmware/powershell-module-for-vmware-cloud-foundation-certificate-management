@@ -2,110 +2,110 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/install/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/license/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/release-notes/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/update/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/user-access/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/code-of-conduct/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/contributing/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/community/support/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Confirm-CAInvCenterServer/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Confirm-EsxiCertificateInstalled/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-EsxiCertificateMode/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-EsxiHostVsanMaintenanceModePrecheck/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-EsxiLockdownMode/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-VcfCertificateThumbprint/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Get-vSANHealthSummary/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Install-VcfCertificate/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VcfCsr/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Request-VcfSignedCertificate/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Restart-EsxiHost/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiCertificateMode/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-EsxiLockdownMode/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Set-VcfCertificateAuthority/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/functions/Test-EsxiCertMgmtChecks/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/user-guide/esxi-certificate-management/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-certificate-management/documentation/user-guide/vcf-certificate-management/</loc>
-         <lastmod>2025-05-06</lastmod>
+         <lastmod>2025-06-06</lastmod>
     </url>
 </urlset>
