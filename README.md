@@ -26,9 +26,11 @@ workload domain.
 - Set the ESX Certificate Mode in vCenter.
 - Install and replace CA-signed certificates for a ESX hosts.
 
+For details on specific VMware Cloud Foundation versions supported by this module, please refer to the [documentation][docs-module].
+
 ## Documentation
 
-Please refer to the [documentation][docs-module] for more information on how to use this module.
+For detailed instructions on using this module, refer to the [documentation][docs-module].
 
 ## Contributing
 
