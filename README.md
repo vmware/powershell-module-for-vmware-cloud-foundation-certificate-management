@@ -10,7 +10,11 @@
 [<img src="https://img.shields.io/powershellgallery/v/VMware.CloudFoundation.CertificateManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery">][psgallery-module]&nbsp;&nbsp;
 <img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.CertificateManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">
 
-## Overview
+## Project Archived
+
+`VMware.CloudFoundation.CertificateManagement` has been archived no further updates will be made.
+
+## Historical Overview
 
 `VMware.CloudFoundation.CertificateManagement` is a PowerShell module designed to provide you the ability to manage 
 certificates within your VMware Cloud Foundation environment.
